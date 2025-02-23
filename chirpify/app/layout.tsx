@@ -5,8 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import "./globals.css";
 
-import { useTheme } from "next-themes"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { useTheme } from "next-themes";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -45,8 +45,7 @@ export default function RootLayout({
                     <Link href={"/"} className="flex items-center">
                       <span className="text-2xl font-bold">Chirpify</span>
                     </Link>
-                    <div className="flex items-center">
-                    </div>
+                    <div className="flex items-center"></div>
                   </div>
                   <div className="flex items-center gap-4">
                     <ThemeToggle />
