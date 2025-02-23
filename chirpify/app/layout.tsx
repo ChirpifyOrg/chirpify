@@ -2,10 +2,8 @@ import HeaderAuth from "@/components/header-auth";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
-import Image from "next/image";
 import "./globals.css";
 
-import { useTheme } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const defaultUrl = process.env.VERCEL_URL
