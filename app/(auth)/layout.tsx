@@ -1,9 +1,7 @@
-export default async function Layout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="max-w-7xl flex flex-col gap-12 items-start">{children}</div>
-  );
+  return <>{children}</>; // 아무것도 감싸지 않음 (root layout 적용 안 됨)
 }
