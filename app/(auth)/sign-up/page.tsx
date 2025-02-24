@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/fe/utils/cn";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { signUpWithGoogle } from "@/lib/fe/superbase/signup";
 
 export default function LoginPage() {
   return (
@@ -24,6 +27,7 @@ export default function LoginPage() {
                   <Button
                     variant="outline"
                     className="w-full flex items-center"
+                    onClick={() => signUpWithGoogle()}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
