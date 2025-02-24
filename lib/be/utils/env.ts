@@ -1,4 +1,5 @@
 class EnvProvider {
+    // if you want to access env from client, it must start with prefit 'nextPublic'
     public nextPublicSupabaseUrl: string;
     public nextPublicSupabaseAnonKey: string;
     public nextPublicDomain: string;
