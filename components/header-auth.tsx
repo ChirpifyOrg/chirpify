@@ -1,7 +1,7 @@
-import { signOutAction } from "@/lib/superbase/actions";
+import { signOutAction } from "@/lib/fe/superbase/actions";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { createClient } from "@/lib/superbase/client";
+import { createClient } from "@/lib/fe/superbase/client";
 
 export default async function AuthButton() {
   const supabase = await createClient();

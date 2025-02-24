@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/superbase/server";
+import { createClient } from "@/lib/be/superbase/server";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {

@@ -1,7 +1,7 @@
 "use server";
 
-import { encodedRedirect } from "@/lib/utils/encoded-redirect";
-import { createClient } from "@/lib/superbase/server";
+import { encodedRedirect } from "@/lib/fe/utils/encoded-redirect";
+import { createClient } from "@/lib/be/superbase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/superbase/server";
+import { createClient } from "@/lib/be/superbase/server";
 import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 

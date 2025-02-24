@@ -8,8 +8,11 @@
 
 주요 폴더
 - app: 화면 구성에 대한 전반 로직
+- be: 백엔드 관련 코어 로직, next.js와의 의존성이 분리됨.
 - components: 재사용 가능한 UI 컴포넌트
-- pages/api: 백엔드 API endpoint
+- lib: 
+    - fe: next.js client에서 사용할 수 있는 로직
+    - be: next.js server를 의존하는 서버 로직(e.g. session 관리 등)
 - public: 정적 파일
 
 주요 파일
