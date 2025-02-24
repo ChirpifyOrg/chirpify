@@ -3,10 +3,13 @@ import { env } from "@/lib/be/utils/env";
 
 export async function signUpWithGoogle() {
   const supabase = await createClient();
+  var protocol = env.isLocal() ? "http" : "https";
+
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `https://${env.nextPublicDomain}/api/auth/callback/google`,
+      redirectTo: `${protocol}://${env.nextPublicDomain}/api/auth/callback/google`,
     },
   });
 

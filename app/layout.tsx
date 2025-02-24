@@ -1,4 +1,4 @@
-import HeaderAuth from "@/components/header-auth";
+import HeaderAuth from "@/app/(auth)/components/header-auth";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
