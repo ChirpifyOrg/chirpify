@@ -1,4 +1,4 @@
-import { signOutAction } from "@/app/hooks/user/actions";
+import { signOutAction } from "@/app/hooks/auth/actions";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { createClient } from "@/lib/superbase/client";
