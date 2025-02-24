@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "../../../components/ui/button";
 import { createClient } from "@/lib/be/superbase/server";
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserProfile } from "@/app/(user)/components/user_profile";
+import { UserProfile } from "@/app/(user)/components/user_profile_avatar";
 
 export default async function AuthButton() {
   const supabase = await createClient();
