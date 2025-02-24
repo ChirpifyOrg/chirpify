@@ -2,8 +2,8 @@ import { UserUsecase } from "@/be/application/user/usecase";
 import { UserRepositoryImpl } from "@/be/infrastructure/repository/user";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const id = params.id;
+export async function GET(_request: NextRequest, { params }: {params: Promise<{ id: string }>}) {
+  const id = (await params).id
 
   if (!id) {
     return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
