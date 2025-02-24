@@ -2,8 +2,12 @@ import { UserUsecase } from "@/be/application/user/usecase";
 import { UserRepositoryImpl } from "@/be/infrastructure/repository/user";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, context: { params: { id: string } }) {
-  const { id } = context.params; // context에서 params 추출
+export async function GET(request: Request, context: { params?: Record<string, string | string[]> }) {
+  const id = context.params?.id;
+
+  if (!id || Array.isArray(id)) {
+    return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+  }
 
   const repository = new UserRepositoryImpl();
   const usecase = new UserUsecase(repository);
