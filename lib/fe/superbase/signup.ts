@@ -10,7 +10,7 @@ export async function signUpWithGoogle() {
     },
   });
 
-  console.log(`${window.location.origin}/api/auth/callback/google`);
+  console.log(`https://${env.domain}/api/auth/callback/google`);
 
   if (error) {
     throw error;
