@@ -1,18 +1,17 @@
-import { signOutAction } from "@/lib/fe/superbase/actions";
+import { signOutAction } from "@/lib/fe/superbase/sign-out";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { createClient } from "@/lib/fe/superbase/client";
+import { createClient } from "@/lib/be/superbase/server";
 
 export default async function AuthButton() {
   const supabase = await createClient();
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
-
+  } = await supabase.auth.getUser()
+  
   return user ? (
     <div className="flex items-center gap-4">
-      Hey, {user.email}!
       <form action={signOutAction}>
         <Button type="submit" variant={"outline"}>
           Sign out
