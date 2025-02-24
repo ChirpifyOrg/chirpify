@@ -1,11 +1,11 @@
 import { UserUsecase } from "@/be/application/user/usecase";
 import { UserRepositoryImpl } from "@/be/infrastructure/repository/user";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request, context: { params?: Record<string, string | string[]> }) {
-  const id = context.params?.id;
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const id = params.id;
 
-  if (!id || Array.isArray(id)) {
+  if (!id) {
     return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
   }
 
