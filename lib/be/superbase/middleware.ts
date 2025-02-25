@@ -1,6 +1,4 @@
-import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
-import { env } from "@/lib/be/utils/env";
 
 export const updateSession = async (request: NextRequest) => {
   // This `try/catch` block is only here for the interactive tutorial.
@@ -12,29 +10,6 @@ export const updateSession = async (request: NextRequest) => {
         headers: request.headers,
       },
     });
-
-    const supabase = createServerClient(
-      env.nextPublicSupabaseUrl,
-      env.nextPublicSupabaseAnonKey,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value }) =>
-              request.cookies.set(name, value),
-            );
-            response = NextResponse.next({
-              request,
-            });
-            cookiesToSet.forEach(({ name, value, options }) =>
-              response.cookies.set(name, value, options),
-            );
-          },
-        },
-      },
-    );
 
     return response;
   } catch (_error) { 
