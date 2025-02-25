@@ -1,4 +1,4 @@
-name: Build
+name: Build and Lint
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    build-lint:
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
