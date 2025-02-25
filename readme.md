@@ -2,7 +2,9 @@
 
 ## Prerequisite
 
-- Node.js 23.7.0 이상
+- Node.js v22.14.0 이상
+    - vercel에서 현재 v23을 지원하지 않음
+    - nvm을 활용하면 여러 node.js 가상환경 활용 가능
 
 ## How to run
 
