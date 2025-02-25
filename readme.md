@@ -4,6 +4,12 @@
 2. `npm install` 명령어로 패키지를 설치합니다.
 3. `npm run dev` 명령어로 개발 서버를 실행합니다.
 
+## Notice for Development
+
+1. local 환경 env environment는 Bale에게 요청합니다.
+2. prod 환경 env는 vercel에서 관리되고 있습니다.
+3. local 환경에서 로그인을 진행하려면 superbase에서 redirect_url을 수정해야합니다. [여기](https://supabase.com/dashboard/project/qbvcwhzupopjzhqwsjlx/auth/url-configuration)에 접속 후 Site URL을 "http://localhost:3000"으로 수정합니다. 현재 런칭 상태가 아니기에 localhost를 기본으로하고, 상용 환경 QA를 진행할 때만 이를 "https://chirpify.app"으로 수정합니다.
+
 # 패키지 구성
 
 주요 폴더
