@@ -6,7 +6,7 @@ on:
       - '**'
 
 jobs:
-  test:
+  Build and Lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
