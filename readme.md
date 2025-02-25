@@ -1,5 +1,12 @@
 # How to Contribute
 
+## Prerequisite
+
+- Node.js 23.7.0 이상
+
+## How to run
+
+
 1. 프로젝트 루트 경로에 .env.local 파일 생성 후 관리자로부터 시크릿을 전달받아 입력합니다.
 2. `npm install` 명령어로 패키지를 설치합니다.
 3. `npm run dev` 명령어로 개발 서버를 실행합니다.
