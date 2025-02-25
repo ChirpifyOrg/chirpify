@@ -1,6 +1,6 @@
 export class User {
     constructor(
-        public id: number,
+        public id: string,
         public name: string,
         public email: string,
     ) {}
@@ -10,4 +10,5 @@ export class User {
 
 export interface UserRepository {
     findById(id: string): Promise<User | null>;
+    deleteById(id: string): Promise<void>;
 }

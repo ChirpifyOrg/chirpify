@@ -10,6 +10,7 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createClient } from "@/lib/fe/superbase/client";
 import { signOutAction } from "@/lib/fe/superbase/sign-out";
+import Link from "next/link";
 
 export function UserProfile() {
   const [user, setUser] = React.useState<any>(null);
@@ -44,9 +45,11 @@ export function UserProfile() {
         sideOffset={3}
         alignOffset={10}
       >
-        <DropdownMenuItem className="pl-2 pt-1 pb-1">
-          👬 Profile
-        </DropdownMenuItem>
+        <Link href="/profile">
+          <DropdownMenuItem className="pl-2 pt-1 pb-1">
+            👬 Profile
+          </DropdownMenuItem>
+        </Link>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="pl-2 pt-1 pb-1" onClick={signOutAction}>
           🔓 Logout
