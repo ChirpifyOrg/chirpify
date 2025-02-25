@@ -1,3 +1,4 @@
+"use server";
 import { NextResponse } from "next/server";
 // The client you created from the Server-Side Auth instructions
 import { createClient } from "@/lib/be/superbase/server";

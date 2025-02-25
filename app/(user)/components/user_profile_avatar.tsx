@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createClient } from "@/lib/fe/superbase/client";
-import { signOutAction } from "@/lib/fe/superbase/sign-out";
+import { signOutAction } from "@/lib/be/superbase/sign-out";
 import Link from "next/link";
 
 export function UserProfile() {

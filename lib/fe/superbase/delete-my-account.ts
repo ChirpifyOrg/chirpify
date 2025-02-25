@@ -1,3 +1,4 @@
+"use client";
 export const deleteMyAccount = async (): Promise<boolean> => {
   const response = await fetch("/api/user/profile", {
     method: "DELETE",

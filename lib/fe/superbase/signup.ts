@@ -1,3 +1,4 @@
+"use client";
 import { createClient } from "@/lib/fe/superbase/client";
 import { env } from "@/lib/be/utils/env";
 
