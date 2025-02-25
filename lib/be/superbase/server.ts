@@ -1,3 +1,4 @@
+"use server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { env } from "@/lib/be/utils/env";
@@ -28,3 +29,14 @@ export const createClient = async () => {
     },
   );
 };
+
+
+export const getCurrentUser = async () => {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.getUser();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data.user;
+};
+

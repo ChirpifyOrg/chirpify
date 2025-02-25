@@ -6,3 +6,13 @@ export const createClient = () =>
     env.nextPublicSupabaseUrl,
     env.nextPublicSupabaseAnonKey,
   );
+
+
+export const getCurrentUser = async () => {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.getUser();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data.user;
+};
