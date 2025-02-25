@@ -1,0 +1,29 @@
+name: Build and Test
+
+on:
+  push:
+    branches-ignore:
+      - 'main'  # main 브랜치를 제외
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    build-lint:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.10'  # 원하는 Node.js 버전으로 변경 가능
+
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run build
+        run: npm run build
+
+      - name: Run lint
+        run: npx eslint . --fix --no-cache
+
