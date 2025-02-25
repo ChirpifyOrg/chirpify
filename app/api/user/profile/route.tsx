@@ -1,3 +1,4 @@
+"use server";
 import { UserUsecase } from "@/be/application/user/usecase";
 import { UserRepositoryImpl } from "@/be/infrastructure/repository/user";
 import { NextRequest, NextResponse } from "next/server";
