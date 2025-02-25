@@ -30,7 +30,7 @@ export default [
       "react/prop-types": "off",
       "@typescript-eslint/no-empty-interface": "off",
       "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["warn", {
+      "@typescript-eslint/no-unused-vars": ["error", {
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_",
         "caughtErrorsIgnorePattern": "^_"
