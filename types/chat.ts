@@ -7,7 +7,8 @@ export interface Feedback {
     description: string;
   }>;
 }
-// AI 응답 타입
+
+// 기본 AI 응답 타입
 export interface AIResponse {
   answer: string;
   evaluation: {
@@ -28,6 +29,11 @@ export interface AIResponse {
     [key: string]: string;
   };
   difficulty_level: string;
+}
+
+// 피드백용 AI 응답 타입
+export interface AIFeedbackResponse extends Omit<AIResponse, 'answer'> {
+  userMessage: string;
 }
 
 export interface ChatMessage {
