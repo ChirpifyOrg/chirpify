@@ -4,7 +4,7 @@ import { ScrollArea } from "./ui/scroll-area";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { memo, useState } from "react";
-import { ChatMessage, AIResponse, Feedback } from "../types/chat";
+import { ChatMessage, AIResponse } from "../types/chat";
 import { ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "../lib/fe/utils/cn";
@@ -12,34 +12,6 @@ import { mockChatHistoryData } from "../lib/fe/mock/chat-history-data";
 
 // 테스트용 임시 데이터
 const mockMessages: ChatMessage[] = mockChatHistoryData;
-
-// 피드백 컴포넌트
-const FeedbackItem = memo(({ feedback }: { feedback: Feedback }) => {
-  if (feedback.count === 0) return null;
-  
-  return (
-    <div className="mt-2 text-xs text-white/80">
-      <div className="font-semibold">{feedback.issue}</div>
-      {feedback.details.map((detail, index) => (
-        <div key={index} className="ml-2 mt-1">
-          • {detail.description}
-        </div>
-      ))}
-    </div>
-  );
-});
-FeedbackItem.displayName = 'FeedbackItem';
-
-// 평가 점수 컴포넌트
-const EvaluationScore = memo(({ score }: { score: number }) => {
-  return (
-    <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/10">
-      <span className="text-xs text-white/80">점수:</span>
-      <span className="text-sm font-semibold text-white">{score.toFixed(1)}</span>
-    </div>
-  );
-});
-EvaluationScore.displayName = 'EvaluationScore';
 
 // 개별 메시지 컴포넌트
 const MessageItem = memo(({ message, onShowFeedback }: { message: ChatMessage; onShowFeedback: (response: AIResponse) => void }) => {
