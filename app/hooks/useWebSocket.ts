@@ -5,15 +5,21 @@ interface UseWebSocketProps {
   url: string;
   onMessage?: (message: ChatMessage) => void;
   onChallengeTask?: (challengeTask: any) => void;
+  mode?: 'full' | 'trial';
 }
 
-export function useWebSocket({ url, onMessage, onChallengeTask }: UseWebSocketProps) {
+export function useWebSocket({ url, onMessage, onChallengeTask, mode }: UseWebSocketProps) {
   const ws = useRef<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const socket = new WebSocket(url);
+    const wsUrl = new URL(url);
+    if (mode === 'trial') {
+      wsUrl.searchParams.set('trial', 'true');
+    }
+    
+    const socket = new WebSocket(wsUrl.toString());
 
     socket.onopen = () => {
       setIsConnected(true);
@@ -25,7 +31,7 @@ export function useWebSocket({ url, onMessage, onChallengeTask }: UseWebSocketPr
         const data: WebSocketMessage = JSON.parse(event.data);
         
         switch (data.type) {
-          case 'message':
+          case 'chat-message':
             onMessage?.(data.payload);
             break;
           case 'challenge-task':
@@ -54,15 +60,16 @@ export function useWebSocket({ url, onMessage, onChallengeTask }: UseWebSocketPr
     return () => {
       socket.close();
     };
-  }, [url, onMessage, onChallengeTask]);
+  }, [url, onMessage, onChallengeTask, mode]);
 
   const sendMessage = (content: string) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
       ws.current.send(JSON.stringify({
-        type: 'message',
+        type: 'chat-message',
         payload: {
           content,
           timestamp: new Date().toISOString(),
+          isTrial: mode === 'trial'
         },
       }));
     }

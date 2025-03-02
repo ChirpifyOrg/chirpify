@@ -1,6 +1,14 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { useWebSocket } from '../app/hooks/useWebSocket';
-import {  ChallengeTask, ChatMessage } from '../types/chat';
+import { ChallengeTask, ChatMessage } from '../types/chat';
+
+const WS_BASE = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'wss://api.chirpify.io';
+const CHAT_ENDPOINTS = {
+  // AI 채팅 - 영어 대화 연습
+  CONVERSATION: '/ws/chat/conversation',
+  // AI 작문 지원
+  WRITING: '/ws/chat/writing',
+} as const;
 
 export interface WebSocketContextType {
   sendMessage: (content: string) => void;
@@ -27,7 +35,8 @@ export function WebSocketProvider({ children, mode }: WebSocketProviderProps) {
   const [hasMoreMessages] = useState(true);
 
   const { sendMessage, isConnected, error } = useWebSocket({
-    url: process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:8080',
+    url: `${WS_BASE}${CHAT_ENDPOINTS.CONVERSATION}`,
+    mode,
     onMessage: (message) => {
       setMessages(prev => [message, ...prev]);
     },

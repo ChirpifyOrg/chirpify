@@ -49,3 +49,16 @@ export interface ChallengeTask {
   completed: boolean;
   achievedAt?: string;
 }
+
+export type WebSocketEventType = 
+  | 'chat-message'
+  | 'challenge-task'
+
+
+export interface WebSocketMessage<T = any> {
+  type: WebSocketEventType;
+  payload: T;
+  timestamp: string;
+  sessionId?: string;
+}
+
