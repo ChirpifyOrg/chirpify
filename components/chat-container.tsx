@@ -90,7 +90,7 @@ function ChatContainerContent({persona, mode}: ChatContainerProps) {
                         )?.content as string;
                         
                         // answer를 제외한 나머지 속성과 userMessage를 포함하여 AIFeedbackResponse 생성
-                        const { answer, ...rest } = response;
+                        const {  ...rest } = response;
                         setSelectedFeedback({
                             ...rest,
                             userMessage: userMessage || ""
