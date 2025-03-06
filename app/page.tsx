@@ -20,7 +20,7 @@ export default function Home() {
             Try your first lesson for free!
           </h2>
         </div>
-        <div>
+        <div className="w-full max-w-3xl">
           <ChatContainer persona="aru" mode="trial" />
         </div>
       </main>

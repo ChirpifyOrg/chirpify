@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "./ui/button";
 import {
   AlertDialog,
@@ -8,7 +8,7 @@ import {
   AlertDialogTitle,
 } from "@radix-ui/react-alert-dialog";
 import { AlertDialogFooter, AlertDialogHeader } from "./ui/alert-dialog";
-import { MessageSquare, Trophy } from "lucide-react";
+import { MessageSquare, Trophy, Maximize2, Minimize2 } from "lucide-react";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { ChatContent } from "./chat-content";
 import { ChallengeTask } from "./challenge-task";
@@ -25,6 +25,7 @@ import {
   AIFeedbackResponse,
 } from "../types/chat";
 import Image from "next/image";
+import { cn } from "../lib/fe/utils/cn";
 
 interface ChatContainerProps {
   persona: string;
@@ -38,6 +39,9 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
     Number(localStorage.getItem(STORAGE_KEY)) || 0
   );
   const { challengeTasks, sendMessage, messages } = useWebSocketContext();
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [viewportHeight, setViewportHeight] = useState<number>(0);
 
   const [isTrialEnded, setIsTrialEnded] = useState<boolean>(() => {
     if (mode === "trial") {
@@ -50,12 +54,61 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
   const [isAchievementsOpen, setIsAchievementsOpen] = useState<boolean>(false);
   const [selectedFeedback, setSelectedFeedback] =
     useState<AIFeedbackResponse | null>(null);
+  const [containerWidth, setContainerWidth] = useState<number>(0);
 
   useEffect(() => {
     if (mode === "trial" && messageCount >= maxTrialCount) {
       setIsTrialEnded(true);
     }
   }, [messageCount, mode, maxTrialCount]);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      setContainerWidth(window.innerWidth);
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  useEffect(() => {
+    const updateViewportHeight = () => {
+      const height = window.visualViewport?.height || window.innerHeight;
+      const additionalHeight = window.visualViewport?.height 
+        ? window.innerHeight - window.visualViewport.height + 500 
+        : 0;
+      setViewportHeight(height + additionalHeight);
+    };
+
+    window.visualViewport?.addEventListener('resize', updateViewportHeight);
+    window.visualViewport?.addEventListener('scroll', updateViewportHeight);
+    updateViewportHeight();
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', updateViewportHeight);
+      window.visualViewport?.removeEventListener('scroll', updateViewportHeight);
+    };
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
 
   const handleSendMessage = (content: string) => {
     sendMessage(content);
@@ -68,29 +121,66 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
     }
   };
 
-  // 가장 최근 AI 응답 가져오기
   const lastAIResponse =
     (messages.filter((m) => m.sender === "assistant").slice(-1)[0]
       ?.content as AIResponseType) || "";
+  
+  const getPanelStyle = () => {
+    return {
+      width: '70%',
+      position: 'absolute' as const,
+      left: '50%',
+      top: containerWidth < 768 ? '60px' : '20px',
+      transform: 'translateX(-50%)',
+      transition: 'transform 0.3s ease-in-out, top 0.3s ease-in-out',
+      zIndex: 30
+    };
+  };
 
   return (
     <div
-      className="relative"
+      ref={containerRef}
+      className={cn(
+        "relative transition-all duration-300 ease-in-out overflow-hidden",
+        isFullscreen && "fixed inset-0 z-50 bg-black"
+      )}
       style={{
-        width: "300px",
+        width: "100%",
         height: "auto",
         minHeight: "320px",
+        margin: "0 auto"
       }}
     >
-      {/* <img
-        src={`/images/${persona}.png`}
-        alt={persona}
-        style={{ width: "100%", height: "auto" }}
-      /> */}
-      <Image src={`/images/${persona}.png`} alt={persona} fill />
+      <div className={cn(
+        "relative w-full",
+        isFullscreen ? "h-[100dvh]" : "h-[320px] md:h-[400px] lg:h-[480px]"
+      )}>
+        <Image 
+          src={`/images/${persona}.png`} 
+          alt={persona} 
+          fill
+          className={cn(
+            "transition-all duration-300",
+            isFullscreen ? "object-cover" : ""
+          )}
+          priority
+        />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-4 left-4 h-8 w-8 text-white/60 hover:text-white bg-black/40 hover:bg-black/60"
+          onClick={toggleFullscreen}
+        >
+          {isFullscreen ? (
+            <Minimize2 className="h-5 w-5" />
+          ) : (
+            <Maximize2 className="h-5 w-5" />
+          )}
+        </Button>
+      </div>
 
       {/* 우측 상단 버튼 그룹 */}
-      <div className="absolute top-4 right-4 flex gap-2 z-10">
+      <div className="absolute top-4 right-4 flex gap-2 z-50">
         <Button
           variant="outline"
           size="icon"
@@ -117,7 +207,6 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
           <ChatContent
             messages={messages}
             onShowFeedback={(response) => {
-              // 해당 AI 응답 직전의 사용자 메시지 찾기
               const userMessage = messages.find(
                 (m) =>
                   m.sender === "user" &&
@@ -125,7 +214,6 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
                     new Date((response as any).timestamp).getTime()
               )?.content as string;
 
-              // answer를 제외한 나머지 속성과 userMessage를 포함하여 AIFeedbackResponse 생성
               const { ...rest } = response;
               setSelectedFeedback({
                 ...rest,
@@ -145,7 +233,7 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
       {/* 도전과제 패널 */}
       <ChallengeTask
         isOpen={isAchievementsOpen}
-        containerWidth={800}
+        style={getPanelStyle()}
         challenge={mockChallengeData[0]}
       />
 

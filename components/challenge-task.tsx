@@ -4,18 +4,15 @@ import { AIResponse } from "../types/chat";
 
 interface ChallengeTaskProps {
   isOpen?: boolean;
-  containerWidth: number;
+  style?: React.CSSProperties;
   challenge?: AIResponse;
 }
 
 export function ChallengeTask({
   isOpen,
-  containerWidth,
+  style,
   challenge,
 }: ChallengeTaskProps) {
-  const panelWidth = containerWidth - 200;
-  const leftPosition = `calc(50% - ${panelWidth / 2}px)`;
-
   if (!challenge) return null;
 
   return (
@@ -25,9 +22,9 @@ export function ChallengeTask({
         isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       )}
       style={{
-        width: `${panelWidth}px`,
-        left: leftPosition,
-        top: "10px",
+        ...style,
+        transform: isOpen ? 'translate(-50%, 0)' : 'translate(50%, 0)',
+        transition: 'transform 0.3s ease-in-out, opacity 0.3s ease-in-out'
       }}
     >
       <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/20 shadow-lg p-3">
