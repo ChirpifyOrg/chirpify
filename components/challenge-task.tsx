@@ -8,22 +8,26 @@ interface ChallengeTaskProps {
   challenge?: AIResponse;
 }
 
-export function ChallengeTask({ isOpen, containerWidth, challenge }: ChallengeTaskProps) {
+export function ChallengeTask({
+  isOpen,
+  containerWidth,
+  challenge,
+}: ChallengeTaskProps) {
   const panelWidth = containerWidth - 200;
-  const leftPosition = `calc(50% - ${panelWidth/2}px)`;
+  const leftPosition = `calc(50% - ${panelWidth / 2}px)`;
 
   if (!challenge) return null;
-  
+
   return (
-    <div 
+    <div
       className={cn(
         "absolute transition-all duration-300 ease-in-out transform",
         isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       )}
-      style={{ 
+      style={{
         width: `${panelWidth}px`,
         left: leftPosition,
-        top: "10px"
+        top: "10px",
       }}
     >
       <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/20 shadow-lg p-3">
@@ -37,4 +41,4 @@ export function ChallengeTask({ isOpen, containerWidth, challenge }: ChallengeTa
       </div>
     </div>
   );
-} 
+}
