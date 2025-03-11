@@ -10,7 +10,7 @@ interface MessageInputProps {
 
 export function MessageInput({ input, setInput, handleSend }: MessageInputProps) {
   return (
-    <div className="flex items-center gap-2 w-full bg-white/10 backdrop-blur-sm p-2 ">
+    <div className="flex items-center gap-2 w-full bg-[rgb(30,30,30)] backdrop-blur-sm p-2 ">
       <Input
         type="text"
         value={input}

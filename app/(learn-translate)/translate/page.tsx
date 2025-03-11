@@ -21,8 +21,8 @@ export default function ChatUI() {
   };
 
   return (
-    <div className="flex-wrap w-full flex p-4 mx-auto">
-      <div className="sm:w-4/4 md:w-3/4 flex gap-4 box-border">
+    <div className="flex-wrap w-full flex p-2 mx-auto">
+      <div className="sm:w-4/4 md:w-3/4 flex w-full gap-4 box-border">
         <MessageList messages={messages} />
       </div>
       <div className="sm:w-4/4 md:w-1/4 flex gap-4 box-border">
