@@ -4,28 +4,24 @@ import { AIResponse } from "../types/chat";
 
 interface ChallengeTaskProps {
   isOpen?: boolean;
-  style?: React.CSSProperties;
   challenge?: AIResponse;
+  style?: React.CSSProperties;
 }
 
 export function ChallengeTask({
   isOpen,
-  style,
   challenge,
+  style,
 }: ChallengeTaskProps) {
   if (!challenge) return null;
 
   return (
     <div
       className={cn(
-        "absolute transition-all duration-300 ease-in-out transform",
-        isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+        "absolute transition-all duration-300 ease-in-out",
+        isOpen ? "opacity-100" : "opacity-0"
       )}
-      style={{
-        ...style,
-        transform: isOpen ? 'translate(-50%, 0)' : 'translate(50%, 0)',
-        transition: 'transform 0.3s ease-in-out, opacity 0.3s ease-in-out'
-      }}
+      style={style}
     >
       <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-white/20 shadow-lg p-3">
         <div className="flex items-center gap-2 mb-2">
