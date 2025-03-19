@@ -1,5 +1,5 @@
 "use client";
-
+import { ChatContainer } from "@/components/chat-container";
 export default function Home() {
   return (
     <>
@@ -14,8 +14,7 @@ export default function Home() {
         <h2 className="font-medium text-2xl mb-4">
           Try your first lesson for free!
         </h2>
-
-        <img src="/images/aru.png" alt="Aru"  style={{ width: "800px", height: "auto" }} />
+        <ChatContainer persona="aru" mode="trial" />
       </main>
     </>
   );
