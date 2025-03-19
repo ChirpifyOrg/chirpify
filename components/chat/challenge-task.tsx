@@ -1,6 +1,6 @@
 import { Trophy } from "lucide-react";
-import { cn } from "../lib/fe/utils/cn";
-import { AIResponse } from "../types/chat";
+import { cn } from "@/lib/fe/utils/cn";
+import { AIResponse } from "@/types/chat";
 
 interface ChallengeTaskProps {
   isOpen?: boolean;

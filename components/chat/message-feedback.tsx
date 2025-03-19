@@ -1,9 +1,9 @@
 import { memo } from 'react';
-import { AIFeedbackResponse, Feedback } from '../types/chat';
+import { AIFeedbackResponse, Feedback } from '@/types/chat';
 import { DialogContent, DialogTitle } from '@radix-ui/react-dialog';
-import { DialogHeader } from './ui/dialog';
-import { ScrollArea } from './ui/scroll-area';
-import { getUserLanguage } from '../lib/fe/utils/language';
+import { DialogHeader } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { getUserLanguage } from '@/lib/fe/utils/language';
 
 // 피드백 컴포넌트
 const FeedbackItem = memo(({ feedback }: { feedback: Feedback }) => {

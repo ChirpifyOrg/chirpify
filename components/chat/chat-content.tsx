@@ -1,14 +1,14 @@
 import { DialogContent, DialogTitle } from '@radix-ui/react-dialog';
-import { DialogHeader } from './ui/dialog';
-import { ScrollArea } from './ui/scroll-area';
+import { DialogHeader } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { memo, useState, useEffect } from 'react';
-import { ChatMessage, AIResponse, AIFeedbackResponse } from '../types/chat';
+import { ChatMessage, AIResponse, AIFeedbackResponse } from '@/types/chat';
 import { ChevronDown } from 'lucide-react';
-import { Button } from './ui/button';
-import { cn } from '../lib/fe/utils/cn';
-import { mockChatHistoryData } from '../lib/fe/mock/chat-history-data';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/fe/utils/cn';
+import { mockChatHistoryData } from '@/lib/fe/mock/chat-history-data';
 
 // 개별 메시지 컴포넌트
 const MessageItem = memo(

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import {
    AlertDialog,
    AlertDialogAction,
@@ -7,22 +7,22 @@ import {
    AlertDialogDescription,
    AlertDialogTitle,
 } from '@radix-ui/react-alert-dialog';
-import { AlertDialogFooter, AlertDialogHeader } from './ui/alert-dialog';
+import { AlertDialogFooter, AlertDialogHeader } from '@/components/ui/alert-dialog';
 import { MessageSquare, Trophy, Maximize2, Minimize2 } from 'lucide-react';
 import { Dialog, DialogTrigger } from '@radix-ui/react-dialog';
 import { ChatContent } from './chat-content';
 import { ChallengeTask } from './challenge-task';
 import { MessageFeedback } from './message-feedback';
-import { AIResponse } from './ai-response';
+import { AIResponse } from '@/components/chat/ai-response';
 import { ChatInput } from './chat-input';
-import { mockChallengeData } from '../lib/fe/mock/challenge-data';
+import { mockChallengeData } from '@/lib/fe/mock/challenge-data';
 import Image from 'next/image';
-import { cn } from '../lib/fe/utils/cn';
-import { useTrialMode } from '../app/hooks/useTrialMode';
-import { useFullscreen } from '../app/hooks/useFullscreen';
-import { useContainerDimensions } from '../app/hooks/useContainerDimensions';
-import { useChat } from '../app/hooks/useChat';
-import { mockChatHistoryData } from '../lib/fe/mock/chat-history-data';
+import { cn } from '@/lib/fe/utils/cn';
+import { useTrialMode } from '@/app/hooks/useTrialMode';
+import { useFullscreen } from '@/app/hooks/useFullscreen';
+import { useContainerDimensions } from '@/app/hooks/useContainerDimensions';
+import { useChat } from '@/app/hooks/useChat';
+import { mockChatHistoryData } from '@/lib/fe/mock/chat-history-data';
 
 interface ChatContainerProps {
    persona: string;
@@ -49,7 +49,7 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
       handleSendMessage,
       lastAIResponse,
    } = useChat(mockChatHistoryData);
-
+   console.log(messages);
    // 도전과제 패널 스타일
    const getChallengePanelStyle = () => ({
       width: containerWidth < 768 ? '90%' : '70%',
