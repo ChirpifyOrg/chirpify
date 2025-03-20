@@ -1,8 +1,10 @@
+// issue의 경우 타입이 지정되어있으나, 기능 개발이 좀더 된 이후에 적용도록 하겠음.
 export interface Feedback {
    issue: string;
    description: string;
 }
 
+// 감정표현 
 type Emotion =
    | 'Calm'
    | 'Joy'
@@ -19,8 +21,11 @@ type Emotion =
    | 'Confusion'
    | 'Doubt';
 
+type ChatRole = 'User' | 'Assistant';
+type DifficultyLevel = | 'Easy' | 'Medium' | 'Hard';
+
 // 기본 AI 응답 타입
-export interface AIResponse {
+export interface ChatAIData {
    message: string;
    evaluation: {
       comprehension: number;
@@ -39,12 +44,30 @@ export interface AIResponse {
       en: string;
       [key: string]: string;
    };
-   difficulty_level: string;
+   difficulty_level: DifficultyLevel;
    emotion: Emotion;
 }
 
+export interface ChatAIInfo {
+   persona : string;
+   gpt_model : string;
+   
+}
+export interface ChatUserData {
+
+}
+
+
+export interface ChatHistory {
+   id : string;
+   roomId : string;
+   message : string;
+   role : ChatRole;
+}
+
+
 // 피드백용 AI 응답 타입
-export interface AIFeedbackResponse extends Omit<AIResponse, 'answer'> {
+export interface AIFeedbackResponse extends Omit<ChatAIResponse, 'answer'> {
    userMessage: string;
 }
 
