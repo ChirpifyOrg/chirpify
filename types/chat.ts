@@ -4,7 +4,7 @@ export interface Feedback {
    description: string;
 }
 
-// 감정표현 
+// 감정표현
 type Emotion =
    | 'Calm'
    | 'Joy'
@@ -22,49 +22,67 @@ type Emotion =
    | 'Doubt';
 
 type ChatRole = 'User' | 'Assistant';
-type DifficultyLevel = | 'Easy' | 'Medium' | 'Hard';
+type DifficultyLevel = 'Easy' | 'Medium' | 'Hard';
 
 // 기본 AI 응답 타입
-export interface ChatAIData {
+export interface AIChatAPIResponse {
    message: string;
    evaluation: {
       comprehension: number;
-      grammar_accuracy: number;
-      sentence_naturalness: number;
-      vocabulary_naturalness: number;
+      grammarAccuracy: number;
+      sentenceNaturalness: number;
+      vocabularyNaturalness: number;
    };
-   total_score: number;
+   totalScore: number;
    feedback: {
-      grammar_accuracy: Feedback[];
-      sentence_naturalness: Feedback[];
-      vocabulary_naturalness: Feedback[];
+      grammarAccuracy: Feedback[];
+      sentenceNaturalness: Feedback[];
+      vocabularyNaturalness: Feedback[];
       comprehension: Feedback[];
    };
-   total_feedback: {
+   totalFeedback: {
       en: string;
       [key: string]: string;
    };
-   difficulty_level: DifficultyLevel;
+   difficultyLevel: DifficultyLevel;
    emotion: Emotion;
 }
 
-export interface ChatAIInfo {
-   persona : string;
-   gpt_model : string;
-   
-}
-export interface ChatUserData {
-
+// 모델 정보
+export interface StoredChatAIModelInfo {
+   persona: string;
+   gptModel: string;
+   createdAt: string;
 }
 
-
+//
 export interface ChatHistory {
-   id : string;
-   roomId : string;
-   message : string;
-   role : ChatRole;
+   id: string;
+   roomId: string;
+   message: string;
+   role: ChatRole;
 }
 
+export interface ClientChatRequest {
+   roomId: string;
+   message: string;
+}
+
+export interface StoredUserChatMessage {
+   id: string;
+   content: {
+      message: string;
+   };
+   roomId: string;
+   createdAt: string;
+}
+
+export interface StoredAIChatMessage {
+   id: string;
+   content: GPTAPIResponse;
+   roomId: string;
+   createdAt: string;
+}
 
 // 피드백용 AI 응답 타입
 export interface AIFeedbackResponse extends Omit<ChatAIResponse, 'answer'> {
