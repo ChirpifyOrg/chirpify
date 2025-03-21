@@ -48,64 +48,62 @@ export interface AIChatAPIResponse {
    emotion: Emotion;
 }
 
+
+
 // 모델 정보
-export interface StoredChatAIModelInfo {
+export interface StoredAIChatOpenAIModel {
+   id : string;
    persona: string;
    gptModel: string;
    createdAt: string;
 }
 
-//
-export interface ChatHistory {
+// 채팅방 정보
+export interface StoredAIChatRoom  {
+   id : string;
+   modelId : string;
+   userId : string;
+   createdAt : string;
+}
+
+// 채팅 히스토리 (채팅 형식 출력용)
+export interface AIChatSimpleFormatHistory {
    id: string;
    roomId: string;
    message: string;
    role: ChatRole;
 }
 
-export interface ClientChatRequest {
-   roomId: string;
-   message: string;
+export interface StoredChatMessageBase {
+   id : string;
+   roomId : string;
+   message : string;
+   createdAt : string;
 }
 
-export interface StoredUserChatMessage {
-   id: string;
+
+export interface StoredUserChatMessage extends StoredChatMessageBase {
    content: {
       message: string;
+      nativeLanguage : string;
    };
-   roomId: string;
-   createdAt: string;
 }
 
-export interface StoredAIChatMessage {
-   id: string;
-   content: GPTAPIResponse;
-   roomId: string;
-   createdAt: string;
+export interface StoredAIChatMessage extends StoredChatMessageBase {
+   content: AIChatAPIResponse;
 }
 
-// 피드백용 AI 응답 타입
-export interface AIFeedbackResponse extends Omit<ChatAIResponse, 'answer'> {
-   userMessage: string;
-}
-
-export interface UserChatMessage {
-   id: string;
-   content: string;
-   role: 'user';
-   timestamp: string;
-}
-
-export interface ChatMessage {
-   id: string;
-   content: string | AIResponse;
-   role: 'user' | 'assistant';
-   timestamp: string;
-}
 
 export interface ChallengeTask {
    id: string;
    description: string;
    completed: boolean;
    achievedAt?: string;
+}
+
+
+
+export interface ClientChatRequest {
+   roomId: string;
+   message: string;
 }

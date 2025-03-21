@@ -13,12 +13,12 @@ import { mockChatHistoryData } from '@/lib/fe/mock/chat-history-data';
 // 개별 메시지 컴포넌트
 const MessageItem = memo(
    ({ message, onShowFeedback }: { message: ChatMessage; onShowFeedback: (response: AIResponse) => void }) => {
-      const isAIResponse = message.sender === 'assistant' && typeof message.content === 'object';
+      const isAIResponse = message.message === 'Assistant' && typeof message.content === 'object';
       const aiResponse = isAIResponse ? (message.content as AIResponse) : null;
       const content = isAIResponse && aiResponse ? aiResponse.answer : String(message.content);
 
       return (
-         <div className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+         <div className={`flex ${message.role === 'User' ? 'justify-end' : 'justify-start'}`}>
             <div
                className={`rounded-2xl px-4 py-2 max-w-[80%] ${
                   message.sender === 'user' ? 'bg-white/20 text-white' : 'bg-white/10 text-white'
