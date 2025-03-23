@@ -49,7 +49,7 @@ export default [
                format: ['camelCase'],
             },
          ],
-         camelcase: ['error', { properties: 'always' }],
+         camelcase: ['error', { properties: 'as-needed' }],
       },
       settings: {
          react: {
