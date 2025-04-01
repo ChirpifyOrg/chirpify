@@ -30,15 +30,15 @@ const Settings: React.FC = () => {
         </div>
         <div className="flex-1">대화 주제</div>
         <div className="flex gap-2">
-          <button className="flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 transition-colors">
+          <button className="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 transition-colors">
             Search
           </button>
         </div>
-        <div className="flex gap-2">
-        <button className="flex-1 px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 transition-colors ml-auto">
-        Generate a sentence
+        <div className="flex gap-2 w-fit">
+          <button className="p-2 bg-gray-700 rounded hover:bg-gray-600 cursor-pointer transition-colors">
+            Generate a sentence
           </button>
-          </div>
+        </div>
       </div>
     </div>
   );

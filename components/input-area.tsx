@@ -11,7 +11,7 @@ const InputArea: React.FC = () => {
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
         placeholder="Type..."
-        className="flex-1 bg-transparent outline-none resize-none min-h-[40px] max-h-[120px] overflow-y-auto"
+        className="flex-1 bg-transparent outline-none resize-none min-h-[40px] max-h-[120px] overflow-y-auto align-middle py-2"
         rows={1}
       />
       <button className="px-4 py-2 border border-gray-600 rounded hover:bg-gray-700 transition-colors">

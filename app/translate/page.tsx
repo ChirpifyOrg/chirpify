@@ -1,24 +1,28 @@
 import React from 'react';
-import NativeLanguageArea from '../../components/NativeLanguageArea';
-import ChatArea from '../../components/ChatArea';
-import InputArea from '../../components/InputArea';
-import Settings from '../../components/Settings';
-import History from '../../components/History';
+import NativeLanguageArea from '@/components/native-language-area';
+import FeedbackArea from '@/components/feedback-area';
+import InputArea from '@/components/input-area';
+import Settings from '@/components/settings';
+import History from '@/components/history';
+
+
 
 const Layout: React.FC = () => {
   return (
-    <div className="flex w-10/12 m-1 h-90vh bg-gray-900 text-white">
+    <div className="flex w-full md:w-10/12 sd:w-full m-1 h-90vh bg-gray-900 text-white">
       {/* 왼쪽 채팅 영역 */}
-      <div className="flex-[2] flex flex-col border-r border-gray-700">
+      <div className="sm:w-full md:w-4/5 flex flex-col border-r border-gray-700">
         <NativeLanguageArea />
-        <ChatArea />
+        <FeedbackArea />
         <InputArea />
       </div>
 
       {/* 오른쪽 설정 영역 */}
-      <div className="flex-1 p-3 space-y-5 flex flex-col">
-        <Settings />
-        <div className="flex-1 overflow-y-auto">
+      <div className="w-full sm:w-full md:w-1/5 space-y-3 flex flex-col" style={{ overflowX: 'auto' }}>
+        <div className="w-full p-3 ">
+          <Settings />
+        </div>
+        <div className="w-full p-3 flex-1 overflow-y-auto">
           <History />
         </div>
       </div>
