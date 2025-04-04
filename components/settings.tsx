@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Modal from './modal'; // 모달 컴포넌트 임포트
+import Modal from './setting-modal'; // 모달 컴포넌트 임포트
 
 const Settings: React.FC = () => {
   const [difficulty, setDifficulty] = useState<number>(1);
