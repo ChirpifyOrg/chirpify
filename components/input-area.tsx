@@ -3,8 +3,33 @@
 import React, { useState, useRef } from 'react';
 
 const InputArea: React.FC = () => {
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState<string>('');
   const isComposingRef = useRef(false);
+
+  const handleSend = async () => {
+    const trimmedText = inputText.trim(); // 공백 제거
+    if (trimmedText) { // 빈 문자열이 아닐 때만 전송
+      const question = "사용자가 물어본 질문"; // 실제 질문으로 대체
+      const answer = trimmedText; // 사용자가 입력한 텍스트를 답변으로 사용
+
+      const response = await fetch('/api/translate/feedback', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              question,
+              answer,
+          }),
+      });
+
+      console.log(response);
+
+      const result = await response.json();
+      console.log(result); // 결과 처리
+      setInputText(''); // 전송 후 입력 필드 초기화
+    }
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // 한글 조합 중일 때는 Enter 키 처리를 건너뜁니다
@@ -30,14 +55,6 @@ const InputArea: React.FC = () => {
 
   const handleCompositionEnd = () => {
     isComposingRef.current = false;
-  };
-
-  const handleSend = () => {
-    const trimmedText = inputText.trim(); // 공백 제거
-    if (trimmedText) { // 빈 문자열이 아닐 때만 전송
-      //console.log('전송된 텍스트:', trimmedText);
-      setInputText(''); // 전송 후 입력 필드 초기화
-    }
   };
 
   return (

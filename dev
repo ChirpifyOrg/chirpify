@@ -1,0 +1,144 @@
+> next dev -H 0.0.0.0
+
+   ▲ Next.js 15.1.7
+   - Local:        http://localhost:3000
+   - Network:      http://0.0.0.0:3000
+   - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 2.2s
+ ✓ Compiled /middleware in 158ms (99 modules)
+ ○ Compiling /translate ...
+ ✓ Compiled /translate in 2.7s (1245 modules)
+ ✓ Compiled in 150ms (461 modules)
+ GET /translate 200 in 1487ms
+ ⨯ ./app/api/translate/route.tsx
+Error:   × Did you mean "use server"? "use Server" is not a supported directive name."
+  │ 
+   ╭─[/Users/b/Downloads/chirpify/app/api/translate/route.tsx:1:1]
+ 1 │ "use Server";
+   · ────────────
+ 2 │ import { NextRequest, NextResponse } from "next/server";
+ 3 │ import { TranslateLearnAIService } from "@/be/infrastructure/service/translate-learn-AI-service";
+   ╰────
+
+Import trace for requested module:
+./app/api/translate/route.tsx
+ ○ Compiling /_not-found ...
+ ⨯ ./app/api/translate/route.tsx
+Error:   × Did you mean "use server"? "use Server" is not a supported directive name."
+  │ 
+   ╭─[/Users/b/Downloads/chirpify/app/api/translate/route.tsx:1:1]
+ 1 │ "use Server";
+   · ────────────
+ 2 │ import { NextRequest, NextResponse } from "next/server";
+ 3 │ import { TranslateLearnAIService } from "@/be/infrastructure/service/translate-learn-AI-service";
+   ╰────
+
+Import trace for requested module:
+./app/api/translate/route.tsx
+ ⨯ ./app/api/translate/route.tsx
+Error:   × Did you mean "use server"? "use Server" is not a supported directive name."
+  │ 
+   ╭─[/Users/b/Downloads/chirpify/app/api/translate/route.tsx:1:1]
+ 1 │ "use Server";
+   · ────────────
+ 2 │ import { NextRequest, NextResponse } from "next/server";
+ 3 │ import { TranslateLearnAIService } from "@/be/infrastructure/service/translate-learn-AI-service";
+   ╰────
+
+Import trace for requested module:
+./app/api/translate/route.tsx
+ ⨯ ./app/api/translate/route.tsx
+Error:   × Did you mean "use server"? "use Server" is not a supported directive name."
+  │ 
+   ╭─[/Users/b/Downloads/chirpify/app/api/translate/route.tsx:1:1]
+ 1 │ "use Server";
+   · ────────────
+ 2 │ import { NextRequest, NextResponse } from "next/server";
+ 3 │ import { TranslateLearnAIService } from "@/be/infrastructure/service/translate-learn-AI-service";
+   ╰────
+
+Import trace for requested module:
+./app/api/translate/route.tsx
+ POST /api/translate 500 in 1679ms
+ GET /translate 500 in 359ms
+ GET /translate 500 in 6ms
+ GET /translate 500 in 6ms
+ GET /translate 500 in 12ms
+ ⨯ ./app/api/translate/route.tsx
+Error:   × Did you mean "use server"? "use Server" is not a supported directive name."
+  │ 
+   ╭─[/Users/b/Downloads/chirpify/app/api/translate/route.tsx:1:1]
+ 1 │ "use Server";
+   · ────────────
+ 2 │ import { NextRequest, NextResponse } from "next/server";
+ 3 │ import { TranslateLearnAIService } from "@/be/infrastructure/service/translate-learn-AI-service";
+   ╰────
+
+Import trace for requested module:
+./app/api/translate/route.tsx
+ GET /_next/static/webpack/02495976a16613f9.webpack.hot-update.json 500 in 1219ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET / 500 in 1241ms
+ GET /translate 500 in 11ms
+ ✓ Compiled / in 246ms (664 modules)
+ GET /translate 500 in 20ms
+ ✓ Compiled in 159ms (661 modules)
+ GET /translate 500 in 7ms
+ ✓ Compiled /_not-found in 429ms (1480 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /_next/static/webpack/02495976a16613f9.webpack.hot-update.json 404 in 1391ms
+ GET /translate 200 in 664ms
+ GET /translate 200 in 69ms
+ ○ Compiling /api/translate ...
+ ✓ Compiled /api/translate in 567ms (959 modules)
+ ⨯ Error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the doc
+ ⨯ Error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+    at async OpenAIChatService.generateResponse (be/infrastructure/service/OpenAIChatService.ts:18:25)
+    at async TranslateLearnAIService.generateLearningContent (be/infrastructure/service/translate-learn-AI-service.ts:41:21)
+    at async POST (app/api/translate/route.tsx:13:19)
+  16 |    }
+  17 |    async generateResponse(request: ChatCompletionCreateParamsNonStreaming): Promise<ChatCompletion> {
+> 18 |       const completion = await this.client.chat.completions.create(request);
+     |                         ^
+  19 |
+  20 |       if (!completion.choices[0].message.content) {
+  21 |          throw new Error('No content generated'); {
+  status: 429,
+  headers: [Object],
+  request_id: 'req_72aa3ba83cd1cafb522924c9ee361653',
+  error: [Object],
+  code: 'insufficient_quota',
+  param: null,
+  type: 'insufficient_quota'
+}
+ ⨯ Error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the doc
+ ⨯ Error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+    at async OpenAIChatService.generateResponse (be/infrastructure/service/OpenAIChatService.ts:18:25)
+    at async TranslateLearnAIService.generateLearningContent (be/infrastructure/service/translate-learn-AI-service.ts:41:21)
+    at async POST (app/api/translate/route.tsx:13:19)
+  16 |    }
+  17 |    async generateResponse(request: ChatCompletionCreateParamsNonStreaming): Promise<ChatCompletion> {
+> 18 |       const completion = await this.client.chat.completions.create(request);
+     |                         ^
+  19 |
+  20 |       if (!completion.choices[0].message.content) {
+  21 |          throw new Error('No content generated'); {
+  status: 429,
+  headers: [Object],
+  request_id: 'req_72aa3ba83cd1cafb522924c9ee361653',
+  error: [Object],
+  code: 'insufficient_quota',
+  param: null,
+  type: 'insufficient_quota'
+}
+ POST /api/translate 500 in 4760ms
+^C
+npm notice
+npm notice New major version of npm available! 10.9.2 -> 11.3.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.3.0
+npm notice To update run: npm install -g npm@11.3.0
+npm notice
+
+npm run dev
