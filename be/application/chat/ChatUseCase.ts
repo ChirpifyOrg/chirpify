@@ -30,8 +30,8 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
       await this.requestValidate(request);
       const stream = await this.requestChatStreaming(request);
       for await (const chunk of stream) {
-         responseChunk.push(chunk);
-         onData(chunk);
+         responseChunk.push(chunk as string);
+         onData(chunk as string);
       }
       const response = responseChunk.join('');
       const formattedResponse = this.formatResponse(response as R);
@@ -49,7 +49,7 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
       return this.chatService.generateResponse(request);
    }
    /* 비동기 스트리밍 요청 */
-   protected async requestChatStreaming(request: U): Promise<AsyncIterable<string>> {
+   protected async requestChatStreaming(request: U): Promise<AsyncIterable<unknown>> {
       return this.chatService.generateResponseStream(request);
    }
 
