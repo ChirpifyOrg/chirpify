@@ -2,18 +2,17 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/be/superbase/server';
 import { ClientChatRequest } from '@/types/chat';
-import { ChatServiceFactory } from '@/be/domain/ChatServiceFactory';
 import { OpenAIChatService } from '@/be/infrastructure/service/OpenAIChatService';
-import { ChatRepositoryImpl } from '@/be/infrastructure/repository/Chat';
-import { AIModelRepositoryImpl } from '@/be/infrastructure/repository/AIModel';
+import { ChatRepositoryImpl } from '@/be/infrastructure/repository/ChatRepository';
+import { AIModelRepositoryImpl } from '@/be/infrastructure/repository/AIModelRepository';
 import { AuthenticationChatUseCase } from '@/be/application/chat/AuthenticationChatUseCase';
 import { env } from '@/lib/be/utils/env';
 
 export async function POST(request: Request) {
    const superbase = await createClient();
    const { roomId, message, nativeLanguage, isTrial }: ClientChatRequest = await request.json();
-   const { data, error } = await superbase.auth.getUser();
-   const user = data?.user;
+   const { data } = await superbase.auth.getUser();
+   //    const user = data?.user;
    try {
       const service = new OpenAIChatService(env.openAPIKey);
       const chatRepository = new ChatRepositoryImpl();

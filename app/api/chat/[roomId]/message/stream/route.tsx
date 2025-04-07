@@ -6,14 +6,18 @@ import { OpenAIChatService } from '@/be/infrastructure/service/OpenAIChatService
 import { env } from '@/lib/be/utils/env';
 import { AuthenticationChatUseCase } from '@/be/application/chat/AuthenticationChatUseCase';
 
-import { AIModelRepositoryImpl } from '@/be/infrastructure/repository/AIModel';
-import { ChatRepositoryImpl } from '@/be/infrastructure/repository/Chat';
+import { AIModelRepositoryImpl } from '@/be/infrastructure/repository/AIModelRepository';
+import { ChatRepositoryImpl } from '@/be/infrastructure/repository/ChatRepository';
 import { ClientChatRequest } from '@/types/chat';
+import { AuthError } from '@supabase/supabase-js';
 
 export async function POST(request: Request) {
    const { roomId, message, nativeLanguage, isTrial }: ClientChatRequest = await request.json();
    const superbase = await createClient();
    const { data, error } = await superbase.auth.getUser();
+   if (error) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+   }
    const user = data?.user;
    const encoder = new TextEncoder();
    const stream = new ReadableStream({
