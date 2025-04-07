@@ -19,7 +19,7 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
 
    async processChat(request: U): Promise<T> {
       await this.requestValidate(request);
-      const response = await this.requestChat(request);
+      const response = await this.chatService.generateResponse(request);
       const formattedResponse = this.formatResponse(response);
       await this.storeChat(request, formattedResponse);
       return formattedResponse;
@@ -28,7 +28,7 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
    async processChatStreaming(request: U, onData: (chunk: string) => void): Promise<void> {
       let responseChunk: string[] = [];
       await this.requestValidate(request);
-      const stream = await this.requestChatStreaming(request);
+      const stream = await this.chatService.generateResponseStream(request);
       for await (const chunk of stream) {
          responseChunk.push(chunk as string);
          onData(chunk as string);
@@ -44,14 +44,14 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
    /* 원본 응답 -> 클라이언트 전달 타입 변환 로직 */
    protected abstract formatResponse(originResponse: R): T;
 
-   /*  비동기 요청 */
-   protected async requestChat(request: U): Promise<R> {
-      return this.chatService.generateResponse(request);
-   }
-   /* 비동기 스트리밍 요청 */
-   protected async requestChatStreaming(request: U): Promise<AsyncIterable<unknown>> {
-      return this.chatService.generateResponseStream(request);
-   }
+   // /*  비동기 요청 */
+   // protected async requestChat(request: U): Promise<R> {
+   //    return this.chatService.generateResponse(request);
+   // }
+   // /* 비동기 스트리밍 요청 */
+   // protected async requestChatStreaming(request: U): Promise<AsyncIterable<unknown>> {
+   //    return this.chatService.generateResponseStream(request);
+   // }
 
    protected abstract requestValidate(request: U): Promise<void>;
 
