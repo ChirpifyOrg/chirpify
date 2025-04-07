@@ -38,18 +38,6 @@ export default [
                caughtErrorsIgnorePattern: '^_',
             },
          ],
-         '@typescript-eslint/naming-convention': [
-            'error',
-            {
-               selector: 'property',
-               format: ['camelCase'],
-            },
-            {
-               selector: 'typeProperty',
-               format: ['camelCase'],
-            },
-         ],
-         camelcase: ['error', { properties: 'as-needed' }],
       },
       settings: {
          react: {
