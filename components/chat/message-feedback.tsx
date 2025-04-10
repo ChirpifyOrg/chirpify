@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { AIFeedbackResponse, Feedback } from '@/types/chat';
+import { Feedback } from '@/types/chat';
 import { DialogContent, DialogTitle } from '@radix-ui/react-dialog';
 import { DialogHeader } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';

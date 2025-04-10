@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,7 +23,6 @@ import { useTrialMode } from '@/app/hooks/useTrialMode';
 import { useFullscreen } from '@/app/hooks/useFullscreen';
 import { useContainerDimensions } from '@/app/hooks/useContainerDimensions';
 import { useChat } from '@/app/hooks/useChat';
-import { mockChatHistoryData } from '@/lib/fe/mock/chat-history-data';
 import { getUserLanguage } from '@/lib/fe/utils/language';
 
 interface ChatContainerProps {
@@ -30,11 +30,15 @@ interface ChatContainerProps {
    mode: 'full' | 'trial';
 }
 
-function ChatContainerContent({ persona, mode }: ChatContainerProps) {
+export function ChatContainer({ persona, mode }: ChatContainerProps) {
+   const isStreaming = false;
    const containerRef = useRef<HTMLDivElement>(null);
+
    // testdata
    const [challengeTasks] = useState(mockChallengeData);
-   console.log(mockChallengeData);
+
+   const [isExpanded, setIsExpanded] = useState(false);
+   const [selectedFeedback, setSelectedFeedback] = useState<any | null>(null);
 
    const [isChallengeTaskOpen, setIsChallengeTaskOpen] = useState<boolean>(false);
    // 메시지 카운트 관련
@@ -43,15 +47,7 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
    const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
    // 컨테이너 크기 관련
    const { containerHeight, containerWidth } = useContainerDimensions(containerRef);
-   const {
-      messages,
-      selectedFeedback,
-      isExpanded,
-      setSelectedFeedback,
-      setIsExpanded,
-      handleSendMessage,
-      lastAIResponse,
-   } = useChat(mockChatHistoryData);
+   const { aiStreamedMessage, aiFullResponse, handleSendMessage } = useChat();
 
    // 도전과제 패널 스타일
    const getChallengePanelStyle = () => ({
@@ -90,7 +86,7 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
 
    // 메시지 전송 핸들러
    const onSendMessage = (message: string) => {
-      handleSendMessage({ roomId: '1', message, nativeLanguage: getUserLanguage() });
+      handleSendMessage({ roomId: '1', message, nativeLanguage: getUserLanguage() }, isStreaming);
       incrementMessageCount();
    };
 
@@ -150,9 +146,6 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
                   style={getChatContentStyle(containerHeight, containerWidth)}
                   isExpanded={isExpanded}
                   onExpand={() => setIsExpanded(!isExpanded)}
-                  // onShowFeedback={response => {
-                  //    setSelectedFeedback(response);
-                  // }}
                />
             </Dialog>
             <Dialog open={!!selectedFeedback} onOpenChange={open => !open && setSelectedFeedback(null)}>
@@ -162,7 +155,7 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
 
          <ChallengeTask isOpen={isChallengeTaskOpen} style={getChallengePanelStyle()} challenge={mockChallengeData} />
 
-         <AIResponse response={lastAIResponse as string} persona={persona} />
+         <AIResponse response={isStreaming ? aiStreamedMessage : aiFullResponse?.message} persona={persona} />
 
          <ChatInput
             onSend={onSendMessage}
@@ -195,8 +188,4 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
          )}
       </div>
    );
-}
-
-export function ChatContainer(props: ChatContainerProps) {
-   return <ChatContainerContent {...props} />;
 }

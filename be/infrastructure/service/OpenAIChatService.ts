@@ -16,11 +16,9 @@ export class OpenAIChatService
    }
    async generateResponse(request: ChatCompletionCreateParamsNonStreaming): Promise<ChatCompletion> {
       const completion = await this.client.chat.completions.create(request);
-
       if (!completion.choices[0].message.content) {
          throw new Error('No content generated');
       }
-
       return completion;
    }
    async generateResponseStream(

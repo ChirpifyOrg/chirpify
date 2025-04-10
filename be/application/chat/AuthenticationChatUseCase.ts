@@ -1,9 +1,4 @@
-import {
-   AIChatAPIResponse,
-   AIChatAPIResponseSchema,
-   AuthenticatedClientChatReuqest,
-   ClientChatRequest,
-} from '@/types/chat';
+import { AIChatAPIResponse, AIChatAPIResponseSchema, AuthenticatedClientChatReuqest } from '@/types/chat';
 import { ChatUseCase } from './ChatUseCase';
 import { ChatCompletionChunk, ChatCompletion as GPTChatFormat } from 'openai/resources';
 import { ChatRepository } from '@/be/domain/chat/ChatRepository';
@@ -49,11 +44,13 @@ export class AuthenticationChatUseCase extends ChatUseCase<
          const validatedResponse = AIChatAPIResponseSchema.parse(response);
          return validatedResponse;
       } catch (e) {
+         console.error(e);
          throw new Error('Method not implemented.');
       }
    }
    protected async requestValidate(request: AuthenticatedClientChatReuqest): Promise<void> {
       // TODO : 여기서 방의 소유권을 확인하는 절차 작성.
+      const { userId, roomId } = request;
    }
 
    async processChatStreaming(request: AuthenticatedClientChatReuqest, onData: (chunk: string) => void): Promise<void> {

@@ -6,25 +6,7 @@ export interface Feedback {
    description: string;
 }
 
-// 감정표현
-type Emotion =
-   | 'Calm'
-   | 'Joy'
-   | 'Sadness'
-   | 'Anger'
-   | 'Fear'
-   | 'Surprise'
-   | 'Discomfort'
-   | 'Love'
-   | 'Shame'
-   | 'Confidence'
-   | 'Jealousy'
-   | 'Guilt'
-   | 'Confusion'
-   | 'Doubt';
-
 type ChatRole = 'User' | 'Assistant';
-type DifficultyLevel = 'Easy' | 'Medium' | 'Hard';
 
 // 기본 AI 응답 타입
 
@@ -102,7 +84,7 @@ export const FeedbackSchema = z.object({
 
 // AIChatAPIResponse 스키마 정의
 export const AIChatAPIResponseSchema = z.object({
-   message: z.string(),
+   message: z.string().default(''),
    evaluation: z.object({
       comprehension: z.number().default(0),
       grammar_accuracy: z.number().default(0),
@@ -144,3 +126,86 @@ export const AIChatAPIResponseSchema = z.object({
 });
 
 export type AIChatAPIResponse = z.infer<typeof AIChatAPIResponseSchema>;
+
+/**
+ * AIChatAPIResponse 객체를 NDJSON 문자열로 변환
+ * 의미 있는 섹션별로 줄 단위 JSON 객체 생성
+ */
+export function convertAIChatResponseToNDJSON(data: AIChatAPIResponse): string {
+   const ndjsonLines: string[] = [];
+
+   // message
+   ndjsonLines.push(JSON.stringify({ type: 'message', value: data.message }));
+
+   // evaluation
+   ndjsonLines.push(JSON.stringify({ type: 'evaluation', value: data.evaluation }));
+
+   // total_score
+   ndjsonLines.push(JSON.stringify({ type: 'total_score', value: data.total_score }));
+
+   // feedback per category
+   for (const [key, value] of Object.entries(data.feedback)) {
+      ndjsonLines.push(JSON.stringify({ type: 'feedback', category: key, value }));
+   }
+
+   // total_feedback (병합된 객체)
+   ndjsonLines.push(JSON.stringify({ type: 'total_feedback', value: data.total_feedback }));
+
+   // difficulty_level
+   ndjsonLines.push(JSON.stringify({ type: 'difficulty_level', value: data.difficulty_level }));
+
+   // emotion
+   ndjsonLines.push(JSON.stringify({ type: 'emotion', value: data.emotion }));
+
+   return ndjsonLines.join('\n');
+}
+
+export function parseNDJSONToAIChatResponse(ndjson: string): AIChatAPIResponse {
+   const lines = ndjson.trim().split('\n');
+
+   const result: any = {
+      message: '',
+      evaluation: {},
+      total_score: 0,
+      feedback: {
+         grammar_accuracy: [],
+         sentence_naturalness: [],
+         vocabulary_naturalness: [],
+         comprehension: [],
+      },
+      total_feedback: {},
+      difficulty_level: 'Medium', // 기본값
+      emotion: 'Calm', // 기본값
+   };
+
+   for (const line of lines) {
+      const obj = JSON.parse(line);
+
+      switch (obj.type) {
+         case 'message':
+            result.message = obj.value;
+            break;
+         case 'evaluation':
+            result.evaluation = obj.value;
+            break;
+         case 'total_score':
+            result.total_score = obj.value;
+            break;
+         case 'feedback':
+            result.feedback[obj.category] = obj.value;
+            break;
+         case 'total_feedback':
+            result.total_feedback = obj.value;
+            break;
+         case 'difficulty_level':
+            result.difficulty_level = obj.value;
+            break;
+         case 'emotion':
+            result.emotion = obj.value;
+            break;
+      }
+   }
+
+   // Zod 스키마로 유효성 검사 (필요 시 에러 throw)
+   return AIChatAPIResponseSchema.parse(result);
+}

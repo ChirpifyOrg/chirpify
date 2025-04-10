@@ -1,57 +1,38 @@
 'use server';
 import { NextResponse } from 'next/server';
-// The client you created from the Server-Side Auth instructions
 import { createClient } from '@/lib/be/superbase/server';
-import { OpenAIChatService } from '@/be/infrastructure/service/OpenAIChatService';
-import { env } from '@/lib/be/utils/env';
-import { AuthenticationChatUseCase } from '@/be/application/chat/AuthenticationChatUseCase';
-
-import { AIModelRepositoryImpl } from '@/be/infrastructure/repository/AIModelRepository';
-import { ChatRepositoryImpl } from '@/be/infrastructure/repository/ChatRepository';
 import { ClientChatRequest } from '@/types/chat';
-import { AuthError } from '@supabase/supabase-js';
+import { ChatUseCaseFactory } from '@/be/application/chat/ChatUseCaseFactory';
+import { createChatRequest } from '@/be/application/chat/Dtos';
 
 export async function POST(request: Request) {
    const { roomId, message, nativeLanguage, isTrial }: ClientChatRequest = await request.json();
    const superbase = await createClient();
    const { data, error } = await superbase.auth.getUser();
+   const isLoggedIn = !error && data?.user != null;
+   const testUser = { id: 'test-user-id', email: 'test@example.com' };
+
    if (error) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
    }
-   const user = data?.user;
+
+   const userId = isLoggedIn ? data?.user?.id : testUser.id;
+
    const encoder = new TextEncoder();
    const stream = new ReadableStream({
       async start(controller) {
          // 콜백용 함수 선언
+         // TODO : NDJSON 형식으로 Prompt단에서 변경이 필요.
          const cb = (data: string) => {
             controller.enqueue(encoder.encode(data));
          };
-         const service = new OpenAIChatService(env.openAPIKey);
-         const chatRepository = new ChatRepositoryImpl();
-         const aiModelRepository = new AIModelRepositoryImpl();
-         const useCase = new AuthenticationChatUseCase(service, chatRepository, aiModelRepository);
+         const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, isTrial ?? false);
+
          await useCase.processChatStreaming(
-            {
-               message,
-               nativeLanguage,
-               userId: '1',
-               isTrial,
-               roomId,
-            },
+            createChatRequest({ message, nativeLanguage, roomId }, userId, isTrial),
             cb,
          );
          controller.close();
-         // 추후 NDJSON 형식으로 변경시 아래 포멧처럼 구현할것.
-         // const dataChunks = [
-         //    { type: 'message', value: "Hello! I'm doing well, thank you!" },
-         //    { type: 'evaluation', category: 'comprehension', value: 4 },
-         //    { type: 'evaluation', category: 'grammar_accuracy', value: 4 },
-         //    { type: 'evaluation', category: 'sentence_naturalness', value: 4 },
-         //    { type: 'evaluation', category: 'vocabulary_naturalness', value: 4 },
-         //    { type: 'total_score', value: 4 },
-         //    { type: 'difficulty_level', value: 'Easy' },
-         //    { type: 'emotion', value: 'Joy' },
-         // ];
       },
    });
 
