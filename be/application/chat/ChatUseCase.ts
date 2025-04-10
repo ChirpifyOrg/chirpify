@@ -2,6 +2,7 @@ import { AIModelRepository } from '@/be/domain/chat/AIModelRepository';
 import { ChatRepository } from '@/be/domain/chat/ChatRepository';
 import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
 import { ClientChatRequest } from '@/types/chat';
+import { ChatRoomRepository } from '@/be/domain/chat/ChatRoomRepository';
 
 /**
  * @description 채팅 관련 UseCase 추상 클래스
@@ -15,11 +16,14 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
       protected chatService: ApiResponseGenerator<unknown, R>,
       protected chatRepository: ChatRepository,
       protected aiModelRepository: AIModelRepository,
+      protected chatRoomRepository: ChatRoomRepository,
    ) {}
 
    async processChat(request: U): Promise<T> {
       await this.requestValidate(request);
-      const response = await this.chatService.generateResponse(request);
+      const modelInfo = await this.chatRoomRepository.findByIdWidthModel(request.roomId);
+      const promptInput = await this.formatRequest(request, modelInfo);
+      const response = await this.chatService.generateResponse(promptInput);
       const formattedResponse = this.formatResponse(response);
       await this.storeChat(request, formattedResponse);
       return formattedResponse;
@@ -28,7 +32,9 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
    async processChatStreaming(request: U, onData: (chunk: string) => void): Promise<void> {
       let responseChunk: string[] = [];
       await this.requestValidate(request);
-      const stream = await this.chatService.generateResponseStream(request);
+      const modelInfo = await this.chatRoomRepository.findByIdWidthModel(request.roomId);
+      const promptInput = await this.formatRequest(request, modelInfo);
+      const stream = await this.chatService.generateResponseStream(promptInput);
       for await (const chunk of stream) {
          responseChunk.push(chunk as string);
          onData(chunk as string);
@@ -44,17 +50,8 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
    /* 원본 응답 -> 클라이언트 전달 타입 변환 로직 */
    protected abstract formatResponse(originResponse: R): T;
 
-   // /*  비동기 요청 */
-   // protected async requestChat(request: U): Promise<R> {
-   //    return this.chatService.generateResponse(request);
-   // }
-   // /* 비동기 스트리밍 요청 */
-   // protected async requestChatStreaming(request: U): Promise<AsyncIterable<unknown>> {
-   //    return this.chatService.generateResponseStream(request);
-   // }
-
+   protected abstract formatRequest(request: U, modelInfo: unknown): unknown;
    protected abstract requestValidate(request: U): Promise<void>;
-
    protected async storeChat(request: U, response: T): Promise<void> {
       await this.chatRepository.saveChat(request, response);
    }
