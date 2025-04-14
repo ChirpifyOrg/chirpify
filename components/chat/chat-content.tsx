@@ -1,6 +1,6 @@
 import { DialogContent, DialogTitle } from '@radix-ui/react-dialog';
 import { DialogHeader } from '@/components/ui/dialog';
-import { ScrollArea, ScrollAreaOnScroll, ScrollAreaTest, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollAreaOnScroll } from '@/components/ui/scroll-area';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { memo, useState, useEffect, useRef } from 'react';
@@ -8,7 +8,6 @@ import { AIChatSimpleFormatHistory } from '@/types/chat';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/fe/utils/cn';
-import { mockChatHistoryData } from '@/lib/fe/mock/chat-history-data';
 import { onShowFeedBackFn } from '@/app/hooks/useFeedBack';
 import { useSimpleChatStore } from '@/app/state/chatStore';
 
@@ -108,50 +107,20 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
                roomId: '2',
                message: `${Date.now() + Math.random()}`,
                role: 'User',
-               createdAt: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+               createdAt: new Date(Date.now() - 1000 * 60).toISOString(),
             },
             {
                id: `${Date.now() + 1 + Math.random()}`,
                roomId: '2',
                message: `${Date.now() + Math.random()}`,
                role: 'Assistant',
-               createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
-            },
-            {
-               id: `${Date.now() + 2 + Math.random()}`,
-               roomId: '2',
-               message: `${Date.now() + Math.random()}`,
-               role: 'Assistant',
-               createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
-            },
-            {
-               id: `${Date.now() + 3 + Math.random()}`,
-               roomId: '2',
-               message: `${Date.now() + Math.random()}`,
-               role: 'Assistant',
-               createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
-            },
-            {
-               id: `${Date.now() + 4 + Math.random()}`,
-               roomId: '3',
-               message: `${Date.now() + Math.random()}`,
-               role: 'Assistant',
-               createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+               createdAt: new Date(Date.now() - 1000 * 60 ).toISOString(),
             },
          ] as AIChatSimpleFormatHistory[];
 
          prependMessage({ roomId, messages: [...newMessages] });
          console.log('prependMessage');
-         // requestAnimationFrame(() => {
-         //    const container = scrollContainerRef.current;
-         //    const previousScrollHeight = container?.scrollHeight ?? 0;
-         //    if (container) {
-         //       console.log('requestAnimate');
-         //       const newScrollHeight = container.scrollHeight;
-         //       const scrollDiff = newScrollHeight - previousScrollHeight;
-         //       container.scrollTop = scrollDiff;
-         //    }
-         // });
+        
       } catch (error) {
          console.error('Error loading messages:', error);
       } finally {
@@ -175,8 +144,9 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
             if (scrollContainerRef.current) {
                scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
 
-               setInit(true);
+             
                loadMoreMessages(); // 초기 메시지 이후 추가 로딩
+               setInit(true);
                // 100ms 딜레이로 안정성 보장
             }
          }, 100);

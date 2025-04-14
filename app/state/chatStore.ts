@@ -27,7 +27,7 @@ export const useSimpleChatStore = create(
          appendMessage: ({ roomId, messages }) => {
             set(state => {
                const combined = [...(state.messages[roomId] || []), ...messages];
-               combined.sort((a, b) => Number(a.id) - Number(b.id));
+               combined.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
                return {
                   messages: {
                      ...state.messages,
@@ -48,7 +48,7 @@ export const useSimpleChatStore = create(
          prependMessage: ({ roomId, messages }) => {
             set(state => {
                const combined = [...messages, ...(state.messages[roomId] || [])];
-               combined.sort((a, b) => Number(a.id) - Number(b.id));
+               combined.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
                return {
                   messages: {
                      ...state.messages,
