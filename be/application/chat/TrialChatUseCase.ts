@@ -3,7 +3,7 @@ import { ChatUseCase } from './ChatUseCase';
 import { ChatCompletion } from 'openai/resources';
 import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions';
 
-export class trialChatUseCase extends ChatUseCase<AIChatAPIResponse, ClientChatRequest, ChatCompletion> {
+export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, ClientChatRequest, ChatCompletion> {
    protected formatResponse(originResponse: ChatCompletion): AIChatAPIResponse {
       throw new Error('Method not implemented.');
    }
