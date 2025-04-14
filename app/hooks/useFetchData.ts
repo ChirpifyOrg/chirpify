@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-async function fetchWithTypedBody<Req, Res>(url: string, options?: RequestInit & { body?: Req }): Promise<Res> {
+export async function fetchWithTypedBody<Req, Res>(url: string, options?: RequestInit & { body?: Req }): Promise<Res> {
    const response = await fetch(url, {
       ...options,
       body: options?.body ? JSON.stringify(options.body) : undefined,
@@ -33,7 +33,7 @@ export function useFetchData<Res>(url: string, options?: RequestInit) {
             if (err instanceof Error) {
                setError(err.message);
             } else {
-               setError('An unknown error occurred');
+               setError('알 수 없는 오류가 발생했습니다');
             }
          } finally {
             setLoading(false);
@@ -41,7 +41,7 @@ export function useFetchData<Res>(url: string, options?: RequestInit) {
       };
 
       fetchData();
-   }, [url]);
+   }, [url, options]);
 
    return { data, loading, error };
 }

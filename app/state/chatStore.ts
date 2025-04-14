@@ -1,27 +1,112 @@
-// store/chatStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { ClientStoredAIChatMessage } from '@/types/chat';
+import { AIChatSimpleFormatHistory } from '@/types/chat';
+
+import { mockChatHistoryData } from '@/lib/fe/mock/chat-history-data';
+
+type useSimpleStoreAddParam = {
+   roomId: string;
+   messages: AIChatSimpleFormatHistory[];
+};
 
 // Zustand 스토어 생성 (persist 미들웨어 포함)
-export const useChatStore = create(
+export const useSimpleChatStore = create(
    persist<{
-      messages: ClientStoredAIChatMessage;
-      addMessage: (message: any) => void;
-      setMessages: (messages: ClientStoredAIChatMessage) => void;
-      clearMessages: () => void;
+      messages: Record<string, AIChatSimpleFormatHistory[]>;
+      appendMessage: ({ roomId, messages }: useSimpleStoreAddParam) => void;
+      prependMessage: ({ roomId, messages }: useSimpleStoreAddParam) => void;
+      setMessages: ({ roomId, messages }: useSimpleStoreAddParam) => void;
+      clearAllMessages: () => void;
+      clearMessages: (roomId: string) => void;
+      getMessage: (roomId: string) => AIChatSimpleFormatHistory[];
+      startIndex: Record<string, string | null>;
+      endIndex: Record<string, string | null>;
    }>(
-      set => ({
-         messages: [],
-         addMessage: message =>
+      (set, get) => ({
+         messages: { '1': mockChatHistoryData },
+         appendMessage: ({ roomId, messages }) => {
+            set(state => {
+               const combined = [...(state.messages[roomId] || []), ...messages];
+               combined.sort((a, b) => Number(a.id) - Number(b.id));
+               return {
+                  messages: {
+                     ...state.messages,
+                     [roomId]: combined,
+                  },
+                  startIndex: {
+                     ...state.startIndex,
+                     [roomId]: state.startIndex[roomId] ?? combined[0]?.id,
+                  },
+                  endIndex: {
+                     ...state.endIndex,
+                     [roomId]: combined[combined.length - 1]?.id,
+                  },
+               };
+            });
+         },
+
+         prependMessage: ({ roomId, messages }) => {
+            set(state => {
+               const combined = [...messages, ...(state.messages[roomId] || [])];
+               combined.sort((a, b) => Number(a.id) - Number(b.id));
+               return {
+                  messages: {
+                     ...state.messages,
+                     [roomId]: combined,
+                  },
+                  startIndex: {
+                     ...state.startIndex,
+                     [roomId]: combined[0]?.id,
+                  },
+                  endIndex: {
+                     ...state.endIndex,
+                     [roomId]: state.endIndex[roomId] ?? combined[combined.length - 1]?.id,
+                  },
+               };
+            });
+         },
+         setMessages: ({ roomId, messages }) => {
             set(state => ({
-               messages: [...state.messages, message],
-            })),
-         setMessages: messages => set({ messages }),
-         clearMessages: () => set({ messages: [] }),
+               messages: {
+                  ...state.messages,
+                  [roomId]: messages,
+               },
+               startIndex: {
+                  ...state.startIndex,
+                  [roomId]: messages[0]?.id,
+               },
+               endIndex: {
+                  ...state.endIndex,
+                  [roomId]: messages[messages.length - 1]?.id,
+               },
+            }));
+         },
+
+         clearAllMessages: () => {
+            set({ messages: {}, startIndex: {}, endIndex: {} });
+         },
+         clearMessages: roomId => {
+            set(state => ({
+               messages: { ...state.messages, [roomId]: [] },
+               startIndex: {
+                  ...state.startIndex,
+                  [roomId]: null,
+               },
+               endIndex: {
+                  ...state.endIndex,
+                  [roomId]: null,
+               },
+            }));
+         },
+         getMessage: roomId => {
+            const state = get();
+            return state.messages[roomId] || [];
+         },
+         startIndex: {},
+         endIndex: {},
       }),
       {
-         name: 'ai-chat-message-persist',
+         name: 'ai-chat-simple-message-persist',
          storage: createJSONStorage(() => localStorage),
          // SSR/SSG 환경에서 안전하게 사용하기 위한 조건 추가
          skipHydration: typeof window === 'undefined',

@@ -1,17 +1,24 @@
 import { DialogContent, DialogTitle } from '@radix-ui/react-dialog';
 import { DialogHeader } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollAreaOnScroll, ScrollAreaTest, ScrollBar } from '@/components/ui/scroll-area';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { memo, useState, useEffect } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import { AIChatSimpleFormatHistory } from '@/types/chat';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/fe/utils/cn';
 import { mockChatHistoryData } from '@/lib/fe/mock/chat-history-data';
+import { onShowFeedBackFn } from '@/app/hooks/useFeedBack';
+import { useSimpleChatStore } from '@/app/state/chatStore';
 
+type MessageItemProps = {
+   message: AIChatSimpleFormatHistory;
+   onShowFeedback: onShowFeedBackFn;
+   beforeMessage: string;
+};
 // 개별 메시지 컴포넌트
-const MessageItem = memo(({ message }: { message: AIChatSimpleFormatHistory }) => {
+const MessageItem = memo(({ message, onShowFeedback, beforeMessage }: MessageItemProps) => {
    return (
       <div className={`flex ${message.role === 'User' ? 'justify-end' : 'justify-start'}`}>
          <div
@@ -19,19 +26,20 @@ const MessageItem = memo(({ message }: { message: AIChatSimpleFormatHistory }) =
                message.role === 'User' ? 'bg-white/20 text-white' : 'bg-white/10 text-white'
             }`}>
             <div className="text-sm">{message.message}</div>
-            {/* {isAIResponse && aiResponse && ( */}
-            <div className="mt-2 flex items-center gap-2">
-               <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2 text-xs text-white/60 hover:text-white hover:bg-white/10"
-                  // onClick={() => onShowFeedback(aiResponse)}
-               >
-                  <ChevronDown className="h-3 w-3 mr-1" />
-                  Show Feedback
-               </Button>
-            </div>
-            {/* )} */}
+            {message.role === 'User' ? (
+               <></>
+            ) : (
+               <div className="mt-2 flex items-center gap-2">
+                  <Button
+                     variant="ghost"
+                     size="sm"
+                     className="h-6 px-2 text-xs text-white/60 hover:text-white hover:bg-white/10"
+                     onClick={() => onShowFeedback({ messageId: message.id, clientSendMessage: beforeMessage })}>
+                     <ChevronDown className="h-3 w-3 mr-1" />
+                     Show Feedback
+                  </Button>
+               </div>
+            )}
             <div className="text-xs mt-1 text-white/60">
                {format(new Date(message.createdAt), 'a h:mm', { locale: ko })}
             </div>
@@ -42,40 +50,151 @@ const MessageItem = memo(({ message }: { message: AIChatSimpleFormatHistory }) =
 MessageItem.displayName = 'MessageItem';
 
 // 메시지 목록 컴포넌트
-const MessageList = memo(({ messages }: { messages: AIChatSimpleFormatHistory[] }) => {
-   if (messages.length === 0) {
-      return <div className="text-center text-white/60 py-8">아직 대화 내용이 없습니다.</div>;
-   }
-
-   return (
-      <div className="flex flex-col gap-3">
-         {messages.map(message => (
-            <MessageItem key={message.id} message={message} />
-         ))}
-      </div>
-   );
-});
+const MessageList = memo(
+   ({ messages, onShowFeedback }: { messages: AIChatSimpleFormatHistory[]; onShowFeedback: onShowFeedBackFn }) => {
+      if (messages.length === 0) {
+         return <div className="text-center text-white/60 py-8">아직 대화 내용이 없습니다.</div>;
+      }
+      return (
+         <div className="flex flex-col gap-3">
+            {messages.map((message, index) => {
+               return (
+                  <MessageItem
+                     key={message.id}
+                     onShowFeedback={onShowFeedback}
+                     message={message}
+                     beforeMessage={messages[index - 1]?.message ?? ''}
+                  />
+               );
+            })}
+         </div>
+      );
+   },
+);
 MessageList.displayName = 'MessageList';
 
 interface ChatContentProps {
    style?: React.CSSProperties;
-   messageKey?: string;
+   onShowFeedback: onShowFeedBackFn;
    isExpanded?: boolean;
    onExpand?: () => void;
+   roomId: string;
+   isOpen: boolean;
 }
+export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpand, roomId }: ChatContentProps) {
+   const { prependMessage, startIndex, endIndex } = useSimpleChatStore.getState();
+   const messages = useSimpleChatStore(state => state.messages[roomId] ?? []);
+   const [page, setPage] = useState(1);
+   const [isInit, setInit] = useState<boolean>(false);
 
-export function ChatContent({ style, messageKey, onShowFeedback, isExpanded, onExpand }: ChatContentProps) {
-   const [messages] = useState<AIChatSimpleFormatHistory[]>(mockChatHistoryData);
+   const [isLoading, setIsLoading] = useState(false);
    const contentHeight = style?.maxHeight ? parseInt(style.maxHeight as string) : 320;
    const scrollAreaHeight = Math.max(contentHeight - 60, 100);
 
-   useEffect(() => {
-      if (messageKey) {
-         // TODO: messageKey에 따라 다른 메시지 세트를 로드하는 로직
-         // setMessages(loadMessages(messageKey));
-      }
-   }, [messageKey]);
+   const scrollContainerRef = useRef<HTMLDivElement>(null);
+   const scrollBottom = useRef<HTMLDivElement>(null);
 
+   const loadMoreMessages = async () => {
+      console.log(`isLoading? :${isLoading}`);
+      if (isLoading) return;
+
+      setIsLoading(true);
+
+      try {
+         // 실제에선 startIndex 또는 현재 메시지 중 가장 오래된 ID 기준으로 fetch
+         const newMessages = [
+            {
+               id: `${Date.now() + Math.random()}`,
+               roomId: '2',
+               message: `${Date.now() + Math.random()}`,
+               role: 'User',
+               createdAt: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+            },
+            {
+               id: `${Date.now() + 1 + Math.random()}`,
+               roomId: '2',
+               message: `${Date.now() + Math.random()}`,
+               role: 'Assistant',
+               createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+            },
+            {
+               id: `${Date.now() + 2 + Math.random()}`,
+               roomId: '2',
+               message: `${Date.now() + Math.random()}`,
+               role: 'Assistant',
+               createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+            },
+            {
+               id: `${Date.now() + 3 + Math.random()}`,
+               roomId: '2',
+               message: `${Date.now() + Math.random()}`,
+               role: 'Assistant',
+               createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+            },
+            {
+               id: `${Date.now() + 4 + Math.random()}`,
+               roomId: '3',
+               message: `${Date.now() + Math.random()}`,
+               role: 'Assistant',
+               createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+            },
+         ] as AIChatSimpleFormatHistory[];
+
+         prependMessage({ roomId, messages: [...newMessages] });
+         console.log('prependMessage');
+         // requestAnimationFrame(() => {
+         //    const container = scrollContainerRef.current;
+         //    const previousScrollHeight = container?.scrollHeight ?? 0;
+         //    if (container) {
+         //       console.log('requestAnimate');
+         //       const newScrollHeight = container.scrollHeight;
+         //       const scrollDiff = newScrollHeight - previousScrollHeight;
+         //       container.scrollTop = scrollDiff;
+         //    }
+         // });
+      } catch (error) {
+         console.error('Error loading messages:', error);
+      } finally {
+         setIsLoading(false);
+      }
+   };
+
+   // 1단계: 초기 메시지 세팅
+   useEffect(() => {
+      console.log('set Data)');
+   }, [roomId]);
+
+   // 2단계: 메시지 렌더 이후 스크롤 바닥 이동 및 초기화
+   useEffect(() => {
+      console.log(isOpen);
+
+      requestAnimationFrame(() => {
+         console.log('req Frame in Effect current?: ', scrollContainerRef.current);
+         setTimeout(() => {
+            console.log('ref : ', scrollContainerRef.current);
+            if (scrollContainerRef.current) {
+               scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+
+               setInit(true);
+               loadMoreMessages(); // 초기 메시지 이후 추가 로딩
+               // 100ms 딜레이로 안정성 보장
+            }
+         }, 100);
+      });
+   }, [isOpen]);
+
+   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+      console.log(`isInit in Scroll ${isInit} , isLoading ${isLoading}`);
+      console.log(`scrollContainerRef.current : `, scrollContainerRef.current);
+      const { scrollTop } = event.currentTarget;
+      if (!isInit || isLoading) return; // 초기화가 안됬거나 로딩중이면
+
+      if (scrollTop < 50) {
+         console.log('scrollTop < 50');
+         loadMoreMessages();
+         // 다음 렌더 후 스크롤 위치 보정
+      }
+   };
    return (
       <DialogContent
          className={cn(
@@ -93,11 +212,17 @@ export function ChatContent({ style, messageKey, onShowFeedback, isExpanded, onE
                </div>
             </div>
          </DialogHeader>
-         <ScrollArea style={{ height: scrollAreaHeight }}>
+         <ScrollAreaOnScroll
+            scrollRef={scrollContainerRef}
+            style={{ height: scrollAreaHeight }}
+            onScrollCb={handleScroll}
+            className="w-full">
             <div className="p-4">
-               <MessageList messages={messages} />
+               <MessageList messages={messages ?? []} onShowFeedback={onShowFeedback} />
+               {isLoading && <div className="text-center py-2 text-white/60">Loading more messages...</div>}
             </div>
-         </ScrollArea>
+            <div ref={scrollBottom}></div>
+         </ScrollAreaOnScroll>
       </DialogContent>
    );
 }
