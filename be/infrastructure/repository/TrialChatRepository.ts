@@ -1,6 +1,6 @@
 import { ChatRepository } from '@/be/domain/chat/ChatRepository';
 
-export class TrailChatRepositoryImpl implements ChatRepository {
+export class TrialChatRepositoryImpl implements ChatRepository {
    saveChat(data: any, data2: any): Promise<void> {
       throw new Error('Method not implemented.');
    }

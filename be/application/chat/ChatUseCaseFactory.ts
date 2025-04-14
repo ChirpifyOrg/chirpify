@@ -1,9 +1,9 @@
 import { ClientChatRequest } from '@/types/chat';
 import { ChatUseCase } from './ChatUseCase';
 import { AuthenticationChatUseCase } from './AuthenticationChatUseCase';
-import { TrailChatUseCase } from './TrailChatUseCase';
+import { TrialChatUseCase } from './trialChatUseCase';
 import { ChatRepositoryImpl } from '@/be/infrastructure/repository/ChatRepository';
-import { TrailChatRepositoryImpl } from '@/be/infrastructure/repository/TrailChatRepository';
+import { TrialChatRepositoryImpl } from '@/be/infrastructure/repository/trialChatRepository';
 import { OpenAIChatService } from '@/be/infrastructure/service/OpenAIChatService';
 import { AIModelRepositoryImpl } from '@/be/infrastructure/repository/AIModelRepository';
 import { env } from '@/lib/be/utils/env';
@@ -42,9 +42,9 @@ export class ChatUseCaseFactory {
             );
             break;
          case 'trial':
-            useCase = new TrailChatUseCase(
+            useCase = new TrialChatUseCase(
                new OpenAIChatService(env.openAPIKey),
-               new TrailChatRepositoryImpl(),
+               new TrialChatRepositoryImpl(),
                new AIModelRepositoryImpl(),
             );
             break;

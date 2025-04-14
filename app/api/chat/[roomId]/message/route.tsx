@@ -12,7 +12,7 @@ export async function POST(request: Request) {
    const isLoggedIn = !error && data?.user != null;
    const testUser = { id: 'test-user-id', email: 'test@example.com' };
 
-   if (error) {
+   if (error && !isTrial) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
    }
    const userId = isLoggedIn ? data?.user?.id : testUser.id;
