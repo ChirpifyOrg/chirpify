@@ -1,4 +1,5 @@
 export interface ChatRoomRepository {
-   createRoom();
-   findByIdWidthModel(roomId: string);
+   createRoom({ userId, modelId }: { userId: string; modelId: string });
+   findByIdWithModel(roomId: string);
+   getRoomIdByUserIdAndModelId({ userId, modelId }: { userId: string; modelId: string });
 }

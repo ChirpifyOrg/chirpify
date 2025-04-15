@@ -1,6 +1,25 @@
 'use client';
 import { ChatContainer } from '@/components/chat/chat-container';
+import { trialRoomCreate } from '@/app/actions';
+import { useEffect, useState } from 'react';
+
 export default function Home() {
+   const [roomId, setRoomId] = useState<string | null>(null);
+
+   useEffect(() => {
+      // 비동기 함수를 내부에 정의하고 즉시 실행
+      const initRoom = async () => {
+         try {
+            const newRoomId = await trialRoomCreate();
+            setRoomId(newRoomId);
+         } catch (error) {
+            console.error('Error creating trial room:', error);
+         }
+      };
+
+      initRoom();
+   }, []);
+
    return (
       <>
          <main className="flex-1 flex flex-col w-full items-center justify-center">
@@ -18,9 +37,11 @@ export default function Home() {
                   Try your first lesson for free!
                </h2>
             </div>
-            <div className="w-full max-w-5xl">
-               <ChatContainer persona="aru" mode="trial" />
-            </div>
+            {roomId && (
+               <div className="w-full max-w-5xl">
+                  <ChatContainer persona="aru" mode="trial" roomId={roomId} />
+               </div>
+            )}
          </main>
       </>
    );

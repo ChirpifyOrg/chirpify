@@ -21,7 +21,7 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
 
    async processChat(request: U): Promise<T> {
       await this.requestValidate(request);
-      const modelInfo = await this.chatRoomRepository.findByIdWidthModel(request.roomId);
+      const modelInfo = await this.chatRoomRepository.findByIdWithModel(request.roomId);
       const promptInput = await this.formatRequest(request, modelInfo);
       const response = await this.chatService.generateResponse(promptInput);
       const formattedResponse = this.formatResponse(response);
@@ -32,7 +32,7 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
    async processChatStreaming(request: U, onData: (chunk: string) => void): Promise<void> {
       let responseChunk: string[] = [];
       await this.requestValidate(request);
-      const modelInfo = await this.chatRoomRepository.findByIdWidthModel(request.roomId);
+      const modelInfo = await this.chatRoomRepository.findByIdWithModel(request.roomId);
       const promptInput = await this.formatRequest(request, modelInfo);
       const stream = await this.chatService.generateResponseStream(promptInput);
       for await (const chunk of stream) {
@@ -44,9 +44,6 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
       await this.storeChat(request, formattedResponse);
    }
 
-   async getHistory(roomId: string) {
-      return this.chatRepository.getHistory(roomId);
-   }
    /* 원본 응답 -> 클라이언트 전달 타입 변환 로직 */
    protected abstract formatResponse(originResponse: R): T;
 
@@ -54,5 +51,20 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
    protected abstract requestValidate(request: U): Promise<void>;
    protected async storeChat(request: U, response: T): Promise<void> {
       await this.chatRepository.saveChat(request, response);
+   }
+
+   // TODO : 추후 UseCase 분리가 가능하다면 아래 메소드부터는 분리 권장
+   async getHistory(roomId: string) {
+      return this.chatRepository.getHistory(roomId);
+   }
+   async getOrCreateRoom({ userId, modelId }: { userId: string; modelId: string }) {
+      const existing = this.chatRoomRepository.getRoomIdByUserIdAndModelId({ userId, modelId });
+      if (existing) return existing;
+
+      const created = await this.chatRoomRepository.createRoom({ userId, modelId });
+      return created;
+   }
+   async getLatestModelInfo({ name }: { name: string }) {
+      return this.aiModelRepository.getLastModelInfo(name);
    }
 }

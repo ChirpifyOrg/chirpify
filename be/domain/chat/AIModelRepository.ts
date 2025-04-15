@@ -1,1 +1,3 @@
-export interface AIModelRepository {}
+export interface AIModelRepository {
+   getLastModelInfo(name: string);
+}
