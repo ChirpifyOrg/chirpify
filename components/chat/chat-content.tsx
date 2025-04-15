@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/fe/utils/cn';
 import { onShowFeedBackFn } from '@/app/hooks/useFeedBack';
 import { useSimpleChatStore } from '@/app/state/chatStore';
+import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
+import { fetchWithTypedBody } from '@/app/hooks/useFetchData';
 
 type MessageItemProps = {
    message: AIChatSimpleFormatHistory;
@@ -81,9 +83,11 @@ interface ChatContentProps {
    isOpen: boolean;
 }
 export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpand, roomId }: ChatContentProps) {
-   const { prependMessage, startIndex, endIndex } = useSimpleChatStore.getState();
+   const { prependMessage } = useSimpleChatStore.getState();
    const messages = useSimpleChatStore(state => state.messages[roomId] ?? []);
-   const [page, setPage] = useState(1);
+   const startIndex = useSimpleChatStore(state => state.startIndex[roomId] ?? undefined);
+   const endIndex = useSimpleChatStore(state => state.endIndex[roomId] ?? undefined);
+
    const [isInit, setInit] = useState<boolean>(false);
 
    const [isLoading, setIsLoading] = useState(false);
@@ -94,12 +98,21 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
    const scrollBottom = useRef<HTMLDivElement>(null);
 
    const loadMoreMessages = async () => {
-      console.log(`isLoading? :${isLoading}`);
       if (isLoading) return;
 
       setIsLoading(true);
 
       try {
+         const DEFAULT_CHAT_HISTORY_LIMIT = 20;
+         const response = await fetchWithTypedBody(
+            API_ENDPOINTS.getChatSimpleFormatHistory({
+               roomId,
+               endIndex,
+               limit: DEFAULT_CHAT_HISTORY_LIMIT,
+               startIndex,
+            }),
+         );
+         console.log(response);
          // 실제에선 startIndex 또는 현재 메시지 중 가장 오래된 ID 기준으로 fetch
          const newMessages = [
             {
@@ -114,13 +127,11 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
                roomId: '2',
                message: `${Date.now() + Math.random()}`,
                role: 'Assistant',
-               createdAt: new Date(Date.now() - 1000 * 60 ).toISOString(),
+               createdAt: new Date(Date.now() - 1000 * 60).toISOString(),
             },
          ] as AIChatSimpleFormatHistory[];
 
          prependMessage({ roomId, messages: [...newMessages] });
-         console.log('prependMessage');
-        
       } catch (error) {
          console.error('Error loading messages:', error);
       } finally {
@@ -128,23 +139,13 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
       }
    };
 
-   // 1단계: 초기 메시지 세팅
-   useEffect(() => {
-      console.log('set Data)');
-   }, [roomId]);
-
    // 2단계: 메시지 렌더 이후 스크롤 바닥 이동 및 초기화
    useEffect(() => {
-      console.log(isOpen);
-
       requestAnimationFrame(() => {
-         console.log('req Frame in Effect current?: ', scrollContainerRef.current);
          setTimeout(() => {
-            console.log('ref : ', scrollContainerRef.current);
             if (scrollContainerRef.current) {
                scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
 
-             
                loadMoreMessages(); // 초기 메시지 이후 추가 로딩
                setInit(true);
                // 100ms 딜레이로 안정성 보장
@@ -154,13 +155,10 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
    }, [isOpen]);
 
    const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
-      console.log(`isInit in Scroll ${isInit} , isLoading ${isLoading}`);
-      console.log(`scrollContainerRef.current : `, scrollContainerRef.current);
       const { scrollTop } = event.currentTarget;
       if (!isInit || isLoading) return; // 초기화가 안됬거나 로딩중이면
 
       if (scrollTop < 50) {
-         console.log('scrollTop < 50');
          loadMoreMessages();
          // 다음 렌더 후 스크롤 위치 보정
       }

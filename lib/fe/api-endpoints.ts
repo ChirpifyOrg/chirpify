@@ -6,10 +6,13 @@ const ENDPOINTS = {
       `/chat/${roomId}/message/${messageId}/feedback`,
    sendChatMessage: ({ roomId }: { roomId: string }) => `/chat/${roomId}/message`,
    sendChatMessageStream: ({ roomId }: { roomId: string }) => `/chat/${roomId}/message/stream`,
-   getChatSimpleFormatHistory: ({ roomId, startIndex, endIndex, limit }: ClientChatSimpleFormatHistoryRequest) =>
-      `/chat/${roomId}/message?${startIndex && `startIndex=${startIndex}`}
-   ?${endIndex && `endIndex=${endIndex}`}
-   ?${limit && `limit=${limit}`}`,
+   getChatSimpleFormatHistory: ({ roomId, startIndex, endIndex, limit }: ClientChatSimpleFormatHistoryRequest) => {
+      const params = new URLSearchParams();
+      if (startIndex !== undefined) params.append('startIndex', startIndex);
+      if (endIndex !== undefined) params.append('endIndex', endIndex);
+      if (limit !== undefined) params.append('limit', limit.toString());
+      return `/chat/${roomId}/message${params.toString()}`;
+   },
 };
 
 // PREFIX 추가를 위해 Proxy 객체 사용
