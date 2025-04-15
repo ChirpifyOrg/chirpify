@@ -12,6 +12,8 @@ type useSimpleStoreAddParam = {
 // Zustand 스토어 생성 (persist 미들웨어 포함)
 export const useSimpleChatStore = create(
    persist<{
+      currentRoomId: string | null;
+      setRoomId: (roomId: string) => void;
       messages: Record<string, AIChatSimpleFormatHistory[]>;
       appendMessage: ({ roomId, messages }: useSimpleStoreAddParam) => void;
       prependMessage: ({ roomId, messages }: useSimpleStoreAddParam) => void;
@@ -19,10 +21,14 @@ export const useSimpleChatStore = create(
       clearAllMessages: () => void;
       clearMessages: (roomId: string) => void;
       getMessage: (roomId: string) => AIChatSimpleFormatHistory[];
-      startIndex: Record<string, string | null>;
-      endIndex: Record<string, string | null>;
+      startIndex: Record<string, string | undefined>;
+      endIndex: Record<string, string | undefined>;
    }>(
       (set, get) => ({
+         currentRoomId: null,
+         setRoomId: roomId => {
+            set(state => ({ ...state, currentRoomId: roomId }));
+         },
          messages: { '1': mockChatHistoryData },
          appendMessage: ({ roomId, messages }) => {
             set(state => {
@@ -90,11 +96,11 @@ export const useSimpleChatStore = create(
                messages: { ...state.messages, [roomId]: [] },
                startIndex: {
                   ...state.startIndex,
-                  [roomId]: null,
+                  [roomId]: undefined,
                },
                endIndex: {
                   ...state.endIndex,
-                  [roomId]: null,
+                  [roomId]: undefined,
                },
             }));
          },
