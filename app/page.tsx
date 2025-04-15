@@ -1,17 +1,18 @@
 'use client';
 import { ChatContainer } from '@/components/chat/chat-container';
-import { trialRoomCreate } from '@/app/actions';
-import { useEffect, useState } from 'react';
+import { trailRoomCreateWithSupaBaseAnonymousUser } from '@/app/actions';
+import { useEffect } from 'react';
+import { useSimpleChatStore } from './state/chatStore';
 
 export default function Home() {
-   const [roomId, setRoomId] = useState<string | null>(null);
-
+   // const [roomId, setRoomId] = useState<string | null>(null);
+   const { currentRoomId, setRoomId } = useSimpleChatStore();
    useEffect(() => {
       // 비동기 함수를 내부에 정의하고 즉시 실행
       const initRoom = async () => {
          try {
-            const newRoomId = await trialRoomCreate();
-            setRoomId(newRoomId);
+            const newRoomId = await trailRoomCreateWithSupaBaseAnonymousUser();
+            setRoomId(newRoomId?.roomId);
          } catch (error) {
             console.error('Error creating trial room:', error);
          }
@@ -37,9 +38,9 @@ export default function Home() {
                   Try your first lesson for free!
                </h2>
             </div>
-            {roomId && (
+            {currentRoomId && (
                <div className="w-full max-w-5xl">
-                  <ChatContainer persona="aru" mode="trial" roomId={roomId} />
+                  <ChatContainer persona="aru" mode="trial" roomId={currentRoomId} />
                </div>
             )}
          </main>

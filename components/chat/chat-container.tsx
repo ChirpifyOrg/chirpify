@@ -33,6 +33,10 @@ interface ChatContainerProps {
 }
 
 export function ChatContainer({ persona, mode, roomId }: ChatContainerProps) {
+   if (!roomId) {
+      return <>Error !</>;
+   }
+
    const isStreaming = false;
    const containerRef = useRef<HTMLDivElement>(null);
 
@@ -101,7 +105,7 @@ export function ChatContainer({ persona, mode, roomId }: ChatContainerProps) {
 
    // 메시지 전송 핸들러
    const onSendMessage = (message: string) => {
-      handleSendMessage({ roomId: '1', message, nativeLanguage: getUserLanguage() }, isStreaming);
+      handleSendMessage({ roomId, message, nativeLanguage: getUserLanguage() }, isStreaming);
       incrementMessageCount();
    };
 
@@ -165,7 +169,7 @@ export function ChatContainer({ persona, mode, roomId }: ChatContainerProps) {
                </Button>
 
                <ChatContent
-                  roomId="1"
+                  roomId={roomId}
                   isOpen={isChatContentOpen}
                   style={getChatContentStyle(containerHeight, containerWidth)}
                   isExpanded={isExpanded}
