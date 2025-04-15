@@ -2,6 +2,9 @@ import { AIModelRepository } from '@/be/domain/chat/AIModelRepository';
 // import { PrismaClient } from '@prisma/client';
 
 export class AIModelRepositoryImpl implements AIModelRepository {
+   getLastModelInfo(name: string) {
+      throw new Error('Method not implemented.');
+   }
    // private prisma: PrismaClient;
    // constructor() {
    //    this.prisma = new PrismaClient();
