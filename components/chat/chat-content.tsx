@@ -3,7 +3,7 @@ import { DialogHeader } from '@/components/ui/dialog';
 import { ScrollAreaOnScroll } from '@/components/ui/scroll-area';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { memo, useState, useEffect, useRef } from 'react';
+import { memo, useState, useEffect, useRef, useCallback } from 'react';
 import { AIChatSimpleFormatHistory } from '@/types/chat';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { onShowFeedBackFn } from '@/app/hooks/useFeedBack';
 import { useSimpleChatStore } from '@/app/state/chatStore';
 import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
 import { fetchWithTypedBody } from '@/app/hooks/useFetchData';
+import { useShallow } from 'zustand/shallow';
 
 type MessageItemProps = {
    message: AIChatSimpleFormatHistory;
@@ -84,12 +85,11 @@ interface ChatContentProps {
 }
 export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpand, roomId }: ChatContentProps) {
    const { prependMessage } = useSimpleChatStore.getState();
-   const messages = useSimpleChatStore(state => state.messages[roomId] ?? []);
-   const startIndex = useSimpleChatStore(state => state.startIndex[roomId] ?? undefined);
-   const endIndex = useSimpleChatStore(state => state.endIndex[roomId] ?? undefined);
+
+   // useShallow를 사용하여 얕은 비교 수행
+   const messages = useSimpleChatStore(useShallow(state => state.messages[roomId] ?? []));
 
    const [isInit, setInit] = useState<boolean>(false);
-
    const [isLoading, setIsLoading] = useState(false);
    const contentHeight = style?.maxHeight ? parseInt(style.maxHeight as string) : 320;
    const scrollAreaHeight = Math.max(contentHeight - 60, 100);
@@ -97,8 +97,9 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
    const scrollContainerRef = useRef<HTMLDivElement>(null);
    const scrollBottom = useRef<HTMLDivElement>(null);
 
-   const loadMoreMessages = async () => {
-      if (isLoading) return;
+   // loadMoreMessages를 useCallback으로 메모이제이션
+   const loadMoreMessages = useCallback(async () => {
+      if (isLoading || !isInit) return;
 
       setIsLoading(true);
 
@@ -107,24 +108,23 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
          const response = await fetchWithTypedBody(
             API_ENDPOINTS.getChatSimpleFormatHistory({
                roomId,
-               endIndex,
+               endIndex: '1',
                limit: DEFAULT_CHAT_HISTORY_LIMIT,
-               startIndex,
+               startIndex: '2',
             }),
          );
-         console.log(response);
-         // 실제에선 startIndex 또는 현재 메시지 중 가장 오래된 ID 기준으로 fetch
+
          const newMessages = [
             {
                id: `${Date.now() + Math.random()}`,
-               roomId: '2',
+               roomId, // props로 받은 roomId 사용
                message: `${Date.now() + Math.random()}`,
                role: 'User',
                createdAt: new Date(Date.now() - 1000 * 60).toISOString(),
             },
             {
                id: `${Date.now() + 1 + Math.random()}`,
-               roomId: '2',
+               roomId, // props로 받은 roomId 사용
                message: `${Date.now() + Math.random()}`,
                role: 'Assistant',
                createdAt: new Date(Date.now() - 1000 * 60).toISOString(),
@@ -137,22 +137,22 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
       } finally {
          setIsLoading(false);
       }
-   };
+   }, [isLoading, isInit, roomId, prependMessage]);
 
    // 2단계: 메시지 렌더 이후 스크롤 바닥 이동 및 초기화
    useEffect(() => {
-      requestAnimationFrame(() => {
-         setTimeout(() => {
-            if (scrollContainerRef.current) {
-               scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
-
-               loadMoreMessages(); // 초기 메시지 이후 추가 로딩
-               setInit(true);
-               // 100ms 딜레이로 안정성 보장
-            }
-         }, 100);
-      });
-   }, [isOpen]);
+      if (!isInit) {
+         requestAnimationFrame(() => {
+            setTimeout(() => {
+               if (scrollContainerRef.current) {
+                  scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+                  loadMoreMessages();
+                  setInit(true);
+               }
+            }, 100);
+         });
+      }
+   }, [isOpen, isInit]);
 
    const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
       const { scrollTop } = event.currentTarget;
