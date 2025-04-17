@@ -5,31 +5,57 @@ import { ChatUseCaseFactory } from '@/be/application/chat/ChatUseCaseFactory';
 import { createClient } from '@/lib/be/superbase/server';
 import { cookies } from 'next/headers';
 
-export async function trailRoomCreateWithSupaBaseAnonymousUser(modelName = 'Aru') {
+export async function createAnonymousUser(): Promise<{ sessionCreated: boolean }> {
    const supabase = await createClient();
-   let userId = null;
-   let roomId = null;
-   try {
-      const isLoggedIn = (await supabase.auth.getUser()).data?.user ? true : false;
-      if (isLoggedIn) {
-         return { roomId, userId };
-      }
+   const { data: userData } = await supabase.auth.getUser();
+   const isLoggedIn = !!userData?.user;
 
-      const { data, error } = await supabase.auth.signInAnonymously();
-      if (error) {
-         console.error('supabase anonymous create error', error);
-         return;
-      }
-      userId = data.user?.id;
+   if (isLoggedIn) return { sessionCreated: false };
 
-      const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, true);
-      const modelInfo = useCase.getLatestModelInfo({ name: modelName });
-      const roomInfo = useCase.getOrCreateRoom({ userId, modelId: modelInfo.id });
-      roomId = roomInfo.id;
-   } catch (e) {
-      console.error('error', e);
+   const { error } = await supabase.auth.signInAnonymously();
+   if (error) {
+      console.error('익명 사용자 생성 실패:', error.message);
+      throw new Error('익명 사용자 생성 실패');
    }
-   return { roomId, userId };
+
+   return { sessionCreated: true };
+}
+type TrialRoomResult = { success: true; roomId: string; userId: string } | { success: false; error: string };
+
+export async function trialRoomGetOrCreateWithSupaBaseAnonymousUser(modelName = 'Aru'): Promise<TrialRoomResult> {
+   try {
+      const supabase = await createClient();
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error) {
+         return { success: false, error: '사용자 정보를 가져오지 못했습니다.' };
+      }
+
+      const user = data?.user;
+      const isLoggedIn = !!user;
+
+      if (!isLoggedIn || !user?.is_anonymous) {
+         return { success: false, error: '익명 사용자만 사용할 수 있습니다.' };
+      }
+
+      const userId = user.id;
+      const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, true);
+      const modelInfo = await useCase.getLatestModelInfo({ name: modelName });
+
+      if (!modelInfo?.id) {
+         return { success: false, error: '모델 정보를 가져올 수 없습니다.' };
+      }
+
+      const roomInfo = await useCase.getOrCreateRoom({ userId, modelId: modelInfo.id });
+      if (!roomInfo?.id) {
+         return { success: false, error: '방을 생성하지 못하였습니다.' };
+      }
+
+      return { success: true, roomId: roomInfo.id, userId };
+   } catch (e) {
+      console.error('Unhandled error', e);
+      return { success: false, error: '알 수 없는 에러가 발생했습니다.' };
+   }
 }
 
 export async function trialRoomCreate() {

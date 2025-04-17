@@ -1,26 +1,39 @@
 'use client';
 import { ChatContainer } from '@/components/chat/chat-container';
-import { trailRoomCreateWithSupaBaseAnonymousUser } from '@/app/actions';
-import { useEffect } from 'react';
+import { createAnonymousUser, trialRoomGetOrCreateWithSupaBaseAnonymousUser } from '@/app/actions';
+import { useEffect, useState } from 'react';
 import { useSimpleChatStore } from './state/chatStore';
 
 export default function Home() {
-   // const [roomId, setRoomId] = useState<string | null>(null);
-   const { currentRoomId, setRoomId } = useSimpleChatStore();
+   const [currentRoomId, setRoomId] = useState<string | null>(null);
+   // const { currentRoomId, setRoomId } = useSimpleChatStore();
    useEffect(() => {
-      // 비동기 함수를 내부에 정의하고 즉시 실행
       const initRoom = async () => {
          try {
-            const newRoomId = await trailRoomCreateWithSupaBaseAnonymousUser();
-            setRoomId(newRoomId?.roomId);
-         } catch (error) {
-            console.error('Error creating trial room:', error);
+            const { sessionCreated } = await createAnonymousUser();
+
+            // 세션이 새로 생성된 경우 → 다음 렌더 사이클에 다시 시도
+            if (sessionCreated) {
+               location.reload();
+               return;
+            }
+
+            const result = await trialRoomGetOrCreateWithSupaBaseAnonymousUser();
+
+            if (!result.success) {
+               console.error(result.error);
+               alert(result.error);
+               return;
+            }
+
+            setRoomId(result.roomId);
+         } catch (e) {
+            console.error('Error initializing anonymous room:', e);
          }
       };
 
       initRoom();
    }, []);
-
    return (
       <>
          <main className="flex-1 flex flex-col w-full items-center justify-center">
