@@ -5,20 +5,20 @@ import { ClientChatRequest } from '@/types/chat';
 import { createChatRequest } from '@/be/application/chat/Dtos';
 import { ChatUseCaseFactory } from '@/be/application/chat/ChatUseCaseFactory';
 
-export async function POST(request: NextRequest) {
-   const { roomId, message, nativeLanguage, isTrial }: ClientChatRequest = await request.json();
+export async function POST(request: NextRequest, { params }: { params: { roomId: string } }) {
+   const { roomId } = params;
+   const { message, nativeLanguage }: ClientChatRequest = await request.json();
    const superbase = await createClient();
    const { data, error } = await superbase.auth.getUser();
    const isLoggedIn = !error && data?.user != null;
-   const testUser = { id: 'test-user-id', email: 'test@example.com' };
 
-   if (error && !isTrial) {
+   const userId = data?.user?.id;
+   if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
    }
-   const userId = isLoggedIn ? data?.user?.id : testUser.id;
-
+   const isTrial = data?.user?.is_anonymous ? true : false;
    try {
-      const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, isTrial ?? false);
+      const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, isTrial);
       const response = await useCase.processChat(
          createChatRequest({ message, nativeLanguage, roomId }, userId, isTrial),
       );
