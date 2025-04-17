@@ -1,9 +1,13 @@
 import { AIChatAPIResponse, AIChatAPIResponseSchema, AuthenticatedClientChatReuqest } from '@/types/chat';
 import { ChatUseCase } from './ChatUseCase';
-import { ChatCompletionChunk, ChatCompletion as GPTChatFormat } from 'openai/resources';
+import { ChatCompletionChunk, ChatModel, ChatCompletion as GPTChatFormat } from 'openai/resources';
 import { ChatRepository } from '@/be/domain/chat/ChatRepository';
-import { AIModelRepository } from '@/be/domain/chat/AIModelRepository';
+
 import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
+import { ChatRoomRepository } from '@/be/domain/chat/ChatRoomRepository';
+import { ChatModelRepository } from '@/be/domain/chat/ChatModelRepository';
+import { ForbiddenError } from '@/lib/be/utils/errors';
+import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions';
 /**
  * @class AuthenticationChatUseCase
  * @extends ChatUseCase
@@ -22,7 +26,7 @@ import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
  *
  * @param {ChatRepository} chatRepository - 채팅 기록을 저장하고 조회하는 리포지토리입니다.
  *
- * @param {AIModelRepository} aiModelRepository - AI 모델 정보를 관리하는 리포지토리입니다.
+ * @param {ChatModelRepository} ChatModelRepository - AI 모델 정보를 관리하는 리포지토리입니다.
  */
 // TODO : [현재 GPT API 의존] GPT API가 아닌 다른 LLM도 지원하도록 Generic 공통 interface 개발 및 변경 필요.
 export class AuthenticationChatUseCase extends ChatUseCase<
@@ -33,9 +37,10 @@ export class AuthenticationChatUseCase extends ChatUseCase<
    constructor(
       protected chatService: ApiResponseGenerator<unknown, GPTChatFormat, ChatCompletionChunk>,
       protected chatRepository: ChatRepository,
-      protected aiModelRepository: AIModelRepository,
+      protected ChatModelRepository: ChatModelRepository,
+      protected chatRoomRepository: ChatRoomRepository,
    ) {
-      super(chatService, chatRepository, aiModelRepository);
+      super(chatService, chatRepository, ChatModelRepository, chatRoomRepository);
    }
    protected formatResponse(originResponse: GPTChatFormat): AIChatAPIResponse {
       try {
@@ -49,8 +54,11 @@ export class AuthenticationChatUseCase extends ChatUseCase<
       }
    }
    protected async requestValidate(request: AuthenticatedClientChatReuqest): Promise<void> {
-      // TODO : 여기서 방의 소유권을 확인하는 절차 작성.
       const { userId, roomId } = request;
+      const isUserOwnerOfRoom = await this.chatRoomRepository.isUserInRoom({ roomId, userId });
+      if (!isUserOwnerOfRoom) {
+         throw new ForbiddenError('잘못된 room 소유자 입니다.');
+      }
    }
 
    async processChatStreaming(request: AuthenticatedClientChatReuqest, onData: (chunk: string) => void): Promise<void> {
@@ -68,5 +76,24 @@ export class AuthenticationChatUseCase extends ChatUseCase<
       const response = responseChunk.join('');
       const formattedResponse = this.formatResponse(JSON.parse(response) as GPTChatFormat);
       await this.storeChat(request, formattedResponse);
+   }
+
+   protected async formatRequest(
+      request: AuthenticatedClientChatReuqest,
+      modelInfo: ChatModel,
+   ): Promise<ChatCompletionCreateParamsBase> {
+      const defaultParam = modelInfo.defaultParam as ChatCompletionCreateParamsBase;
+      defaultParam.messages.push({ role: 'user', content: request.message });
+      defaultParam.stream = false;
+      return defaultParam;
+   }
+   protected async formatStreamRequest(
+      request: AuthenticatedClientChatReuqest,
+      modelInfo: ChatModel,
+   ): Promise<ChatCompletionCreateParamsBase> {
+      const defaultParam = modelInfo.defaultParam as ChatCompletionCreateParamsBase;
+      defaultParam.messages.push({ role: 'user', content: request.message });
+      defaultParam.stream = true;
+      return defaultParam;
    }
 }

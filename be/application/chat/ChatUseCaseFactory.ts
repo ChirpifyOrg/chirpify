@@ -1,12 +1,12 @@
 import { ClientChatRequest } from '@/types/chat';
 import { ChatUseCase } from './ChatUseCase';
 import { AuthenticationChatUseCase } from './AuthenticationChatUseCase';
-import { TrialChatUseCase } from './trialChatUseCase';
 import { ChatRepositoryImpl } from '@/be/infrastructure/repository/ChatRepository';
-import { TrialChatRepositoryImpl } from '@/be/infrastructure/repository/trialChatRepository';
 import { OpenAIChatService } from '@/be/infrastructure/service/OpenAIChatService';
-import { AIModelRepositoryImpl } from '@/be/infrastructure/repository/AIModelRepository';
+import { ChatModelRepositoryImpl } from '@/be/infrastructure/repository/ChatModelRepository';
 import { env } from '@/lib/be/utils/env';
+import { ChatRoomRepositoryImpl } from '@/be/infrastructure/repository/ChatRoomRepository';
+import { TrialChatUseCase } from './TrialChatUseCase';
 
 export class ChatUseCaseFactory {
    private static instance: ChatUseCaseFactory;
@@ -22,7 +22,13 @@ export class ChatUseCaseFactory {
    }
 
    getUseCase(isLoggedIn: boolean, isTrial: boolean): ChatUseCase<unknown, ClientChatRequest, unknown> {
-      const key = isLoggedIn ? 'default' : isTrial ? 'trial' : 'unauthorized';
+      let key;
+      if (isLoggedIn) {
+         if (isTrial) key = 'trial';
+         else key = 'default';
+      } else {
+         key = 'unauthorized';
+      }
 
       // 이미 존재하는 서비스가 있다면 반환
       const existingService = this.usecases.get(key);
@@ -38,14 +44,16 @@ export class ChatUseCaseFactory {
             useCase = new AuthenticationChatUseCase(
                new OpenAIChatService(env.openAPIKey),
                new ChatRepositoryImpl(),
-               new AIModelRepositoryImpl(),
+               new ChatModelRepositoryImpl(),
+               new ChatRoomRepositoryImpl(),
             );
             break;
          case 'trial':
             useCase = new TrialChatUseCase(
                new OpenAIChatService(env.openAPIKey),
-               new TrialChatRepositoryImpl(),
-               new AIModelRepositoryImpl(),
+               new ChatRepositoryImpl(),
+               new ChatModelRepositoryImpl(),
+               new ChatRoomRepositoryImpl(),
             );
             break;
          case 'unauthorized':
