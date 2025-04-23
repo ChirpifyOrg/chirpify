@@ -1,7 +1,6 @@
 import { z } from 'zod';
-import { useEffect, useState } from 'react';
 
-type ChatRole = 'User' | 'Assistant';
+export type ChatRole = 'User' | 'Assistant';
 
 // 기본 AI 응답 타입
 
@@ -104,7 +103,6 @@ export type EvaluationCategory = z.infer<typeof EvaluationCategorySchema>;
 // | 'vocabulary_naturalness'
 // | 'sentence_naturalness';
 // AIChatAPIResponse 스키마 정의
-
 export const AIChatAPIResponseSchema = z.object({
    message: z.string().default(''),
    evaluation: z.record(EvaluationCategorySchema, z.number().default(0)),
@@ -174,7 +172,27 @@ export const AIChatAPIResponseSchema = z.object({
       'Doubt',
    ]),
 });
-
+export const defaultAIChatResponse = {
+   message: '',
+   evaluation: {
+      grammar_accuracy: 0,
+      sentence_naturalness: 0,
+      vocabulary_naturalness: 0,
+      comprehension: 0,
+   },
+   total_score: 0,
+   feedback: {
+      grammar_accuracy: [{ issue: '', description: '' }],
+      sentence_naturalness: [{ issue: '', description: '' }],
+      vocabulary_naturalness: [{ issue: '', description: '' }],
+      comprehension: [{ issue: '', description: '' }],
+   },
+   total_feedback: {
+      en: '',
+   },
+   difficulty_level: 'Medium',
+   emotion: 'Calm',
+};
 export type AIChatAPIResponse = z.infer<typeof AIChatAPIResponseSchema>;
 
 /**

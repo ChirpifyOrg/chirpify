@@ -11,7 +11,7 @@ const ENDPOINTS = {
       if (startIndex !== undefined) params.append('startIndex', startIndex);
       if (endIndex !== undefined) params.append('endIndex', endIndex);
       if (limit !== undefined) params.append('limit', limit.toString());
-      return `/chat/${roomId}/message${params.toString()}`;
+      return `/chat/${roomId}/message?${params.toString()}`;
    },
 };
 
