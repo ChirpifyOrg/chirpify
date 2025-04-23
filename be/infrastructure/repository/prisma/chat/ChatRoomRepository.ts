@@ -1,13 +1,12 @@
 import { ChatRoom } from '@/be/domain/chat/ChatRoom';
 import { ChatRoomRepository } from '@/be/domain/chat/ChatRoomRepository';
-import { chat_model, chat_rooms, Prisma, PrismaClient } from '@/lib/generated/prisma';
+import { chat_model, chat_rooms, Prisma } from '@/lib/generated/prisma';
 import { ChatModelRepositoryImpl } from './ChatModelRepository';
+import { BasePrismaRepository } from '../BasePrismaRepository';
 
 type ChatRoomWithModel = chat_rooms & { chat_model: chat_model };
 
-export class ChatRoomRepositoryImpl implements ChatRoomRepository {
-   constructor(private readonly prisma: PrismaClient = prisma) {}
-
+export class ChatRoomRepositoryImpl extends BasePrismaRepository implements ChatRoomRepository {
    async isUserInRoom({ roomId, userId }: { roomId: string; userId: string }): Promise<boolean> {
       try {
          const prismaModel = await this.prisma.chat_rooms.findUnique({

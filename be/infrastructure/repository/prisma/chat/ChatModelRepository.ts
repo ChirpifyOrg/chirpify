@@ -1,11 +1,10 @@
 import { ChatModel } from '@/be/domain/chat/ChatModel';
 import { ChatModelRepository } from '@/be/domain/chat/ChatModelRepository';
-import { chat_model, PrismaClient } from '@/lib/generated/prisma';
+import { chat_model } from '@/lib/generated/prisma';
 import { Prisma } from '@/lib/generated/prisma';
+import { BasePrismaRepository } from '../BasePrismaRepository';
 
-export class ChatModelRepositoryImpl implements ChatModelRepository {
-   constructor(private readonly prisma: PrismaClient = prisma) {}
-
+export class ChatModelRepositoryImpl extends BasePrismaRepository implements ChatModelRepository {
    // persona 이름으로 마지막 모델 정보 가져오기
    async getLastModelInfo(name: string) {
       const prismaModel = await this.prisma.chat_model.findFirst({
