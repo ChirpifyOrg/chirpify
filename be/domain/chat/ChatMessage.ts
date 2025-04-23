@@ -6,7 +6,7 @@ export class ChatMessage {
    id: string;
    roomId?: string;
    role?: string;
-   answer?: string;
+   message?: string;
    rawMessage?: any;
    createdAt: Date;
    evaluations: ChatEvaluation[];
@@ -16,7 +16,7 @@ export class ChatMessage {
       id?: string;
       roomId?: string;
       role?: string;
-      answer?: string;
+      message?: string;
       rawMessage?: any;
       createdAt?: Date;
       evaluations?: ChatEvaluation[];
@@ -25,7 +25,7 @@ export class ChatMessage {
       this.id = props.id || crypto.randomUUID();
       this.roomId = props.roomId;
       this.role = props.role;
-      this.answer = props.answer;
+      this.message = props.message;
       this.rawMessage = props.rawMessage;
       this.createdAt = props.createdAt || new Date();
       this.evaluations = props.evaluations || [];
@@ -36,7 +36,7 @@ export class ChatMessage {
       return new ChatMessage({
          roomId,
          role: 'user',
-         answer: message,
+         message: message,
          rawMessage: { message },
       });
    }
@@ -71,7 +71,7 @@ export class ChatMessage {
       return new ChatMessage({
          roomId,
          role: 'assistant',
-         answer: response.message,
+         message: response.message,
          rawMessage: response,
          metadata,
          evaluations,
