@@ -137,7 +137,6 @@ export type chat_feedback = $Result.DefaultSelection<Prisma.$chat_feedbackPayloa
 export type chat_message = $Result.DefaultSelection<Prisma.$chat_messagePayload>
 /**
  * Model chat_metadata
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
  * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
  */
 export type chat_metadata = $Result.DefaultSelection<Prisma.$chat_metadataPayload>
@@ -23412,7 +23411,7 @@ export namespace Prisma {
     id: string | null
     room_id: string | null
     role: string | null
-    answer: string | null
+    message: string | null
     created_at: Date | null
   }
 
@@ -23420,7 +23419,7 @@ export namespace Prisma {
     id: string | null
     room_id: string | null
     role: string | null
-    answer: string | null
+    message: string | null
     created_at: Date | null
   }
 
@@ -23428,8 +23427,8 @@ export namespace Prisma {
     id: number
     room_id: number
     role: number
-    answer: number
     message: number
+    raw_message: number
     created_at: number
     _all: number
   }
@@ -23439,7 +23438,7 @@ export namespace Prisma {
     id?: true
     room_id?: true
     role?: true
-    answer?: true
+    message?: true
     created_at?: true
   }
 
@@ -23447,7 +23446,7 @@ export namespace Prisma {
     id?: true
     room_id?: true
     role?: true
-    answer?: true
+    message?: true
     created_at?: true
   }
 
@@ -23455,8 +23454,8 @@ export namespace Prisma {
     id?: true
     room_id?: true
     role?: true
-    answer?: true
     message?: true
+    raw_message?: true
     created_at?: true
     _all?: true
   }
@@ -23537,8 +23536,8 @@ export namespace Prisma {
     id: string
     room_id: string | null
     role: string | null
-    answer: string | null
-    message: JsonValue | null
+    message: string | null
+    raw_message: JsonValue | null
     created_at: Date
     _count: Chat_messageCountAggregateOutputType | null
     _min: Chat_messageMinAggregateOutputType | null
@@ -23563,8 +23562,8 @@ export namespace Prisma {
     id?: boolean
     room_id?: boolean
     role?: boolean
-    answer?: boolean
     message?: boolean
+    raw_message?: boolean
     created_at?: boolean
     chat_evaluations?: boolean | chat_message$chat_evaluationsArgs<ExtArgs>
     chat_rooms?: boolean | chat_message$chat_roomsArgs<ExtArgs>
@@ -23576,8 +23575,8 @@ export namespace Prisma {
     id?: boolean
     room_id?: boolean
     role?: boolean
-    answer?: boolean
     message?: boolean
+    raw_message?: boolean
     created_at?: boolean
     chat_rooms?: boolean | chat_message$chat_roomsArgs<ExtArgs>
   }, ExtArgs["result"]["chat_message"]>
@@ -23586,8 +23585,8 @@ export namespace Prisma {
     id?: boolean
     room_id?: boolean
     role?: boolean
-    answer?: boolean
     message?: boolean
+    raw_message?: boolean
     created_at?: boolean
     chat_rooms?: boolean | chat_message$chat_roomsArgs<ExtArgs>
   }, ExtArgs["result"]["chat_message"]>
@@ -23596,12 +23595,12 @@ export namespace Prisma {
     id?: boolean
     room_id?: boolean
     role?: boolean
-    answer?: boolean
     message?: boolean
+    raw_message?: boolean
     created_at?: boolean
   }
 
-  export type chat_messageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "room_id" | "role" | "answer" | "message" | "created_at", ExtArgs["result"]["chat_message"]>
+  export type chat_messageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "room_id" | "role" | "message" | "raw_message" | "created_at", ExtArgs["result"]["chat_message"]>
   export type chat_messageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chat_evaluations?: boolean | chat_message$chat_evaluationsArgs<ExtArgs>
     chat_rooms?: boolean | chat_message$chat_roomsArgs<ExtArgs>
@@ -23626,8 +23625,8 @@ export namespace Prisma {
       id: string
       room_id: string | null
       role: string | null
-      answer: string | null
-      message: Prisma.JsonValue | null
+      message: string | null
+      raw_message: Prisma.JsonValue | null
       created_at: Date
     }, ExtArgs["result"]["chat_message"]>
     composites: {}
@@ -24058,8 +24057,8 @@ export namespace Prisma {
     readonly id: FieldRef<"chat_message", 'String'>
     readonly room_id: FieldRef<"chat_message", 'String'>
     readonly role: FieldRef<"chat_message", 'String'>
-    readonly answer: FieldRef<"chat_message", 'String'>
-    readonly message: FieldRef<"chat_message", 'Json'>
+    readonly message: FieldRef<"chat_message", 'String'>
+    readonly raw_message: FieldRef<"chat_message", 'Json'>
     readonly created_at: FieldRef<"chat_message", 'DateTime'>
   }
     
@@ -28211,8 +28210,8 @@ export namespace Prisma {
     id: 'id',
     room_id: 'room_id',
     role: 'role',
-    answer: 'answer',
     message: 'message',
+    raw_message: 'raw_message',
     created_at: 'created_at'
   };
 
@@ -29840,8 +29839,8 @@ export namespace Prisma {
     id?: UuidFilter<"chat_message"> | string
     room_id?: UuidNullableFilter<"chat_message"> | string | null
     role?: StringNullableFilter<"chat_message"> | string | null
-    answer?: StringNullableFilter<"chat_message"> | string | null
-    message?: JsonNullableFilter<"chat_message">
+    message?: StringNullableFilter<"chat_message"> | string | null
+    raw_message?: JsonNullableFilter<"chat_message">
     created_at?: DateTimeFilter<"chat_message"> | Date | string
     chat_evaluations?: Chat_evaluationsListRelationFilter
     chat_rooms?: XOR<Chat_roomsNullableScalarRelationFilter, chat_roomsWhereInput> | null
@@ -29852,8 +29851,8 @@ export namespace Prisma {
     id?: SortOrder
     room_id?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
-    answer?: SortOrderInput | SortOrder
     message?: SortOrderInput | SortOrder
+    raw_message?: SortOrderInput | SortOrder
     created_at?: SortOrder
     chat_evaluations?: chat_evaluationsOrderByRelationAggregateInput
     chat_rooms?: chat_roomsOrderByWithRelationInput
@@ -29867,8 +29866,8 @@ export namespace Prisma {
     NOT?: chat_messageWhereInput | chat_messageWhereInput[]
     room_id?: UuidNullableFilter<"chat_message"> | string | null
     role?: StringNullableFilter<"chat_message"> | string | null
-    answer?: StringNullableFilter<"chat_message"> | string | null
-    message?: JsonNullableFilter<"chat_message">
+    message?: StringNullableFilter<"chat_message"> | string | null
+    raw_message?: JsonNullableFilter<"chat_message">
     created_at?: DateTimeFilter<"chat_message"> | Date | string
     chat_evaluations?: Chat_evaluationsListRelationFilter
     chat_rooms?: XOR<Chat_roomsNullableScalarRelationFilter, chat_roomsWhereInput> | null
@@ -29879,8 +29878,8 @@ export namespace Prisma {
     id?: SortOrder
     room_id?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
-    answer?: SortOrderInput | SortOrder
     message?: SortOrderInput | SortOrder
+    raw_message?: SortOrderInput | SortOrder
     created_at?: SortOrder
     _count?: chat_messageCountOrderByAggregateInput
     _max?: chat_messageMaxOrderByAggregateInput
@@ -29894,8 +29893,8 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"chat_message"> | string
     room_id?: UuidNullableWithAggregatesFilter<"chat_message"> | string | null
     role?: StringNullableWithAggregatesFilter<"chat_message"> | string | null
-    answer?: StringNullableWithAggregatesFilter<"chat_message"> | string | null
-    message?: JsonNullableWithAggregatesFilter<"chat_message">
+    message?: StringNullableWithAggregatesFilter<"chat_message"> | string | null
+    raw_message?: JsonNullableWithAggregatesFilter<"chat_message">
     created_at?: DateTimeWithAggregatesFilter<"chat_message"> | Date | string
   }
 
@@ -31600,8 +31599,8 @@ export namespace Prisma {
   export type chat_messageCreateInput = {
     id?: string
     role?: string | null
-    answer?: string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     chat_evaluations?: chat_evaluationsCreateNestedManyWithoutChat_messageInput
     chat_rooms?: chat_roomsCreateNestedOneWithoutChat_messageInput
@@ -31612,8 +31611,8 @@ export namespace Prisma {
     id?: string
     room_id?: string | null
     role?: string | null
-    answer?: string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     chat_evaluations?: chat_evaluationsUncheckedCreateNestedManyWithoutChat_messageInput
     chat_metadata?: chat_metadataUncheckedCreateNestedManyWithoutChat_messageInput
@@ -31622,8 +31621,8 @@ export namespace Prisma {
   export type chat_messageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     chat_evaluations?: chat_evaluationsUpdateManyWithoutChat_messageNestedInput
     chat_rooms?: chat_roomsUpdateOneWithoutChat_messageNestedInput
@@ -31634,8 +31633,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     room_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     chat_evaluations?: chat_evaluationsUncheckedUpdateManyWithoutChat_messageNestedInput
     chat_metadata?: chat_metadataUncheckedUpdateManyWithoutChat_messageNestedInput
@@ -31645,16 +31644,16 @@ export namespace Prisma {
     id?: string
     room_id?: string | null
     role?: string | null
-    answer?: string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
   }
 
   export type chat_messageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -31662,8 +31661,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     room_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -33190,8 +33189,8 @@ export namespace Prisma {
     id?: SortOrder
     room_id?: SortOrder
     role?: SortOrder
-    answer?: SortOrder
     message?: SortOrder
+    raw_message?: SortOrder
     created_at?: SortOrder
   }
 
@@ -33199,7 +33198,7 @@ export namespace Prisma {
     id?: SortOrder
     room_id?: SortOrder
     role?: SortOrder
-    answer?: SortOrder
+    message?: SortOrder
     created_at?: SortOrder
   }
 
@@ -33207,7 +33206,7 @@ export namespace Prisma {
     id?: SortOrder
     room_id?: SortOrder
     role?: SortOrder
-    answer?: SortOrder
+    message?: SortOrder
     created_at?: SortOrder
   }
 
@@ -36768,8 +36767,8 @@ export namespace Prisma {
   export type chat_messageCreateWithoutChat_evaluationsInput = {
     id?: string
     role?: string | null
-    answer?: string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     chat_rooms?: chat_roomsCreateNestedOneWithoutChat_messageInput
     chat_metadata?: chat_metadataCreateNestedManyWithoutChat_messageInput
@@ -36779,8 +36778,8 @@ export namespace Prisma {
     id?: string
     room_id?: string | null
     role?: string | null
-    answer?: string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     chat_metadata?: chat_metadataUncheckedCreateNestedManyWithoutChat_messageInput
   }
@@ -36828,8 +36827,8 @@ export namespace Prisma {
   export type chat_messageUpdateWithoutChat_evaluationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     chat_rooms?: chat_roomsUpdateOneWithoutChat_messageNestedInput
     chat_metadata?: chat_metadataUpdateManyWithoutChat_messageNestedInput
@@ -36839,8 +36838,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     room_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     chat_metadata?: chat_metadataUncheckedUpdateManyWithoutChat_messageNestedInput
   }
@@ -37087,8 +37086,8 @@ export namespace Prisma {
   export type chat_messageCreateWithoutChat_metadataInput = {
     id?: string
     role?: string | null
-    answer?: string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     chat_evaluations?: chat_evaluationsCreateNestedManyWithoutChat_messageInput
     chat_rooms?: chat_roomsCreateNestedOneWithoutChat_messageInput
@@ -37098,8 +37097,8 @@ export namespace Prisma {
     id?: string
     room_id?: string | null
     role?: string | null
-    answer?: string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     chat_evaluations?: chat_evaluationsUncheckedCreateNestedManyWithoutChat_messageInput
   }
@@ -37123,8 +37122,8 @@ export namespace Prisma {
   export type chat_messageUpdateWithoutChat_metadataInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     chat_evaluations?: chat_evaluationsUpdateManyWithoutChat_messageNestedInput
     chat_rooms?: chat_roomsUpdateOneWithoutChat_messageNestedInput
@@ -37134,8 +37133,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     room_id?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     chat_evaluations?: chat_evaluationsUncheckedUpdateManyWithoutChat_messageNestedInput
   }
@@ -37185,8 +37184,8 @@ export namespace Prisma {
   export type chat_messageCreateWithoutChat_roomsInput = {
     id?: string
     role?: string | null
-    answer?: string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     chat_evaluations?: chat_evaluationsCreateNestedManyWithoutChat_messageInput
     chat_metadata?: chat_metadataCreateNestedManyWithoutChat_messageInput
@@ -37195,8 +37194,8 @@ export namespace Prisma {
   export type chat_messageUncheckedCreateWithoutChat_roomsInput = {
     id?: string
     role?: string | null
-    answer?: string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     chat_evaluations?: chat_evaluationsUncheckedCreateNestedManyWithoutChat_messageInput
     chat_metadata?: chat_metadataUncheckedCreateNestedManyWithoutChat_messageInput
@@ -37349,8 +37348,8 @@ export namespace Prisma {
     id?: UuidFilter<"chat_message"> | string
     room_id?: UuidNullableFilter<"chat_message"> | string | null
     role?: StringNullableFilter<"chat_message"> | string | null
-    answer?: StringNullableFilter<"chat_message"> | string | null
-    message?: JsonNullableFilter<"chat_message">
+    message?: StringNullableFilter<"chat_message"> | string | null
+    raw_message?: JsonNullableFilter<"chat_message">
     created_at?: DateTimeFilter<"chat_message"> | Date | string
   }
 
@@ -38099,16 +38098,16 @@ export namespace Prisma {
   export type chat_messageCreateManyChat_roomsInput = {
     id?: string
     role?: string | null
-    answer?: string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
   }
 
   export type chat_messageUpdateWithoutChat_roomsInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     chat_evaluations?: chat_evaluationsUpdateManyWithoutChat_messageNestedInput
     chat_metadata?: chat_metadataUpdateManyWithoutChat_messageNestedInput
@@ -38117,8 +38116,8 @@ export namespace Prisma {
   export type chat_messageUncheckedUpdateWithoutChat_roomsInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     chat_evaluations?: chat_evaluationsUncheckedUpdateManyWithoutChat_messageNestedInput
     chat_metadata?: chat_metadataUncheckedUpdateManyWithoutChat_messageNestedInput
@@ -38127,8 +38126,8 @@ export namespace Prisma {
   export type chat_messageUncheckedUpdateManyWithoutChat_roomsInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
-    answer?: NullableStringFieldUpdateOperationsInput | string | null
-    message?: NullableJsonNullValueInput | InputJsonValue
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_message?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
