@@ -38,8 +38,6 @@ export class ChatUseCaseFactory {
       // 새로운 서비스 생성
       let useCase: ChatUseCase<unknown, ClientChatRequest, unknown>;
 
-      // PrismaClient 인스턴스를 생성합니다.
-
       // ✅ UoW 팩토리 메서드 사용
       const unitOfWork = UnitOfWorkChat.create(prisma);
 
