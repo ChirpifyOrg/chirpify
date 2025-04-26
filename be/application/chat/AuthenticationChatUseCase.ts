@@ -1,13 +1,17 @@
-import { AIChatAPIResponse, AIChatAPIResponseSchema, AuthenticatedClientChatReuqest } from '@/types/chat';
+import {
+   AIChatAPIResponse,
+   AIChatAPIResponseSchema,
+   AuthenticatedClientChatReuqest,
+   defaultAIChatResponse,
+} from '@/types/chat';
 import { ChatUseCase } from './ChatUseCase';
-import { ChatCompletionChunk, ChatModel, ChatCompletion as GPTChatFormat } from 'openai/resources';
-import { ChatRepository } from '@/be/domain/chat/ChatRepository';
-
+import { ChatCompletionChunk, ChatCompletion as GPTChatFormat } from 'openai/resources';
 import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
-import { ChatRoomRepository } from '@/be/domain/chat/ChatRoomRepository';
-import { ChatModelRepository } from '@/be/domain/chat/ChatModelRepository';
-import { ForbiddenError } from '@/lib/be/utils/errors';
-import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions';
+import { ForbiddenError, NotFoundError, ValidationError } from '@/lib/be/utils/errors';
+import { ChatCompletion, ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions';
+import { ChatModel } from '@/be/domain/chat/ChatModel';
+import { ChatMessage } from '@/be/domain/chat/ChatMessage';
+import { IUnitOfWorkChat } from '@/be/domain/chat/IUnitOfWorkChat';
 /**
  * @class AuthenticationChatUseCase
  * @extends ChatUseCase
@@ -24,9 +28,7 @@ import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completion
  * @param {ApiResponseGenerator<unknown, GPTChatFormat, ChatCompletionChunk>} chatService -
  * OpenAI API와의 상호작용을 담당하는 서비스입니다.
  *
- * @param {ChatRepository} chatRepository - 채팅 기록을 저장하고 조회하는 리포지토리입니다.
- *
- * @param {ChatModelRepository} ChatModelRepository - AI 모델 정보를 관리하는 리포지토리입니다.
+ * @param {IUnitOfWorkChat}  unitOfWork- UoW 패턴을 통해 chat domain repository를 warpping
  */
 // TODO : [현재 GPT API 의존] GPT API가 아닌 다른 LLM도 지원하도록 Generic 공통 interface 개발 및 변경 필요.
 export class AuthenticationChatUseCase extends ChatUseCase<
@@ -36,29 +38,42 @@ export class AuthenticationChatUseCase extends ChatUseCase<
 > {
    constructor(
       protected chatService: ApiResponseGenerator<unknown, GPTChatFormat, ChatCompletionChunk>,
-      protected chatRepository: ChatRepository,
-      protected ChatModelRepository: ChatModelRepository,
-      protected chatRoomRepository: ChatRoomRepository,
+      protected unitOfWork: IUnitOfWorkChat,
    ) {
-      super(chatService, chatRepository, ChatModelRepository, chatRoomRepository);
+      super(chatService, unitOfWork);
    }
-   protected formatResponse(originResponse: GPTChatFormat): AIChatAPIResponse {
+
+   async processChat(request: AuthenticatedClientChatReuqest): Promise<AIChatAPIResponse> {
       try {
-         const response = JSON.parse(originResponse.choices[0].message.content ?? '');
-         console.log(response);
-         const validatedResponse = AIChatAPIResponseSchema.parse(response);
-         return validatedResponse;
-      } catch (e) {
-         console.error(e);
-         throw new Error('Method not implemented.');
+         await this.unitOfWork.beginTransaction();
+
+         await this.requestValidate(request);
+         const modelInfo = await this.unitOfWork.chatRoomRepository.findByIdWithModel(request.roomId);
+         if (!modelInfo || !modelInfo.model) {
+            throw new NotFoundError('채팅방이 존재하지 않습니다.');
+         }
+         const promptInput = await this.formatRequest(request, modelInfo.model);
+         const response = await this.chatService.generateResponse(promptInput);
+         const formattedResponse = this.formatResponse(response);
+         await this.storeChat(request, formattedResponse);
+
+         await this.unitOfWork.commit();
+         return formattedResponse;
+      } catch (error) {
+         await this.unitOfWork.rollback();
+         throw error;
       }
    }
-   protected async requestValidate(request: AuthenticatedClientChatReuqest): Promise<void> {
-      const { userId, roomId } = request;
-      const isUserOwnerOfRoom = await this.chatRoomRepository.isUserInRoom({ roomId, userId });
-      if (!isUserOwnerOfRoom) {
-         throw new ForbiddenError('잘못된 room 소유자 입니다.');
+
+   protected formatResponse(originResponse: ChatCompletion): AIChatAPIResponse {
+      const result = AIChatAPIResponseSchema.safeParse(JSON.parse(originResponse?.choices[0]?.message?.content ?? ''));
+      if (result.error) {
+         throw new ValidationError('응답 형식이 올바르지 않습니다. API 응답 형식을 확인해주세요.');
       }
+      const parsed = result.success
+         ? result.data
+         : ({ ...defaultAIChatResponse, ...originResponse } as AIChatAPIResponse);
+      return parsed;
    }
 
    async processChatStreaming(request: AuthenticatedClientChatReuqest, onData: (chunk: string) => void): Promise<void> {
@@ -83,17 +98,35 @@ export class AuthenticationChatUseCase extends ChatUseCase<
       modelInfo: ChatModel,
    ): Promise<ChatCompletionCreateParamsBase> {
       const defaultParam = modelInfo.defaultParam as ChatCompletionCreateParamsBase;
+      defaultParam.messages.push({ role: 'system', content: modelInfo.prompt ?? '' });
       defaultParam.messages.push({ role: 'user', content: request.message });
       defaultParam.stream = false;
       return defaultParam;
    }
+
    protected async formatStreamRequest(
       request: AuthenticatedClientChatReuqest,
       modelInfo: ChatModel,
    ): Promise<ChatCompletionCreateParamsBase> {
       const defaultParam = modelInfo.defaultParam as ChatCompletionCreateParamsBase;
+      defaultParam.messages.push({ role: 'system', content: modelInfo.prompt ?? '' });
       defaultParam.messages.push({ role: 'user', content: request.message });
       defaultParam.stream = true;
       return defaultParam;
+   }
+
+   protected async requestValidate(request: AuthenticatedClientChatReuqest): Promise<void> {
+      const { roomId, userId } = request;
+      const isUserOwnerOfRoom = await this.unitOfWork.chatRoomRepository.isUserInRoom({ roomId, userId });
+      if (!isUserOwnerOfRoom) {
+         throw new ForbiddenError('잘못된 room 소유자 입니다.');
+      }
+   }
+   protected async storeChat(request: AuthenticatedClientChatReuqest, response: AIChatAPIResponse): Promise<void> {
+      const { roomId, message, nativeLanguage } = request;
+
+      const userData = ChatMessage.createFromUserMessage(roomId, message);
+      const aiData = ChatMessage.createFromAIResponse(roomId, nativeLanguage, response);
+      await this.unitOfWork.chatRepository.saveChat(userData, aiData);
    }
 }

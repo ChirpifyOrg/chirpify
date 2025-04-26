@@ -1,14 +1,20 @@
+import { uowContext } from '@/be/domain/UnitOfWorkContext';
 import { Prisma, PrismaClient } from '@/lib/generated/prisma';
 
-// prisma 구현체를 위한 기본 클래스
-export class BasePrismaRepository {
-   protected prisma: PrismaClient | Prisma.TransactionClient;
+// prisma 구현체를 위한 클래스
+// 모든 prisma를 통한 영속화 구현체들은 UoW + Service Locator 가 적용된  prisma()를 통해서 prismaclient를 가져오도록 한다.
+export abstract class BasePrismaRepository {
+   constructor(private readonly defaultClient: PrismaClient) {}
 
-   constructor(prisma: PrismaClient) {
-      this.prisma = prisma;
-   }
-
-   setClient(tx: Prisma.TransactionClient) {
-      this.prisma = tx;
+   protected get prisma(): PrismaClient | Prisma.TransactionClient {
+      const tx = uowContext.getStore();
+      const defaultClient = this.defaultClient;
+      const currentClient = tx ?? defaultClient;
+      if ('$transaction' in currentClient) {
+         console.log('[BasePrismaRepo.getClient] : transaction 안');
+      } else {
+         console.log('[BasePrismaRepo.getClient] : transaction 바깥');
+      }
+      return currentClient;
    }
 }

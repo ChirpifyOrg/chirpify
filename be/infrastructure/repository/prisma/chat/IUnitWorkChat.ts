@@ -3,8 +3,9 @@ import { PrismaClient } from '@prisma/client';
 import { ChatRepositoryImpl } from './ChatRepository';
 import { ChatRoomRepositoryImpl } from './ChatRoomRepository';
 import { ChatModelRepositoryImpl } from './ChatModelRepository';
-import { Prisma } from '@/lib/generated/prisma';
 import { PrismaUnitOfWork } from '../PrismaUnitOfWork';
+
+import { IUnitOfWorkChat } from '@/be/domain/chat/IUnitOfWorkChat';
 /**
  * @class PrismaUnitOfWorkChat
  * @extends PrismaUnitOfWork
@@ -17,9 +18,10 @@ import { PrismaUnitOfWork } from '../PrismaUnitOfWork';
  * @param {ChatRoomRepositoryImpl} chatRoomRepository - 채팅방 관련 저장소 구현체
  * @param {ChatModelRepositoryImpl} chatModelRepository - AI 모델 관련 저장소 구현체
  */
-export class UnitOfWorkChat extends PrismaUnitOfWork {
+// IUnitOfChat UoW 도메인 인터페이스를 구현함으로써 proxy를 통한 runtime 동적 속성 가로채기가 필요없어짐.
+export class UnitOfWorkChat extends PrismaUnitOfWork implements IUnitOfWorkChat {
    constructor(
-      protected readonly client: PrismaClient | Prisma.TransactionClient,
+      protected readonly client: PrismaClient,
       public readonly chatRepository: ChatRepositoryImpl,
       public readonly chatRoomRepository: ChatRoomRepositoryImpl,
       public readonly chatModelRepository: ChatModelRepositoryImpl,

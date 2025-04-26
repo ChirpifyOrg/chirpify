@@ -1,16 +1,16 @@
 import { IUnitOfWork } from '@/be/domain/IUnitOfWork';
 
-export abstract class UnitOfWork implements IUnitOfWork {
+export abstract class UnitOfWork implements IUnitOfWork<any> {
    protected transactionClient: unknown;
-
-   constructor(protected readonly client: unknown) {}
-
-   abstract executeInTransaction<T>(callback: (tx: any) => Promise<T>): Promise<T>;
-
-   static create(client: unknown): UnitOfWork {
-      throw new Error('Need Implements Prisma UoW!');
+   constructor(protected readonly client: any) {}
+   executeInTransaction<T>(callback: (uow: any) => Promise<T>): Promise<T> {
+      console.log(callback);
+      throw new Error('Method not implemented.');
    }
 
+   protected getOriginClient() {
+      return this.client;
+   }
    async beginTransaction(): Promise<void> {
       if (this.transactionClient) {
          throw new Error('Transaction already started');
