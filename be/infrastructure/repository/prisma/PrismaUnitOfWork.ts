@@ -32,7 +32,6 @@ export class PrismaUnitOfWork extends UnitOfWork {
          if (!('$transaction' in tx)) {
             console.error('[in $transaction] : tx가 $transaction을 가지고 있습니다.');
          }
-         // const proxy = this.createProxyWithTx(tx); // 프록시가 없어도 각 도메인별 uow 구현체에서
          return uowContext.run(tx, async () => {
             try {
                return await callback(this);
