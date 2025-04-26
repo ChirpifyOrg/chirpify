@@ -32,10 +32,9 @@ export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, Authenticat
       if (!modelInfo || !modelInfo.model) {
          throw new NotFoundError('채팅방이 존재하지 않습니다.');
       }
-
       const promptInput = await this.formatRequest(request, modelInfo.model);
       const response = await this.chatService.generateResponse(promptInput);
-      return this.unitOfWork.executeInTransaction(async uow => {
+      return this.unitOfWork.executeInTransaction(async () => {
          const formattedResponse = this.formatResponse(response);
          await this.storeChat(request, formattedResponse);
          return formattedResponse;

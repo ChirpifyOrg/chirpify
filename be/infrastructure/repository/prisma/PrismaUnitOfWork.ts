@@ -21,30 +21,6 @@ export class PrismaUnitOfWork extends UnitOfWork {
    static create(prisma: PrismaClient): PrismaUnitOfWork {
       return new PrismaUnitOfWork(prisma);
    }
-   // uow 패턴을 암시적으로 처리하기 위해 아래와 같이 proxy 지정
-   private createProxyWithTx(tx: Prisma.TransactionClient) {
-      const proxy = new Proxy(this, {
-         get: (target, prop, receiver) => {
-            if (prop === 'client') {
-               return tx;
-            }
-            const value = Reflect.get(target, prop, receiver);
-            if (value instanceof BasePrismaRepository) {
-               const value = Reflect.get(target, prop, receiver);
-            }
-            return value;
-         },
-      });
-      // 내부에서 tx -> prismaclient로 변환하는 restore 메소드 주입
-      (proxy as any).restoreClient = () => {
-         for (const key of Object.keys(this)) {
-            const val = (this as any)[key]; // BasePrismaRepository 뿐만이 아닌 그 외 key가 있을수 있으니 any 지정.
-            if (val instanceof BasePrismaRepository) {
-            }
-         }
-      };
-      return proxy;
-   }
 
    async executeInTransaction<T>(callback: (uow: this) => Promise<T>): Promise<T> {
       // duck typing을 통해 check
@@ -65,10 +41,6 @@ export class PrismaUnitOfWork extends UnitOfWork {
                console.log(e); // 로깅 기능 추후 추가
                throw e;
             } finally {
-               uowContext.exit(() => {
-                  //(proxy as any).restoreClient();
-               });
-               uowContext.disable();
             }
          });
       });
