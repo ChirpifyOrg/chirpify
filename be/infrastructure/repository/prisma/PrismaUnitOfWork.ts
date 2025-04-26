@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient } from '@/lib/generated/prisma';
 
-import { BasePrismaRepository } from './BasePrismaRepository';
 import { UnitOfWork } from '../uow/UnitOfWork';
 import { uowContext } from '@/be/domain/UnitOfWorkContext';
 

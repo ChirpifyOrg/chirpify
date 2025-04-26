@@ -4,7 +4,7 @@ import { AuthenticationChatUseCase } from './AuthenticationChatUseCase';
 import { OpenAIChatService } from '@/be/infrastructure/service/OpenAIChatService';
 import { env } from '@/lib/be/utils/env';
 import { TrialChatUseCase } from './TrialChatUseCase';
-import { UnitOfWorkChat } from '@/be/infrastructure/repository/prisma/chat/\bIUnitWorkChat';
+import { UnitOfWorkChat } from '@/be/infrastructure/repository/prisma/chat/UnitWorkChat';
 import { prisma } from '@/lib/be/prisma';
 
 export class ChatUseCaseFactory {
@@ -39,7 +39,7 @@ export class ChatUseCaseFactory {
       let useCase: ChatUseCase<unknown, ClientChatRequest, unknown>;
 
       // UoW 팩토리 메서드 사용
-      const unitOfWork = UnitOfWorkChat.create(prisma);
+      const unitOfWork = UnitOfWorkChat.create(prisma); // 현재는 prisma 로 주입
 
       switch (key) {
          case 'default':
