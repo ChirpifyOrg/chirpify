@@ -6,6 +6,9 @@ import { ChatModelRepositoryImpl } from './ChatModelRepository';
 import { PrismaUnitOfWork } from '../PrismaUnitOfWork';
 
 import { IUnitOfWorkChat } from '@/be/domain/chat/IUnitOfWorkChat';
+import { ChatRepository } from '@/be/domain/chat/ChatRepository';
+import { ChatRoomRepository } from '@/be/domain/chat/ChatRoomRepository';
+import { ChatModelRepository } from '@/be/domain/chat/ChatModelRepository';
 /**
  * @class PrismaUnitOfWorkChat
  * @extends PrismaUnitOfWork
@@ -22,9 +25,9 @@ import { IUnitOfWorkChat } from '@/be/domain/chat/IUnitOfWorkChat';
 export class UnitOfWorkChat extends PrismaUnitOfWork implements IUnitOfWorkChat {
    constructor(
       protected readonly client: PrismaClient,
-      public readonly chatRepository: ChatRepositoryImpl,
-      public readonly chatRoomRepository: ChatRoomRepositoryImpl,
-      public readonly chatModelRepository: ChatModelRepositoryImpl,
+      public readonly chatRepository: ChatRepository,
+      public readonly chatRoomRepository: ChatRoomRepository,
+      public readonly chatModelRepository: ChatModelRepository,
    ) {
       super(client);
    }
