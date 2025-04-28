@@ -370,6 +370,7 @@ model chat_message {
 
   @@schema("public")
 }
+
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model chat_metadata {
   id                    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -389,14 +390,12 @@ model chat_metadata {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model chat_model {
-  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  persona       String?
-  description   String?
-  prompt        String?
-  is_active     Boolean?
-  created_at    DateTime     @default(now()) @db.Timestamptz(6)
-  default_param Json?        @db.Json
-  chat_rooms    chat_rooms[]
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  persona               String?
+  description           String?
+  created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  chat_model_parameters chat_model_parameters[]
+  chat_rooms            chat_rooms[]
 
   @@schema("public")
 }
@@ -412,6 +411,21 @@ model chat_rooms {
   chat_message chat_message[]
   chat_model   chat_model?    @relation(fields: [model_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users        users?         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model chat_model_parameters {
+  chat_model_id String?     @db.Uuid
+  default_param Json?       @db.Json
+  prompt        String?
+  is_active     Boolean?    @default(true)
+  is_streaming  Boolean?    @default(false)
+  created_at    DateTime    @default(now()) @db.Timestamptz(6)
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  chat_model    chat_model? @relation(fields: [chat_model_id], references: [id], onDelete: Cascade)
 
   @@schema("public")
 }

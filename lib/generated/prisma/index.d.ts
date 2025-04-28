@@ -152,6 +152,12 @@ export type chat_model = $Result.DefaultSelection<Prisma.$chat_modelPayload>
  * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
  */
 export type chat_rooms = $Result.DefaultSelection<Prisma.$chat_roomsPayload>
+/**
+ * Model chat_model_parameters
+ * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type chat_model_parameters = $Result.DefaultSelection<Prisma.$chat_model_parametersPayload>
 
 /**
  * Enums
@@ -568,6 +574,16 @@ export class PrismaClient<
     * ```
     */
   get chat_rooms(): Prisma.chat_roomsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chat_model_parameters`: Exposes CRUD operations for the **chat_model_parameters** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Chat_model_parameters
+    * const chat_model_parameters = await prisma.chat_model_parameters.findMany()
+    * ```
+    */
+  get chat_model_parameters(): Prisma.chat_model_parametersDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1029,7 +1045,8 @@ export namespace Prisma {
     chat_message: 'chat_message',
     chat_metadata: 'chat_metadata',
     chat_model: 'chat_model',
-    chat_rooms: 'chat_rooms'
+    chat_rooms: 'chat_rooms',
+    chat_model_parameters: 'chat_model_parameters'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1048,7 +1065,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "audit_log_entries" | "flow_state" | "identities" | "instances" | "mfa_amr_claims" | "mfa_challenges" | "mfa_factors" | "one_time_tokens" | "refresh_tokens" | "saml_providers" | "saml_relay_states" | "schema_migrations" | "sessions" | "sso_domains" | "sso_providers" | "users" | "chat_evaluations" | "chat_feedback" | "chat_message" | "chat_metadata" | "chat_model" | "chat_rooms"
+      modelProps: "audit_log_entries" | "flow_state" | "identities" | "instances" | "mfa_amr_claims" | "mfa_challenges" | "mfa_factors" | "one_time_tokens" | "refresh_tokens" | "saml_providers" | "saml_relay_states" | "schema_migrations" | "sessions" | "sso_domains" | "sso_providers" | "users" | "chat_evaluations" | "chat_feedback" | "chat_message" | "chat_metadata" | "chat_model" | "chat_rooms" | "chat_model_parameters"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2680,6 +2697,80 @@ export namespace Prisma {
           }
         }
       }
+      chat_model_parameters: {
+        payload: Prisma.$chat_model_parametersPayload<ExtArgs>
+        fields: Prisma.chat_model_parametersFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.chat_model_parametersFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.chat_model_parametersFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload>
+          }
+          findFirst: {
+            args: Prisma.chat_model_parametersFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.chat_model_parametersFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload>
+          }
+          findMany: {
+            args: Prisma.chat_model_parametersFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload>[]
+          }
+          create: {
+            args: Prisma.chat_model_parametersCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload>
+          }
+          createMany: {
+            args: Prisma.chat_model_parametersCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.chat_model_parametersCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload>[]
+          }
+          delete: {
+            args: Prisma.chat_model_parametersDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload>
+          }
+          update: {
+            args: Prisma.chat_model_parametersUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload>
+          }
+          deleteMany: {
+            args: Prisma.chat_model_parametersDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.chat_model_parametersUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.chat_model_parametersUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload>[]
+          }
+          upsert: {
+            args: Prisma.chat_model_parametersUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chat_model_parametersPayload>
+          }
+          aggregate: {
+            args: Prisma.Chat_model_parametersAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChat_model_parameters>
+          }
+          groupBy: {
+            args: Prisma.chat_model_parametersGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Chat_model_parametersGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.chat_model_parametersCountArgs<ExtArgs>
+            result: $Utils.Optional<Chat_model_parametersCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2786,6 +2877,7 @@ export namespace Prisma {
     chat_metadata?: chat_metadataOmit
     chat_model?: chat_modelOmit
     chat_rooms?: chat_roomsOmit
+    chat_model_parameters?: chat_model_parametersOmit
   }
 
   /* Types for Logging */
@@ -3169,10 +3261,12 @@ export namespace Prisma {
    */
 
   export type Chat_modelCountOutputType = {
+    chat_model_parameters: number
     chat_rooms: number
   }
 
   export type Chat_modelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chat_model_parameters?: boolean | Chat_modelCountOutputTypeCountChat_model_parametersArgs
     chat_rooms?: boolean | Chat_modelCountOutputTypeCountChat_roomsArgs
   }
 
@@ -3185,6 +3279,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the Chat_modelCountOutputType
      */
     select?: Chat_modelCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * Chat_modelCountOutputType without action
+   */
+  export type Chat_modelCountOutputTypeCountChat_model_parametersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: chat_model_parametersWhereInput
   }
 
   /**
@@ -25718,8 +25819,6 @@ export namespace Prisma {
     id: string | null
     persona: string | null
     description: string | null
-    prompt: string | null
-    is_active: boolean | null
     created_at: Date | null
   }
 
@@ -25727,8 +25826,6 @@ export namespace Prisma {
     id: string | null
     persona: string | null
     description: string | null
-    prompt: string | null
-    is_active: boolean | null
     created_at: Date | null
   }
 
@@ -25736,10 +25833,7 @@ export namespace Prisma {
     id: number
     persona: number
     description: number
-    prompt: number
-    is_active: number
     created_at: number
-    default_param: number
     _all: number
   }
 
@@ -25748,8 +25842,6 @@ export namespace Prisma {
     id?: true
     persona?: true
     description?: true
-    prompt?: true
-    is_active?: true
     created_at?: true
   }
 
@@ -25757,8 +25849,6 @@ export namespace Prisma {
     id?: true
     persona?: true
     description?: true
-    prompt?: true
-    is_active?: true
     created_at?: true
   }
 
@@ -25766,10 +25856,7 @@ export namespace Prisma {
     id?: true
     persona?: true
     description?: true
-    prompt?: true
-    is_active?: true
     created_at?: true
-    default_param?: true
     _all?: true
   }
 
@@ -25849,10 +25936,7 @@ export namespace Prisma {
     id: string
     persona: string | null
     description: string | null
-    prompt: string | null
-    is_active: boolean | null
     created_at: Date
-    default_param: JsonValue | null
     _count: Chat_modelCountAggregateOutputType | null
     _min: Chat_modelMinAggregateOutputType | null
     _max: Chat_modelMaxAggregateOutputType | null
@@ -25876,10 +25960,8 @@ export namespace Prisma {
     id?: boolean
     persona?: boolean
     description?: boolean
-    prompt?: boolean
-    is_active?: boolean
     created_at?: boolean
-    default_param?: boolean
+    chat_model_parameters?: boolean | chat_model$chat_model_parametersArgs<ExtArgs>
     chat_rooms?: boolean | chat_model$chat_roomsArgs<ExtArgs>
     _count?: boolean | Chat_modelCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chat_model"]>
@@ -25888,34 +25970,26 @@ export namespace Prisma {
     id?: boolean
     persona?: boolean
     description?: boolean
-    prompt?: boolean
-    is_active?: boolean
     created_at?: boolean
-    default_param?: boolean
   }, ExtArgs["result"]["chat_model"]>
 
   export type chat_modelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     persona?: boolean
     description?: boolean
-    prompt?: boolean
-    is_active?: boolean
     created_at?: boolean
-    default_param?: boolean
   }, ExtArgs["result"]["chat_model"]>
 
   export type chat_modelSelectScalar = {
     id?: boolean
     persona?: boolean
     description?: boolean
-    prompt?: boolean
-    is_active?: boolean
     created_at?: boolean
-    default_param?: boolean
   }
 
-  export type chat_modelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "persona" | "description" | "prompt" | "is_active" | "created_at" | "default_param", ExtArgs["result"]["chat_model"]>
+  export type chat_modelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "persona" | "description" | "created_at", ExtArgs["result"]["chat_model"]>
   export type chat_modelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chat_model_parameters?: boolean | chat_model$chat_model_parametersArgs<ExtArgs>
     chat_rooms?: boolean | chat_model$chat_roomsArgs<ExtArgs>
     _count?: boolean | Chat_modelCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -25925,16 +25999,14 @@ export namespace Prisma {
   export type $chat_modelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "chat_model"
     objects: {
+      chat_model_parameters: Prisma.$chat_model_parametersPayload<ExtArgs>[]
       chat_rooms: Prisma.$chat_roomsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       persona: string | null
       description: string | null
-      prompt: string | null
-      is_active: boolean | null
       created_at: Date
-      default_param: Prisma.JsonValue | null
     }, ExtArgs["result"]["chat_model"]>
     composites: {}
   }
@@ -26329,6 +26401,7 @@ export namespace Prisma {
    */
   export interface Prisma__chat_modelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    chat_model_parameters<T extends chat_model$chat_model_parametersArgs<ExtArgs> = {}>(args?: Subset<T, chat_model$chat_model_parametersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chat_rooms<T extends chat_model$chat_roomsArgs<ExtArgs> = {}>(args?: Subset<T, chat_model$chat_roomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chat_roomsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -26362,10 +26435,7 @@ export namespace Prisma {
     readonly id: FieldRef<"chat_model", 'String'>
     readonly persona: FieldRef<"chat_model", 'String'>
     readonly description: FieldRef<"chat_model", 'String'>
-    readonly prompt: FieldRef<"chat_model", 'String'>
-    readonly is_active: FieldRef<"chat_model", 'Boolean'>
     readonly created_at: FieldRef<"chat_model", 'DateTime'>
-    readonly default_param: FieldRef<"chat_model", 'Json'>
   }
     
 
@@ -26751,6 +26821,30 @@ export namespace Prisma {
      * Limit how many chat_models to delete.
      */
     limit?: number
+  }
+
+  /**
+   * chat_model.chat_model_parameters
+   */
+  export type chat_model$chat_model_parametersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+    where?: chat_model_parametersWhereInput
+    orderBy?: chat_model_parametersOrderByWithRelationInput | chat_model_parametersOrderByWithRelationInput[]
+    cursor?: chat_model_parametersWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Chat_model_parametersScalarFieldEnum | Chat_model_parametersScalarFieldEnum[]
   }
 
   /**
@@ -27931,6 +28025,1105 @@ export namespace Prisma {
 
 
   /**
+   * Model chat_model_parameters
+   */
+
+  export type AggregateChat_model_parameters = {
+    _count: Chat_model_parametersCountAggregateOutputType | null
+    _min: Chat_model_parametersMinAggregateOutputType | null
+    _max: Chat_model_parametersMaxAggregateOutputType | null
+  }
+
+  export type Chat_model_parametersMinAggregateOutputType = {
+    chat_model_id: string | null
+    prompt: string | null
+    is_active: boolean | null
+    is_streaming: boolean | null
+    created_at: Date | null
+    id: string | null
+  }
+
+  export type Chat_model_parametersMaxAggregateOutputType = {
+    chat_model_id: string | null
+    prompt: string | null
+    is_active: boolean | null
+    is_streaming: boolean | null
+    created_at: Date | null
+    id: string | null
+  }
+
+  export type Chat_model_parametersCountAggregateOutputType = {
+    chat_model_id: number
+    default_param: number
+    prompt: number
+    is_active: number
+    is_streaming: number
+    created_at: number
+    id: number
+    _all: number
+  }
+
+
+  export type Chat_model_parametersMinAggregateInputType = {
+    chat_model_id?: true
+    prompt?: true
+    is_active?: true
+    is_streaming?: true
+    created_at?: true
+    id?: true
+  }
+
+  export type Chat_model_parametersMaxAggregateInputType = {
+    chat_model_id?: true
+    prompt?: true
+    is_active?: true
+    is_streaming?: true
+    created_at?: true
+    id?: true
+  }
+
+  export type Chat_model_parametersCountAggregateInputType = {
+    chat_model_id?: true
+    default_param?: true
+    prompt?: true
+    is_active?: true
+    is_streaming?: true
+    created_at?: true
+    id?: true
+    _all?: true
+  }
+
+  export type Chat_model_parametersAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which chat_model_parameters to aggregate.
+     */
+    where?: chat_model_parametersWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of chat_model_parameters to fetch.
+     */
+    orderBy?: chat_model_parametersOrderByWithRelationInput | chat_model_parametersOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: chat_model_parametersWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` chat_model_parameters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` chat_model_parameters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned chat_model_parameters
+    **/
+    _count?: true | Chat_model_parametersCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Chat_model_parametersMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Chat_model_parametersMaxAggregateInputType
+  }
+
+  export type GetChat_model_parametersAggregateType<T extends Chat_model_parametersAggregateArgs> = {
+        [P in keyof T & keyof AggregateChat_model_parameters]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChat_model_parameters[P]>
+      : GetScalarType<T[P], AggregateChat_model_parameters[P]>
+  }
+
+
+
+
+  export type chat_model_parametersGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: chat_model_parametersWhereInput
+    orderBy?: chat_model_parametersOrderByWithAggregationInput | chat_model_parametersOrderByWithAggregationInput[]
+    by: Chat_model_parametersScalarFieldEnum[] | Chat_model_parametersScalarFieldEnum
+    having?: chat_model_parametersScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Chat_model_parametersCountAggregateInputType | true
+    _min?: Chat_model_parametersMinAggregateInputType
+    _max?: Chat_model_parametersMaxAggregateInputType
+  }
+
+  export type Chat_model_parametersGroupByOutputType = {
+    chat_model_id: string | null
+    default_param: JsonValue | null
+    prompt: string | null
+    is_active: boolean | null
+    is_streaming: boolean | null
+    created_at: Date
+    id: string
+    _count: Chat_model_parametersCountAggregateOutputType | null
+    _min: Chat_model_parametersMinAggregateOutputType | null
+    _max: Chat_model_parametersMaxAggregateOutputType | null
+  }
+
+  type GetChat_model_parametersGroupByPayload<T extends chat_model_parametersGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Chat_model_parametersGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Chat_model_parametersGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Chat_model_parametersGroupByOutputType[P]>
+            : GetScalarType<T[P], Chat_model_parametersGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type chat_model_parametersSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    chat_model_id?: boolean
+    default_param?: boolean
+    prompt?: boolean
+    is_active?: boolean
+    is_streaming?: boolean
+    created_at?: boolean
+    id?: boolean
+    chat_model?: boolean | chat_model_parameters$chat_modelArgs<ExtArgs>
+  }, ExtArgs["result"]["chat_model_parameters"]>
+
+  export type chat_model_parametersSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    chat_model_id?: boolean
+    default_param?: boolean
+    prompt?: boolean
+    is_active?: boolean
+    is_streaming?: boolean
+    created_at?: boolean
+    id?: boolean
+    chat_model?: boolean | chat_model_parameters$chat_modelArgs<ExtArgs>
+  }, ExtArgs["result"]["chat_model_parameters"]>
+
+  export type chat_model_parametersSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    chat_model_id?: boolean
+    default_param?: boolean
+    prompt?: boolean
+    is_active?: boolean
+    is_streaming?: boolean
+    created_at?: boolean
+    id?: boolean
+    chat_model?: boolean | chat_model_parameters$chat_modelArgs<ExtArgs>
+  }, ExtArgs["result"]["chat_model_parameters"]>
+
+  export type chat_model_parametersSelectScalar = {
+    chat_model_id?: boolean
+    default_param?: boolean
+    prompt?: boolean
+    is_active?: boolean
+    is_streaming?: boolean
+    created_at?: boolean
+    id?: boolean
+  }
+
+  export type chat_model_parametersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"chat_model_id" | "default_param" | "prompt" | "is_active" | "is_streaming" | "created_at" | "id", ExtArgs["result"]["chat_model_parameters"]>
+  export type chat_model_parametersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chat_model?: boolean | chat_model_parameters$chat_modelArgs<ExtArgs>
+  }
+  export type chat_model_parametersIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chat_model?: boolean | chat_model_parameters$chat_modelArgs<ExtArgs>
+  }
+  export type chat_model_parametersIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chat_model?: boolean | chat_model_parameters$chat_modelArgs<ExtArgs>
+  }
+
+  export type $chat_model_parametersPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "chat_model_parameters"
+    objects: {
+      chat_model: Prisma.$chat_modelPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      chat_model_id: string | null
+      default_param: Prisma.JsonValue | null
+      prompt: string | null
+      is_active: boolean | null
+      is_streaming: boolean | null
+      created_at: Date
+      id: string
+    }, ExtArgs["result"]["chat_model_parameters"]>
+    composites: {}
+  }
+
+  type chat_model_parametersGetPayload<S extends boolean | null | undefined | chat_model_parametersDefaultArgs> = $Result.GetResult<Prisma.$chat_model_parametersPayload, S>
+
+  type chat_model_parametersCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<chat_model_parametersFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Chat_model_parametersCountAggregateInputType | true
+    }
+
+  export interface chat_model_parametersDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['chat_model_parameters'], meta: { name: 'chat_model_parameters' } }
+    /**
+     * Find zero or one Chat_model_parameters that matches the filter.
+     * @param {chat_model_parametersFindUniqueArgs} args - Arguments to find a Chat_model_parameters
+     * @example
+     * // Get one Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends chat_model_parametersFindUniqueArgs>(args: SelectSubset<T, chat_model_parametersFindUniqueArgs<ExtArgs>>): Prisma__chat_model_parametersClient<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Chat_model_parameters that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {chat_model_parametersFindUniqueOrThrowArgs} args - Arguments to find a Chat_model_parameters
+     * @example
+     * // Get one Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends chat_model_parametersFindUniqueOrThrowArgs>(args: SelectSubset<T, chat_model_parametersFindUniqueOrThrowArgs<ExtArgs>>): Prisma__chat_model_parametersClient<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Chat_model_parameters that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chat_model_parametersFindFirstArgs} args - Arguments to find a Chat_model_parameters
+     * @example
+     * // Get one Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends chat_model_parametersFindFirstArgs>(args?: SelectSubset<T, chat_model_parametersFindFirstArgs<ExtArgs>>): Prisma__chat_model_parametersClient<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Chat_model_parameters that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chat_model_parametersFindFirstOrThrowArgs} args - Arguments to find a Chat_model_parameters
+     * @example
+     * // Get one Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends chat_model_parametersFindFirstOrThrowArgs>(args?: SelectSubset<T, chat_model_parametersFindFirstOrThrowArgs<ExtArgs>>): Prisma__chat_model_parametersClient<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Chat_model_parameters that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chat_model_parametersFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.findMany()
+     * 
+     * // Get first 10 Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.findMany({ take: 10 })
+     * 
+     * // Only select the `chat_model_id`
+     * const chat_model_parametersWithChat_model_idOnly = await prisma.chat_model_parameters.findMany({ select: { chat_model_id: true } })
+     * 
+     */
+    findMany<T extends chat_model_parametersFindManyArgs>(args?: SelectSubset<T, chat_model_parametersFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Chat_model_parameters.
+     * @param {chat_model_parametersCreateArgs} args - Arguments to create a Chat_model_parameters.
+     * @example
+     * // Create one Chat_model_parameters
+     * const Chat_model_parameters = await prisma.chat_model_parameters.create({
+     *   data: {
+     *     // ... data to create a Chat_model_parameters
+     *   }
+     * })
+     * 
+     */
+    create<T extends chat_model_parametersCreateArgs>(args: SelectSubset<T, chat_model_parametersCreateArgs<ExtArgs>>): Prisma__chat_model_parametersClient<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Chat_model_parameters.
+     * @param {chat_model_parametersCreateManyArgs} args - Arguments to create many Chat_model_parameters.
+     * @example
+     * // Create many Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends chat_model_parametersCreateManyArgs>(args?: SelectSubset<T, chat_model_parametersCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Chat_model_parameters and returns the data saved in the database.
+     * @param {chat_model_parametersCreateManyAndReturnArgs} args - Arguments to create many Chat_model_parameters.
+     * @example
+     * // Create many Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Chat_model_parameters and only return the `chat_model_id`
+     * const chat_model_parametersWithChat_model_idOnly = await prisma.chat_model_parameters.createManyAndReturn({
+     *   select: { chat_model_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends chat_model_parametersCreateManyAndReturnArgs>(args?: SelectSubset<T, chat_model_parametersCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Chat_model_parameters.
+     * @param {chat_model_parametersDeleteArgs} args - Arguments to delete one Chat_model_parameters.
+     * @example
+     * // Delete one Chat_model_parameters
+     * const Chat_model_parameters = await prisma.chat_model_parameters.delete({
+     *   where: {
+     *     // ... filter to delete one Chat_model_parameters
+     *   }
+     * })
+     * 
+     */
+    delete<T extends chat_model_parametersDeleteArgs>(args: SelectSubset<T, chat_model_parametersDeleteArgs<ExtArgs>>): Prisma__chat_model_parametersClient<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Chat_model_parameters.
+     * @param {chat_model_parametersUpdateArgs} args - Arguments to update one Chat_model_parameters.
+     * @example
+     * // Update one Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends chat_model_parametersUpdateArgs>(args: SelectSubset<T, chat_model_parametersUpdateArgs<ExtArgs>>): Prisma__chat_model_parametersClient<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Chat_model_parameters.
+     * @param {chat_model_parametersDeleteManyArgs} args - Arguments to filter Chat_model_parameters to delete.
+     * @example
+     * // Delete a few Chat_model_parameters
+     * const { count } = await prisma.chat_model_parameters.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends chat_model_parametersDeleteManyArgs>(args?: SelectSubset<T, chat_model_parametersDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Chat_model_parameters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chat_model_parametersUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends chat_model_parametersUpdateManyArgs>(args: SelectSubset<T, chat_model_parametersUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Chat_model_parameters and returns the data updated in the database.
+     * @param {chat_model_parametersUpdateManyAndReturnArgs} args - Arguments to update many Chat_model_parameters.
+     * @example
+     * // Update many Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Chat_model_parameters and only return the `chat_model_id`
+     * const chat_model_parametersWithChat_model_idOnly = await prisma.chat_model_parameters.updateManyAndReturn({
+     *   select: { chat_model_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends chat_model_parametersUpdateManyAndReturnArgs>(args: SelectSubset<T, chat_model_parametersUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Chat_model_parameters.
+     * @param {chat_model_parametersUpsertArgs} args - Arguments to update or create a Chat_model_parameters.
+     * @example
+     * // Update or create a Chat_model_parameters
+     * const chat_model_parameters = await prisma.chat_model_parameters.upsert({
+     *   create: {
+     *     // ... data to create a Chat_model_parameters
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Chat_model_parameters we want to update
+     *   }
+     * })
+     */
+    upsert<T extends chat_model_parametersUpsertArgs>(args: SelectSubset<T, chat_model_parametersUpsertArgs<ExtArgs>>): Prisma__chat_model_parametersClient<$Result.GetResult<Prisma.$chat_model_parametersPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Chat_model_parameters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chat_model_parametersCountArgs} args - Arguments to filter Chat_model_parameters to count.
+     * @example
+     * // Count the number of Chat_model_parameters
+     * const count = await prisma.chat_model_parameters.count({
+     *   where: {
+     *     // ... the filter for the Chat_model_parameters we want to count
+     *   }
+     * })
+    **/
+    count<T extends chat_model_parametersCountArgs>(
+      args?: Subset<T, chat_model_parametersCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Chat_model_parametersCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Chat_model_parameters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Chat_model_parametersAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Chat_model_parametersAggregateArgs>(args: Subset<T, Chat_model_parametersAggregateArgs>): Prisma.PrismaPromise<GetChat_model_parametersAggregateType<T>>
+
+    /**
+     * Group by Chat_model_parameters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chat_model_parametersGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends chat_model_parametersGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: chat_model_parametersGroupByArgs['orderBy'] }
+        : { orderBy?: chat_model_parametersGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, chat_model_parametersGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChat_model_parametersGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the chat_model_parameters model
+   */
+  readonly fields: chat_model_parametersFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for chat_model_parameters.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__chat_model_parametersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    chat_model<T extends chat_model_parameters$chat_modelArgs<ExtArgs> = {}>(args?: Subset<T, chat_model_parameters$chat_modelArgs<ExtArgs>>): Prisma__chat_modelClient<$Result.GetResult<Prisma.$chat_modelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the chat_model_parameters model
+   */
+  interface chat_model_parametersFieldRefs {
+    readonly chat_model_id: FieldRef<"chat_model_parameters", 'String'>
+    readonly default_param: FieldRef<"chat_model_parameters", 'Json'>
+    readonly prompt: FieldRef<"chat_model_parameters", 'String'>
+    readonly is_active: FieldRef<"chat_model_parameters", 'Boolean'>
+    readonly is_streaming: FieldRef<"chat_model_parameters", 'Boolean'>
+    readonly created_at: FieldRef<"chat_model_parameters", 'DateTime'>
+    readonly id: FieldRef<"chat_model_parameters", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * chat_model_parameters findUnique
+   */
+  export type chat_model_parametersFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+    /**
+     * Filter, which chat_model_parameters to fetch.
+     */
+    where: chat_model_parametersWhereUniqueInput
+  }
+
+  /**
+   * chat_model_parameters findUniqueOrThrow
+   */
+  export type chat_model_parametersFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+    /**
+     * Filter, which chat_model_parameters to fetch.
+     */
+    where: chat_model_parametersWhereUniqueInput
+  }
+
+  /**
+   * chat_model_parameters findFirst
+   */
+  export type chat_model_parametersFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+    /**
+     * Filter, which chat_model_parameters to fetch.
+     */
+    where?: chat_model_parametersWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of chat_model_parameters to fetch.
+     */
+    orderBy?: chat_model_parametersOrderByWithRelationInput | chat_model_parametersOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for chat_model_parameters.
+     */
+    cursor?: chat_model_parametersWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` chat_model_parameters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` chat_model_parameters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of chat_model_parameters.
+     */
+    distinct?: Chat_model_parametersScalarFieldEnum | Chat_model_parametersScalarFieldEnum[]
+  }
+
+  /**
+   * chat_model_parameters findFirstOrThrow
+   */
+  export type chat_model_parametersFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+    /**
+     * Filter, which chat_model_parameters to fetch.
+     */
+    where?: chat_model_parametersWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of chat_model_parameters to fetch.
+     */
+    orderBy?: chat_model_parametersOrderByWithRelationInput | chat_model_parametersOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for chat_model_parameters.
+     */
+    cursor?: chat_model_parametersWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` chat_model_parameters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` chat_model_parameters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of chat_model_parameters.
+     */
+    distinct?: Chat_model_parametersScalarFieldEnum | Chat_model_parametersScalarFieldEnum[]
+  }
+
+  /**
+   * chat_model_parameters findMany
+   */
+  export type chat_model_parametersFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+    /**
+     * Filter, which chat_model_parameters to fetch.
+     */
+    where?: chat_model_parametersWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of chat_model_parameters to fetch.
+     */
+    orderBy?: chat_model_parametersOrderByWithRelationInput | chat_model_parametersOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing chat_model_parameters.
+     */
+    cursor?: chat_model_parametersWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` chat_model_parameters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` chat_model_parameters.
+     */
+    skip?: number
+    distinct?: Chat_model_parametersScalarFieldEnum | Chat_model_parametersScalarFieldEnum[]
+  }
+
+  /**
+   * chat_model_parameters create
+   */
+  export type chat_model_parametersCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+    /**
+     * The data needed to create a chat_model_parameters.
+     */
+    data?: XOR<chat_model_parametersCreateInput, chat_model_parametersUncheckedCreateInput>
+  }
+
+  /**
+   * chat_model_parameters createMany
+   */
+  export type chat_model_parametersCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many chat_model_parameters.
+     */
+    data: chat_model_parametersCreateManyInput | chat_model_parametersCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * chat_model_parameters createManyAndReturn
+   */
+  export type chat_model_parametersCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * The data used to create many chat_model_parameters.
+     */
+    data: chat_model_parametersCreateManyInput | chat_model_parametersCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * chat_model_parameters update
+   */
+  export type chat_model_parametersUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+    /**
+     * The data needed to update a chat_model_parameters.
+     */
+    data: XOR<chat_model_parametersUpdateInput, chat_model_parametersUncheckedUpdateInput>
+    /**
+     * Choose, which chat_model_parameters to update.
+     */
+    where: chat_model_parametersWhereUniqueInput
+  }
+
+  /**
+   * chat_model_parameters updateMany
+   */
+  export type chat_model_parametersUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update chat_model_parameters.
+     */
+    data: XOR<chat_model_parametersUpdateManyMutationInput, chat_model_parametersUncheckedUpdateManyInput>
+    /**
+     * Filter which chat_model_parameters to update
+     */
+    where?: chat_model_parametersWhereInput
+    /**
+     * Limit how many chat_model_parameters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * chat_model_parameters updateManyAndReturn
+   */
+  export type chat_model_parametersUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * The data used to update chat_model_parameters.
+     */
+    data: XOR<chat_model_parametersUpdateManyMutationInput, chat_model_parametersUncheckedUpdateManyInput>
+    /**
+     * Filter which chat_model_parameters to update
+     */
+    where?: chat_model_parametersWhereInput
+    /**
+     * Limit how many chat_model_parameters to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * chat_model_parameters upsert
+   */
+  export type chat_model_parametersUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+    /**
+     * The filter to search for the chat_model_parameters to update in case it exists.
+     */
+    where: chat_model_parametersWhereUniqueInput
+    /**
+     * In case the chat_model_parameters found by the `where` argument doesn't exist, create a new chat_model_parameters with this data.
+     */
+    create: XOR<chat_model_parametersCreateInput, chat_model_parametersUncheckedCreateInput>
+    /**
+     * In case the chat_model_parameters was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<chat_model_parametersUpdateInput, chat_model_parametersUncheckedUpdateInput>
+  }
+
+  /**
+   * chat_model_parameters delete
+   */
+  export type chat_model_parametersDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+    /**
+     * Filter which chat_model_parameters to delete.
+     */
+    where: chat_model_parametersWhereUniqueInput
+  }
+
+  /**
+   * chat_model_parameters deleteMany
+   */
+  export type chat_model_parametersDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which chat_model_parameters to delete
+     */
+    where?: chat_model_parametersWhereInput
+    /**
+     * Limit how many chat_model_parameters to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * chat_model_parameters.chat_model
+   */
+  export type chat_model_parameters$chat_modelArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model
+     */
+    select?: chat_modelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model
+     */
+    omit?: chat_modelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_modelInclude<ExtArgs> | null
+    where?: chat_modelWhereInput
+  }
+
+  /**
+   * chat_model_parameters without action
+   */
+  export type chat_model_parametersDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chat_model_parameters
+     */
+    select?: chat_model_parametersSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chat_model_parameters
+     */
+    omit?: chat_model_parametersOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chat_model_parametersInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -28237,10 +29430,7 @@ export namespace Prisma {
     id: 'id',
     persona: 'persona',
     description: 'description',
-    prompt: 'prompt',
-    is_active: 'is_active',
-    created_at: 'created_at',
-    default_param: 'default_param'
+    created_at: 'created_at'
   };
 
   export type Chat_modelScalarFieldEnum = (typeof Chat_modelScalarFieldEnum)[keyof typeof Chat_modelScalarFieldEnum]
@@ -28255,6 +29445,19 @@ export namespace Prisma {
   };
 
   export type Chat_roomsScalarFieldEnum = (typeof Chat_roomsScalarFieldEnum)[keyof typeof Chat_roomsScalarFieldEnum]
+
+
+  export const Chat_model_parametersScalarFieldEnum: {
+    chat_model_id: 'chat_model_id',
+    default_param: 'default_param',
+    prompt: 'prompt',
+    is_active: 'is_active',
+    is_streaming: 'is_streaming',
+    created_at: 'created_at',
+    id: 'id'
+  };
+
+  export type Chat_model_parametersScalarFieldEnum = (typeof Chat_model_parametersScalarFieldEnum)[keyof typeof Chat_model_parametersScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -29982,10 +31185,8 @@ export namespace Prisma {
     id?: UuidFilter<"chat_model"> | string
     persona?: StringNullableFilter<"chat_model"> | string | null
     description?: StringNullableFilter<"chat_model"> | string | null
-    prompt?: StringNullableFilter<"chat_model"> | string | null
-    is_active?: BoolNullableFilter<"chat_model"> | boolean | null
     created_at?: DateTimeFilter<"chat_model"> | Date | string
-    default_param?: JsonNullableFilter<"chat_model">
+    chat_model_parameters?: Chat_model_parametersListRelationFilter
     chat_rooms?: Chat_roomsListRelationFilter
   }
 
@@ -29993,10 +31194,8 @@ export namespace Prisma {
     id?: SortOrder
     persona?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
-    prompt?: SortOrderInput | SortOrder
-    is_active?: SortOrderInput | SortOrder
     created_at?: SortOrder
-    default_param?: SortOrderInput | SortOrder
+    chat_model_parameters?: chat_model_parametersOrderByRelationAggregateInput
     chat_rooms?: chat_roomsOrderByRelationAggregateInput
   }
 
@@ -30007,10 +31206,8 @@ export namespace Prisma {
     NOT?: chat_modelWhereInput | chat_modelWhereInput[]
     persona?: StringNullableFilter<"chat_model"> | string | null
     description?: StringNullableFilter<"chat_model"> | string | null
-    prompt?: StringNullableFilter<"chat_model"> | string | null
-    is_active?: BoolNullableFilter<"chat_model"> | boolean | null
     created_at?: DateTimeFilter<"chat_model"> | Date | string
-    default_param?: JsonNullableFilter<"chat_model">
+    chat_model_parameters?: Chat_model_parametersListRelationFilter
     chat_rooms?: Chat_roomsListRelationFilter
   }, "id">
 
@@ -30018,10 +31215,7 @@ export namespace Prisma {
     id?: SortOrder
     persona?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
-    prompt?: SortOrderInput | SortOrder
-    is_active?: SortOrderInput | SortOrder
     created_at?: SortOrder
-    default_param?: SortOrderInput | SortOrder
     _count?: chat_modelCountOrderByAggregateInput
     _max?: chat_modelMaxOrderByAggregateInput
     _min?: chat_modelMinOrderByAggregateInput
@@ -30034,10 +31228,7 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"chat_model"> | string
     persona?: StringNullableWithAggregatesFilter<"chat_model"> | string | null
     description?: StringNullableWithAggregatesFilter<"chat_model"> | string | null
-    prompt?: StringNullableWithAggregatesFilter<"chat_model"> | string | null
-    is_active?: BoolNullableWithAggregatesFilter<"chat_model"> | boolean | null
     created_at?: DateTimeWithAggregatesFilter<"chat_model"> | Date | string
-    default_param?: JsonNullableWithAggregatesFilter<"chat_model">
   }
 
   export type chat_roomsWhereInput = {
@@ -30099,6 +31290,71 @@ export namespace Prisma {
     model_id?: UuidNullableWithAggregatesFilter<"chat_rooms"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"chat_rooms"> | Date | string
     deleted_at?: DateTimeNullableWithAggregatesFilter<"chat_rooms"> | Date | string | null
+  }
+
+  export type chat_model_parametersWhereInput = {
+    AND?: chat_model_parametersWhereInput | chat_model_parametersWhereInput[]
+    OR?: chat_model_parametersWhereInput[]
+    NOT?: chat_model_parametersWhereInput | chat_model_parametersWhereInput[]
+    chat_model_id?: UuidNullableFilter<"chat_model_parameters"> | string | null
+    default_param?: JsonNullableFilter<"chat_model_parameters">
+    prompt?: StringNullableFilter<"chat_model_parameters"> | string | null
+    is_active?: BoolNullableFilter<"chat_model_parameters"> | boolean | null
+    is_streaming?: BoolNullableFilter<"chat_model_parameters"> | boolean | null
+    created_at?: DateTimeFilter<"chat_model_parameters"> | Date | string
+    id?: UuidFilter<"chat_model_parameters"> | string
+    chat_model?: XOR<Chat_modelNullableScalarRelationFilter, chat_modelWhereInput> | null
+  }
+
+  export type chat_model_parametersOrderByWithRelationInput = {
+    chat_model_id?: SortOrderInput | SortOrder
+    default_param?: SortOrderInput | SortOrder
+    prompt?: SortOrderInput | SortOrder
+    is_active?: SortOrderInput | SortOrder
+    is_streaming?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    id?: SortOrder
+    chat_model?: chat_modelOrderByWithRelationInput
+  }
+
+  export type chat_model_parametersWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: chat_model_parametersWhereInput | chat_model_parametersWhereInput[]
+    OR?: chat_model_parametersWhereInput[]
+    NOT?: chat_model_parametersWhereInput | chat_model_parametersWhereInput[]
+    chat_model_id?: UuidNullableFilter<"chat_model_parameters"> | string | null
+    default_param?: JsonNullableFilter<"chat_model_parameters">
+    prompt?: StringNullableFilter<"chat_model_parameters"> | string | null
+    is_active?: BoolNullableFilter<"chat_model_parameters"> | boolean | null
+    is_streaming?: BoolNullableFilter<"chat_model_parameters"> | boolean | null
+    created_at?: DateTimeFilter<"chat_model_parameters"> | Date | string
+    chat_model?: XOR<Chat_modelNullableScalarRelationFilter, chat_modelWhereInput> | null
+  }, "id">
+
+  export type chat_model_parametersOrderByWithAggregationInput = {
+    chat_model_id?: SortOrderInput | SortOrder
+    default_param?: SortOrderInput | SortOrder
+    prompt?: SortOrderInput | SortOrder
+    is_active?: SortOrderInput | SortOrder
+    is_streaming?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    id?: SortOrder
+    _count?: chat_model_parametersCountOrderByAggregateInput
+    _max?: chat_model_parametersMaxOrderByAggregateInput
+    _min?: chat_model_parametersMinOrderByAggregateInput
+  }
+
+  export type chat_model_parametersScalarWhereWithAggregatesInput = {
+    AND?: chat_model_parametersScalarWhereWithAggregatesInput | chat_model_parametersScalarWhereWithAggregatesInput[]
+    OR?: chat_model_parametersScalarWhereWithAggregatesInput[]
+    NOT?: chat_model_parametersScalarWhereWithAggregatesInput | chat_model_parametersScalarWhereWithAggregatesInput[]
+    chat_model_id?: UuidNullableWithAggregatesFilter<"chat_model_parameters"> | string | null
+    default_param?: JsonNullableWithAggregatesFilter<"chat_model_parameters">
+    prompt?: StringNullableWithAggregatesFilter<"chat_model_parameters"> | string | null
+    is_active?: BoolNullableWithAggregatesFilter<"chat_model_parameters"> | boolean | null
+    is_streaming?: BoolNullableWithAggregatesFilter<"chat_model_parameters"> | boolean | null
+    created_at?: DateTimeWithAggregatesFilter<"chat_model_parameters"> | Date | string
+    id?: UuidWithAggregatesFilter<"chat_model_parameters"> | string
   }
 
   export type audit_log_entriesCreateInput = {
@@ -31753,10 +33009,8 @@ export namespace Prisma {
     id?: string
     persona?: string | null
     description?: string | null
-    prompt?: string | null
-    is_active?: boolean | null
     created_at?: Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
+    chat_model_parameters?: chat_model_parametersCreateNestedManyWithoutChat_modelInput
     chat_rooms?: chat_roomsCreateNestedManyWithoutChat_modelInput
   }
 
@@ -31764,10 +33018,8 @@ export namespace Prisma {
     id?: string
     persona?: string | null
     description?: string | null
-    prompt?: string | null
-    is_active?: boolean | null
     created_at?: Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
+    chat_model_parameters?: chat_model_parametersUncheckedCreateNestedManyWithoutChat_modelInput
     chat_rooms?: chat_roomsUncheckedCreateNestedManyWithoutChat_modelInput
   }
 
@@ -31775,10 +33027,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     persona?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt?: NullableStringFieldUpdateOperationsInput | string | null
-    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
+    chat_model_parameters?: chat_model_parametersUpdateManyWithoutChat_modelNestedInput
     chat_rooms?: chat_roomsUpdateManyWithoutChat_modelNestedInput
   }
 
@@ -31786,10 +33036,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     persona?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt?: NullableStringFieldUpdateOperationsInput | string | null
-    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
+    chat_model_parameters?: chat_model_parametersUncheckedUpdateManyWithoutChat_modelNestedInput
     chat_rooms?: chat_roomsUncheckedUpdateManyWithoutChat_modelNestedInput
   }
 
@@ -31797,30 +33045,21 @@ export namespace Prisma {
     id?: string
     persona?: string | null
     description?: string | null
-    prompt?: string | null
-    is_active?: boolean | null
     created_at?: Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type chat_modelUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     persona?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt?: NullableStringFieldUpdateOperationsInput | string | null
-    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type chat_modelUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     persona?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt?: NullableStringFieldUpdateOperationsInput | string | null
-    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type chat_roomsCreateInput = {
@@ -31879,6 +33118,75 @@ export namespace Prisma {
     model_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type chat_model_parametersCreateInput = {
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: string | null
+    is_active?: boolean | null
+    is_streaming?: boolean | null
+    created_at?: Date | string
+    id?: string
+    chat_model?: chat_modelCreateNestedOneWithoutChat_model_parametersInput
+  }
+
+  export type chat_model_parametersUncheckedCreateInput = {
+    chat_model_id?: string | null
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: string | null
+    is_active?: boolean | null
+    is_streaming?: boolean | null
+    created_at?: Date | string
+    id?: string
+  }
+
+  export type chat_model_parametersUpdateInput = {
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    is_streaming?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    id?: StringFieldUpdateOperationsInput | string
+    chat_model?: chat_modelUpdateOneWithoutChat_model_parametersNestedInput
+  }
+
+  export type chat_model_parametersUncheckedUpdateInput = {
+    chat_model_id?: NullableStringFieldUpdateOperationsInput | string | null
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    is_streaming?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type chat_model_parametersCreateManyInput = {
+    chat_model_id?: string | null
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: string | null
+    is_active?: boolean | null
+    is_streaming?: boolean | null
+    created_at?: Date | string
+    id?: string
+  }
+
+  export type chat_model_parametersUpdateManyMutationInput = {
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    is_streaming?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type chat_model_parametersUncheckedUpdateManyInput = {
+    chat_model_id?: NullableStringFieldUpdateOperationsInput | string | null
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    is_streaming?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    id?: StringFieldUpdateOperationsInput | string
   }
 
   export type UuidNullableFilter<$PrismaModel = never> = {
@@ -33281,22 +34589,27 @@ export namespace Prisma {
     _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
+  export type Chat_model_parametersListRelationFilter = {
+    every?: chat_model_parametersWhereInput
+    some?: chat_model_parametersWhereInput
+    none?: chat_model_parametersWhereInput
+  }
+
+  export type chat_model_parametersOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type chat_modelCountOrderByAggregateInput = {
     id?: SortOrder
     persona?: SortOrder
     description?: SortOrder
-    prompt?: SortOrder
-    is_active?: SortOrder
     created_at?: SortOrder
-    default_param?: SortOrder
   }
 
   export type chat_modelMaxOrderByAggregateInput = {
     id?: SortOrder
     persona?: SortOrder
     description?: SortOrder
-    prompt?: SortOrder
-    is_active?: SortOrder
     created_at?: SortOrder
   }
 
@@ -33304,8 +34617,6 @@ export namespace Prisma {
     id?: SortOrder
     persona?: SortOrder
     description?: SortOrder
-    prompt?: SortOrder
-    is_active?: SortOrder
     created_at?: SortOrder
   }
 
@@ -33351,6 +34662,34 @@ export namespace Prisma {
     model_id?: SortOrder
     created_at?: SortOrder
     deleted_at?: SortOrder
+  }
+
+  export type chat_model_parametersCountOrderByAggregateInput = {
+    chat_model_id?: SortOrder
+    default_param?: SortOrder
+    prompt?: SortOrder
+    is_active?: SortOrder
+    is_streaming?: SortOrder
+    created_at?: SortOrder
+    id?: SortOrder
+  }
+
+  export type chat_model_parametersMaxOrderByAggregateInput = {
+    chat_model_id?: SortOrder
+    prompt?: SortOrder
+    is_active?: SortOrder
+    is_streaming?: SortOrder
+    created_at?: SortOrder
+    id?: SortOrder
+  }
+
+  export type chat_model_parametersMinOrderByAggregateInput = {
+    chat_model_id?: SortOrder
+    prompt?: SortOrder
+    is_active?: SortOrder
+    is_streaming?: SortOrder
+    created_at?: SortOrder
+    id?: SortOrder
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -34281,6 +35620,13 @@ export namespace Prisma {
     update?: XOR<XOR<chat_messageUpdateToOneWithWhereWithoutChat_metadataInput, chat_messageUpdateWithoutChat_metadataInput>, chat_messageUncheckedUpdateWithoutChat_metadataInput>
   }
 
+  export type chat_model_parametersCreateNestedManyWithoutChat_modelInput = {
+    create?: XOR<chat_model_parametersCreateWithoutChat_modelInput, chat_model_parametersUncheckedCreateWithoutChat_modelInput> | chat_model_parametersCreateWithoutChat_modelInput[] | chat_model_parametersUncheckedCreateWithoutChat_modelInput[]
+    connectOrCreate?: chat_model_parametersCreateOrConnectWithoutChat_modelInput | chat_model_parametersCreateOrConnectWithoutChat_modelInput[]
+    createMany?: chat_model_parametersCreateManyChat_modelInputEnvelope
+    connect?: chat_model_parametersWhereUniqueInput | chat_model_parametersWhereUniqueInput[]
+  }
+
   export type chat_roomsCreateNestedManyWithoutChat_modelInput = {
     create?: XOR<chat_roomsCreateWithoutChat_modelInput, chat_roomsUncheckedCreateWithoutChat_modelInput> | chat_roomsCreateWithoutChat_modelInput[] | chat_roomsUncheckedCreateWithoutChat_modelInput[]
     connectOrCreate?: chat_roomsCreateOrConnectWithoutChat_modelInput | chat_roomsCreateOrConnectWithoutChat_modelInput[]
@@ -34288,11 +35634,32 @@ export namespace Prisma {
     connect?: chat_roomsWhereUniqueInput | chat_roomsWhereUniqueInput[]
   }
 
+  export type chat_model_parametersUncheckedCreateNestedManyWithoutChat_modelInput = {
+    create?: XOR<chat_model_parametersCreateWithoutChat_modelInput, chat_model_parametersUncheckedCreateWithoutChat_modelInput> | chat_model_parametersCreateWithoutChat_modelInput[] | chat_model_parametersUncheckedCreateWithoutChat_modelInput[]
+    connectOrCreate?: chat_model_parametersCreateOrConnectWithoutChat_modelInput | chat_model_parametersCreateOrConnectWithoutChat_modelInput[]
+    createMany?: chat_model_parametersCreateManyChat_modelInputEnvelope
+    connect?: chat_model_parametersWhereUniqueInput | chat_model_parametersWhereUniqueInput[]
+  }
+
   export type chat_roomsUncheckedCreateNestedManyWithoutChat_modelInput = {
     create?: XOR<chat_roomsCreateWithoutChat_modelInput, chat_roomsUncheckedCreateWithoutChat_modelInput> | chat_roomsCreateWithoutChat_modelInput[] | chat_roomsUncheckedCreateWithoutChat_modelInput[]
     connectOrCreate?: chat_roomsCreateOrConnectWithoutChat_modelInput | chat_roomsCreateOrConnectWithoutChat_modelInput[]
     createMany?: chat_roomsCreateManyChat_modelInputEnvelope
     connect?: chat_roomsWhereUniqueInput | chat_roomsWhereUniqueInput[]
+  }
+
+  export type chat_model_parametersUpdateManyWithoutChat_modelNestedInput = {
+    create?: XOR<chat_model_parametersCreateWithoutChat_modelInput, chat_model_parametersUncheckedCreateWithoutChat_modelInput> | chat_model_parametersCreateWithoutChat_modelInput[] | chat_model_parametersUncheckedCreateWithoutChat_modelInput[]
+    connectOrCreate?: chat_model_parametersCreateOrConnectWithoutChat_modelInput | chat_model_parametersCreateOrConnectWithoutChat_modelInput[]
+    upsert?: chat_model_parametersUpsertWithWhereUniqueWithoutChat_modelInput | chat_model_parametersUpsertWithWhereUniqueWithoutChat_modelInput[]
+    createMany?: chat_model_parametersCreateManyChat_modelInputEnvelope
+    set?: chat_model_parametersWhereUniqueInput | chat_model_parametersWhereUniqueInput[]
+    disconnect?: chat_model_parametersWhereUniqueInput | chat_model_parametersWhereUniqueInput[]
+    delete?: chat_model_parametersWhereUniqueInput | chat_model_parametersWhereUniqueInput[]
+    connect?: chat_model_parametersWhereUniqueInput | chat_model_parametersWhereUniqueInput[]
+    update?: chat_model_parametersUpdateWithWhereUniqueWithoutChat_modelInput | chat_model_parametersUpdateWithWhereUniqueWithoutChat_modelInput[]
+    updateMany?: chat_model_parametersUpdateManyWithWhereWithoutChat_modelInput | chat_model_parametersUpdateManyWithWhereWithoutChat_modelInput[]
+    deleteMany?: chat_model_parametersScalarWhereInput | chat_model_parametersScalarWhereInput[]
   }
 
   export type chat_roomsUpdateManyWithoutChat_modelNestedInput = {
@@ -34307,6 +35674,20 @@ export namespace Prisma {
     update?: chat_roomsUpdateWithWhereUniqueWithoutChat_modelInput | chat_roomsUpdateWithWhereUniqueWithoutChat_modelInput[]
     updateMany?: chat_roomsUpdateManyWithWhereWithoutChat_modelInput | chat_roomsUpdateManyWithWhereWithoutChat_modelInput[]
     deleteMany?: chat_roomsScalarWhereInput | chat_roomsScalarWhereInput[]
+  }
+
+  export type chat_model_parametersUncheckedUpdateManyWithoutChat_modelNestedInput = {
+    create?: XOR<chat_model_parametersCreateWithoutChat_modelInput, chat_model_parametersUncheckedCreateWithoutChat_modelInput> | chat_model_parametersCreateWithoutChat_modelInput[] | chat_model_parametersUncheckedCreateWithoutChat_modelInput[]
+    connectOrCreate?: chat_model_parametersCreateOrConnectWithoutChat_modelInput | chat_model_parametersCreateOrConnectWithoutChat_modelInput[]
+    upsert?: chat_model_parametersUpsertWithWhereUniqueWithoutChat_modelInput | chat_model_parametersUpsertWithWhereUniqueWithoutChat_modelInput[]
+    createMany?: chat_model_parametersCreateManyChat_modelInputEnvelope
+    set?: chat_model_parametersWhereUniqueInput | chat_model_parametersWhereUniqueInput[]
+    disconnect?: chat_model_parametersWhereUniqueInput | chat_model_parametersWhereUniqueInput[]
+    delete?: chat_model_parametersWhereUniqueInput | chat_model_parametersWhereUniqueInput[]
+    connect?: chat_model_parametersWhereUniqueInput | chat_model_parametersWhereUniqueInput[]
+    update?: chat_model_parametersUpdateWithWhereUniqueWithoutChat_modelInput | chat_model_parametersUpdateWithWhereUniqueWithoutChat_modelInput[]
+    updateMany?: chat_model_parametersUpdateManyWithWhereWithoutChat_modelInput | chat_model_parametersUpdateManyWithWhereWithoutChat_modelInput[]
+    deleteMany?: chat_model_parametersScalarWhereInput | chat_model_parametersScalarWhereInput[]
   }
 
   export type chat_roomsUncheckedUpdateManyWithoutChat_modelNestedInput = {
@@ -34395,6 +35776,22 @@ export namespace Prisma {
     update?: chat_messageUpdateWithWhereUniqueWithoutChat_roomsInput | chat_messageUpdateWithWhereUniqueWithoutChat_roomsInput[]
     updateMany?: chat_messageUpdateManyWithWhereWithoutChat_roomsInput | chat_messageUpdateManyWithWhereWithoutChat_roomsInput[]
     deleteMany?: chat_messageScalarWhereInput | chat_messageScalarWhereInput[]
+  }
+
+  export type chat_modelCreateNestedOneWithoutChat_model_parametersInput = {
+    create?: XOR<chat_modelCreateWithoutChat_model_parametersInput, chat_modelUncheckedCreateWithoutChat_model_parametersInput>
+    connectOrCreate?: chat_modelCreateOrConnectWithoutChat_model_parametersInput
+    connect?: chat_modelWhereUniqueInput
+  }
+
+  export type chat_modelUpdateOneWithoutChat_model_parametersNestedInput = {
+    create?: XOR<chat_modelCreateWithoutChat_model_parametersInput, chat_modelUncheckedCreateWithoutChat_model_parametersInput>
+    connectOrCreate?: chat_modelCreateOrConnectWithoutChat_model_parametersInput
+    upsert?: chat_modelUpsertWithoutChat_model_parametersInput
+    disconnect?: chat_modelWhereInput | boolean
+    delete?: chat_modelWhereInput | boolean
+    connect?: chat_modelWhereUniqueInput
+    update?: XOR<XOR<chat_modelUpdateToOneWithWhereWithoutChat_model_parametersInput, chat_modelUpdateWithoutChat_model_parametersInput>, chat_modelUncheckedUpdateWithoutChat_model_parametersInput>
   }
 
   export type NestedUuidNullableFilter<$PrismaModel = never> = {
@@ -37139,6 +38536,34 @@ export namespace Prisma {
     chat_evaluations?: chat_evaluationsUncheckedUpdateManyWithoutChat_messageNestedInput
   }
 
+  export type chat_model_parametersCreateWithoutChat_modelInput = {
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: string | null
+    is_active?: boolean | null
+    is_streaming?: boolean | null
+    created_at?: Date | string
+    id?: string
+  }
+
+  export type chat_model_parametersUncheckedCreateWithoutChat_modelInput = {
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: string | null
+    is_active?: boolean | null
+    is_streaming?: boolean | null
+    created_at?: Date | string
+    id?: string
+  }
+
+  export type chat_model_parametersCreateOrConnectWithoutChat_modelInput = {
+    where: chat_model_parametersWhereUniqueInput
+    create: XOR<chat_model_parametersCreateWithoutChat_modelInput, chat_model_parametersUncheckedCreateWithoutChat_modelInput>
+  }
+
+  export type chat_model_parametersCreateManyChat_modelInputEnvelope = {
+    data: chat_model_parametersCreateManyChat_modelInput | chat_model_parametersCreateManyChat_modelInput[]
+    skipDuplicates?: boolean
+  }
+
   export type chat_roomsCreateWithoutChat_modelInput = {
     id?: string
     created_at?: Date | string
@@ -37163,6 +38588,35 @@ export namespace Prisma {
   export type chat_roomsCreateManyChat_modelInputEnvelope = {
     data: chat_roomsCreateManyChat_modelInput | chat_roomsCreateManyChat_modelInput[]
     skipDuplicates?: boolean
+  }
+
+  export type chat_model_parametersUpsertWithWhereUniqueWithoutChat_modelInput = {
+    where: chat_model_parametersWhereUniqueInput
+    update: XOR<chat_model_parametersUpdateWithoutChat_modelInput, chat_model_parametersUncheckedUpdateWithoutChat_modelInput>
+    create: XOR<chat_model_parametersCreateWithoutChat_modelInput, chat_model_parametersUncheckedCreateWithoutChat_modelInput>
+  }
+
+  export type chat_model_parametersUpdateWithWhereUniqueWithoutChat_modelInput = {
+    where: chat_model_parametersWhereUniqueInput
+    data: XOR<chat_model_parametersUpdateWithoutChat_modelInput, chat_model_parametersUncheckedUpdateWithoutChat_modelInput>
+  }
+
+  export type chat_model_parametersUpdateManyWithWhereWithoutChat_modelInput = {
+    where: chat_model_parametersScalarWhereInput
+    data: XOR<chat_model_parametersUpdateManyMutationInput, chat_model_parametersUncheckedUpdateManyWithoutChat_modelInput>
+  }
+
+  export type chat_model_parametersScalarWhereInput = {
+    AND?: chat_model_parametersScalarWhereInput | chat_model_parametersScalarWhereInput[]
+    OR?: chat_model_parametersScalarWhereInput[]
+    NOT?: chat_model_parametersScalarWhereInput | chat_model_parametersScalarWhereInput[]
+    chat_model_id?: UuidNullableFilter<"chat_model_parameters"> | string | null
+    default_param?: JsonNullableFilter<"chat_model_parameters">
+    prompt?: StringNullableFilter<"chat_model_parameters"> | string | null
+    is_active?: BoolNullableFilter<"chat_model_parameters"> | boolean | null
+    is_streaming?: BoolNullableFilter<"chat_model_parameters"> | boolean | null
+    created_at?: DateTimeFilter<"chat_model_parameters"> | Date | string
+    id?: UuidFilter<"chat_model_parameters"> | string
   }
 
   export type chat_roomsUpsertWithWhereUniqueWithoutChat_modelInput = {
@@ -37215,20 +38669,16 @@ export namespace Prisma {
     id?: string
     persona?: string | null
     description?: string | null
-    prompt?: string | null
-    is_active?: boolean | null
     created_at?: Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
+    chat_model_parameters?: chat_model_parametersCreateNestedManyWithoutChat_modelInput
   }
 
   export type chat_modelUncheckedCreateWithoutChat_roomsInput = {
     id?: string
     persona?: string | null
     description?: string | null
-    prompt?: string | null
-    is_active?: boolean | null
     created_at?: Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
+    chat_model_parameters?: chat_model_parametersUncheckedCreateNestedManyWithoutChat_modelInput
   }
 
   export type chat_modelCreateOrConnectWithoutChat_roomsInput = {
@@ -37368,20 +38818,16 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     persona?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt?: NullableStringFieldUpdateOperationsInput | string | null
-    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
+    chat_model_parameters?: chat_model_parametersUpdateManyWithoutChat_modelNestedInput
   }
 
   export type chat_modelUncheckedUpdateWithoutChat_roomsInput = {
     id?: StringFieldUpdateOperationsInput | string
     persona?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt?: NullableStringFieldUpdateOperationsInput | string | null
-    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    default_param?: NullableJsonNullValueInput | InputJsonValue
+    chat_model_parameters?: chat_model_parametersUncheckedUpdateManyWithoutChat_modelNestedInput
   }
 
   export type usersUpsertWithoutChat_roomsInput = {
@@ -37477,6 +38923,54 @@ export namespace Prisma {
     mfa_factors?: mfa_factorsUncheckedUpdateManyWithoutUsersNestedInput
     one_time_tokens?: one_time_tokensUncheckedUpdateManyWithoutUsersNestedInput
     sessions?: sessionsUncheckedUpdateManyWithoutUsersNestedInput
+  }
+
+  export type chat_modelCreateWithoutChat_model_parametersInput = {
+    id?: string
+    persona?: string | null
+    description?: string | null
+    created_at?: Date | string
+    chat_rooms?: chat_roomsCreateNestedManyWithoutChat_modelInput
+  }
+
+  export type chat_modelUncheckedCreateWithoutChat_model_parametersInput = {
+    id?: string
+    persona?: string | null
+    description?: string | null
+    created_at?: Date | string
+    chat_rooms?: chat_roomsUncheckedCreateNestedManyWithoutChat_modelInput
+  }
+
+  export type chat_modelCreateOrConnectWithoutChat_model_parametersInput = {
+    where: chat_modelWhereUniqueInput
+    create: XOR<chat_modelCreateWithoutChat_model_parametersInput, chat_modelUncheckedCreateWithoutChat_model_parametersInput>
+  }
+
+  export type chat_modelUpsertWithoutChat_model_parametersInput = {
+    update: XOR<chat_modelUpdateWithoutChat_model_parametersInput, chat_modelUncheckedUpdateWithoutChat_model_parametersInput>
+    create: XOR<chat_modelCreateWithoutChat_model_parametersInput, chat_modelUncheckedCreateWithoutChat_model_parametersInput>
+    where?: chat_modelWhereInput
+  }
+
+  export type chat_modelUpdateToOneWithWhereWithoutChat_model_parametersInput = {
+    where?: chat_modelWhereInput
+    data: XOR<chat_modelUpdateWithoutChat_model_parametersInput, chat_modelUncheckedUpdateWithoutChat_model_parametersInput>
+  }
+
+  export type chat_modelUpdateWithoutChat_model_parametersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    persona?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chat_rooms?: chat_roomsUpdateManyWithoutChat_modelNestedInput
+  }
+
+  export type chat_modelUncheckedUpdateWithoutChat_model_parametersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    persona?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    chat_rooms?: chat_roomsUncheckedUpdateManyWithoutChat_modelNestedInput
   }
 
   export type saml_relay_statesCreateManyFlow_stateInput = {
@@ -38065,11 +39559,47 @@ export namespace Prisma {
     native_language?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type chat_model_parametersCreateManyChat_modelInput = {
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: string | null
+    is_active?: boolean | null
+    is_streaming?: boolean | null
+    created_at?: Date | string
+    id?: string
+  }
+
   export type chat_roomsCreateManyChat_modelInput = {
     id?: string
     user_id?: string | null
     created_at?: Date | string
     deleted_at?: Date | string | null
+  }
+
+  export type chat_model_parametersUpdateWithoutChat_modelInput = {
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    is_streaming?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type chat_model_parametersUncheckedUpdateWithoutChat_modelInput = {
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    is_streaming?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type chat_model_parametersUncheckedUpdateManyWithoutChat_modelInput = {
+    default_param?: NullableJsonNullValueInput | InputJsonValue
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    is_streaming?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    id?: StringFieldUpdateOperationsInput | string
   }
 
   export type chat_roomsUpdateWithoutChat_modelInput = {
