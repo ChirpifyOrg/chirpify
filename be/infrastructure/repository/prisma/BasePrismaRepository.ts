@@ -10,7 +10,8 @@ export abstract class BasePrismaRepository {
       const tx = uowContext.getStore();
       const defaultClient = this.defaultClient;
       const currentClient = tx ?? defaultClient;
-      if ('$transaction' in currentClient) {
+      // duck type checking
+      if (!('$transaction' in currentClient)) {
          console.log('[BasePrismaRepo.getClient] : transaction 안');
       } else {
          console.log('[BasePrismaRepo.getClient] : transaction 바깥');
