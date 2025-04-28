@@ -89,6 +89,7 @@ export class AuthenticationChatUseCase extends ChatUseCase<
          }
       }
       const response = responseChunk.join('');
+      // const ndJSON = responseChunk.join('');
       const formattedResponse = this.formatResponse(JSON.parse(response) as GPTChatFormat);
       await this.storeChat(request, formattedResponse);
    }
@@ -97,8 +98,8 @@ export class AuthenticationChatUseCase extends ChatUseCase<
       request: AuthenticatedClientChatReuqest,
       modelInfo: ChatModel,
    ): Promise<ChatCompletionCreateParamsBase> {
-      const defaultParam = modelInfo.defaultParam as ChatCompletionCreateParamsBase;
-      defaultParam.messages.push({ role: 'system', content: modelInfo.prompt ?? '' });
+      const defaultParam = modelInfo.chatModelParameter[0].defaultParam as ChatCompletionCreateParamsBase;
+      defaultParam.messages.push({ role: 'system', content: modelInfo.chatModelParameter[0].prompt ?? '' });
       defaultParam.messages.push({ role: 'user', content: request.message });
       defaultParam.stream = false;
       return defaultParam;
@@ -108,8 +109,8 @@ export class AuthenticationChatUseCase extends ChatUseCase<
       request: AuthenticatedClientChatReuqest,
       modelInfo: ChatModel,
    ): Promise<ChatCompletionCreateParamsBase> {
-      const defaultParam = modelInfo.defaultParam as ChatCompletionCreateParamsBase;
-      defaultParam.messages.push({ role: 'system', content: modelInfo.prompt ?? '' });
+      const defaultParam = modelInfo.chatModelParameter[0].defaultParam as ChatCompletionCreateParamsBase;
+      defaultParam.messages.push({ role: 'system', content: modelInfo.chatModelParameter[0].prompt ?? '' });
       defaultParam.messages.push({ role: 'user', content: request.message });
       defaultParam.stream = true;
       return defaultParam;

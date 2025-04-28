@@ -87,8 +87,8 @@ export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, Authenticat
       request: AuthenticatedClientChatReuqest,
       modelInfo: ChatModel,
    ): Promise<ChatCompletionCreateParamsBase> {
-      const defaultParam = modelInfo.defaultParam as ChatCompletionCreateParamsBase;
-      defaultParam.messages.push({ role: 'system', content: modelInfo.prompt ?? '' });
+      const defaultParam = modelInfo.chatModelParameter[0].defaultParam as ChatCompletionCreateParamsBase;
+      defaultParam.messages.push({ role: 'system', content: modelInfo.chatModelParameter[0].prompt ?? '' });
       defaultParam.messages.push({ role: 'user', content: request.message });
       defaultParam.stream = false;
       return defaultParam;
@@ -98,12 +98,13 @@ export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, Authenticat
       request: AuthenticatedClientChatReuqest,
       modelInfo: ChatModel,
    ): Promise<ChatCompletionCreateParamsBase> {
-      const defaultParam = modelInfo.defaultParam as ChatCompletionCreateParamsBase;
-      defaultParam.messages.push({ role: 'system', content: modelInfo.prompt ?? '' });
+      const defaultParam = modelInfo.chatModelParameter[0].defaultParam as ChatCompletionCreateParamsBase;
+      defaultParam.messages.push({ role: 'system', content: modelInfo.chatModelParameter[0].prompt ?? '' });
       defaultParam.messages.push({ role: 'user', content: request.message });
       defaultParam.stream = true;
       return defaultParam;
    }
+
    protected async requestValidate(request: AuthenticatedClientChatReuqest): Promise<void> {
       const { roomId, userId } = request; // this = trailChatUseCase , proxy = Proxy(UnitOfWorkChat)
       const trialCount = await this.unitOfWork.chatRepository.getMessageCountForUserInRoom(roomId); // 내부의 respository 구현체에서 에러
