@@ -72,20 +72,24 @@ export const useSimpleChatStore = create(
             });
          },
          setMessages: ({ roomId, messages }) => {
-            set(state => ({
-               messages: {
-                  ...state.messages,
-                  [roomId]: messages,
-               },
-               startIndex: {
-                  ...state.startIndex,
-                  [roomId]: messages[0]?.id,
-               },
-               endIndex: {
-                  ...state.endIndex,
-                  [roomId]: messages[messages.length - 1]?.id,
-               },
-            }));
+            set(state => {
+               const combined = [...messages, ...(state.messages[roomId] || [])];
+               combined.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+               return {
+                  messages: {
+                     ...state.messages,
+                     [roomId]: messages,
+                  },
+                  startIndex: {
+                     ...state.startIndex,
+                     [roomId]: state.startIndex[roomId] ?? combined[0]?.id,
+                  },
+                  endIndex: {
+                     ...state.endIndex,
+                     [roomId]: combined[combined.length - 1]?.id,
+                  },
+               };
+            });
          },
 
          clearAllMessages: () => {
