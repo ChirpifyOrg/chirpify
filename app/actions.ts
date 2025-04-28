@@ -21,8 +21,14 @@ export async function createAnonymousUser(): Promise<{ sessionCreated: boolean }
    return { sessionCreated: true };
 }
 type TrialRoomResult = { success: true; roomId: string; userId: string } | { success: false; error: string };
-
-export async function trialRoomGetOrCreateWithSupaBaseAnonymousUser(modelName = 'Aru'): Promise<TrialRoomResult> {
+interface trialRoomGetOrCreateWithSupaBaseAnonymousUserProps {
+   modelName: string;
+   isStreaming: boolean;
+}
+export async function trialRoomGetOrCreateWithSupaBaseAnonymousUser({
+   modelName,
+   isStreaming,
+}: trialRoomGetOrCreateWithSupaBaseAnonymousUserProps): Promise<TrialRoomResult> {
    try {
       const supabase = await createClient();
       const { data, error } = await supabase.auth.getUser();
@@ -40,7 +46,7 @@ export async function trialRoomGetOrCreateWithSupaBaseAnonymousUser(modelName = 
 
       const userId = user.id;
       const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, true);
-      const modelInfo = await useCase.getLatestModelInfo({ name: modelName });
+      const modelInfo = await useCase.getLatestModelInfo({ name: modelName, isStreaming });
 
       if (!modelInfo?.id) {
          return { success: false, error: '모델 정보를 가져올 수 없습니다.' };
