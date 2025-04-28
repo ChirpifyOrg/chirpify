@@ -7,16 +7,17 @@ import { ChatUseCaseFactory } from '@/be/application/chat/ChatUseCaseFactory';
 import { toHttpError } from '@/lib/be/utils/error-http-mapper';
 
 export async function POST(request: NextRequest, { params }: { params: { roomId: string } }) {
-   const { roomId } = params;
-   const { message, nativeLanguage }: ClientChatRequest = await request.json();
-
    try {
+      const { roomId } = await params;
+      const { message, nativeLanguage }: ClientChatRequest = await request.json();
+
       const superbase = await createClient();
       const { data, error } = await superbase.auth.getUser();
       const isLoggedIn = !error && data?.user != null;
 
       const userId = data?.user?.id;
-      if (!userId) {
+      if (!userId || error) {
+         console.log(error);
          return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
       const isTrial = data?.user?.is_anonymous ? true : false;
