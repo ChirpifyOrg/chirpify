@@ -2,9 +2,11 @@
 import { ChatContainer } from '@/components/chat/chat-container';
 import { createAnonymousUser, trialRoomGetOrCreateWithSupaBaseAnonymousUser } from '@/app/actions';
 import { useEffect, useState } from 'react';
-import { useSimpleChatStore } from './state/chatStore';
 
 export default function Home() {
+   const modelName = 'Aru';
+   const isStreaming = true;
+
    const [currentRoomId, setRoomId] = useState<string | null>(null);
    // const { currentRoomId, setRoomId } = useSimpleChatStore();
    useEffect(() => {
@@ -18,7 +20,7 @@ export default function Home() {
                return;
             }
 
-            const result = await trialRoomGetOrCreateWithSupaBaseAnonymousUser();
+            const result = await trialRoomGetOrCreateWithSupaBaseAnonymousUser({ modelName, isStreaming });
 
             if (!result.success) {
                console.error(result.error);

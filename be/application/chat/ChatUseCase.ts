@@ -59,7 +59,6 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
 
    /* 원본 응답 -> 클라이언트 전달 타입 변환 로직 */
    protected abstract formatResponse(originResponse: R): T;
-
    // TODO : 추후 strategy pattern으로 변경 가능하다면 변경하는게 좋아보임.
    protected abstract formatRequest(request: U, modelInfo: unknown): unknown;
    protected abstract formatStreamRequest(request: U, modelInfo: unknown): unknown;
@@ -88,7 +87,7 @@ export abstract class ChatUseCase<T, U extends ClientChatRequest, R> {
       const created = await this.unitOfWork.chatRoomRepository.createRoom({ userId, modelId });
       return created;
    }
-   async getLatestModelInfo({ name }: { name: string }) {
-      return this.unitOfWork.chatModelRepository.getLastModelInfo(name);
+   async getLatestModelInfo({ name, isStreaming }: { name: string; isStreaming: boolean }) {
+      return this.unitOfWork.chatModelRepository.getLastModelInfo(name, isStreaming);
    }
 }

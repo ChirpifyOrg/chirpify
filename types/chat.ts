@@ -227,13 +227,17 @@ export function convertAIChatResponseToNDJSON(data: AIChatAPIResponse): string {
 
    return ndjsonLines.join('\n');
 }
-
 export function parseNDJSONToAIChatResponse(ndjson: string): AIChatAPIResponse {
    const lines = ndjson.trim().split('\n');
 
-   const result: any = {
+   const result: AIChatAPIResponse = {
       message: '',
-      evaluation: {},
+      evaluation: {
+         comprehension: 0,
+         grammar_accuracy: 0,
+         sentence_naturalness: 0,
+         vocabulary_naturalness: 0,
+      },
       total_score: 0,
       feedback: {
          grammar_accuracy: [],
@@ -241,9 +245,9 @@ export function parseNDJSONToAIChatResponse(ndjson: string): AIChatAPIResponse {
          vocabulary_naturalness: [],
          comprehension: [],
       },
-      total_feedback: {},
-      difficulty_level: 'Medium', // 기본값
-      emotion: 'Calm', // 기본값
+      total_feedback: { en: '' },
+      difficulty_level: 'Medium',
+      emotion: 'Calm',
    };
 
    for (const line of lines) {
@@ -251,19 +255,32 @@ export function parseNDJSONToAIChatResponse(ndjson: string): AIChatAPIResponse {
 
       switch (obj.type) {
          case 'message':
-            result.message = obj.value;
+            result.message = obj.text;
             break;
          case 'evaluation':
-            result.evaluation = obj.value;
+            result.evaluation = {
+               comprehension: obj.comprehension,
+               grammar_accuracy: obj.grammar_accuracy,
+               sentence_naturalness: obj.sentence_naturalness,
+               vocabulary_naturalness: obj.vocabulary_naturalness,
+            };
             break;
          case 'total_score':
             result.total_score = obj.value;
             break;
          case 'feedback':
-            result.feedback[obj.category] = obj.value;
+            const category = obj.category as keyof typeof result.feedback;
+            if (result.feedback[category]) {
+               // Check if category exists
+               result.feedback[category].push({
+                  issue: obj.issue,
+                  description: obj.description,
+               });
+            }
             break;
          case 'total_feedback':
-            result.total_feedback = obj.value;
+            result.total_feedback = { ...obj };
+            delete result.total_feedback.type;
             break;
          case 'difficulty_level':
             result.difficulty_level = obj.value;
@@ -274,7 +291,6 @@ export function parseNDJSONToAIChatResponse(ndjson: string): AIChatAPIResponse {
       }
    }
 
-   // Zod 스키마로 유효성 검사 (필요 시 에러 throw)
    return AIChatAPIResponseSchema.parse(result);
 }
 

@@ -1,32 +1,30 @@
+import { NotFoundError } from '@/lib/be/utils/errors';
+import { ChatModelParameter } from './ChatModelParameter';
 import { ChatRoom } from './ChatRoom';
 
 export class ChatModel {
    id: string;
    persona?: string;
    description?: string;
-   prompt?: string;
-   isActive?: boolean;
-   createdAt: Date;
-   defaultParam?: any; // JSON 타입
    chatRooms: ChatRoom[];
-
+   chatModelParameter: ChatModelParameter[];
+   createdAt: Date;
    constructor(props: {
       id?: string;
       persona?: string;
       description?: string;
-      prompt?: string;
-      isActive?: boolean;
-      createdAt?: Date;
-      defaultParam?: any;
       chatRooms?: ChatRoom[];
+      chatModelParameter: ChatModelParameter[];
+      createdAt?: Date;
    }) {
       this.id = props.id || crypto.randomUUID();
       this.persona = props.persona;
       this.description = props.description;
-      this.prompt = props.prompt;
-      this.isActive = props.isActive;
       this.createdAt = props.createdAt || new Date();
-      this.defaultParam = props.defaultParam;
       this.chatRooms = props.chatRooms || [];
+      this.chatModelParameter = props.chatModelParameter || [];
+      if (this.chatModelParameter.length === 0) {
+         throw new NotFoundError('ChatModelParameter는 최소 1개 이상이어야 합니다.');
+      }
    }
 }

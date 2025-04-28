@@ -1,5 +1,5 @@
 import { ChatModel } from './ChatModel';
 
 export interface ChatModelRepository {
-   getLastModelInfo(name: string): Promise<ChatModel | null>;
+   getLastModelInfo(name: string, isStreaming: boolean): Promise<ChatModel | null>;
 }

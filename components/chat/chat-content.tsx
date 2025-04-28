@@ -84,11 +84,14 @@ interface ChatContentProps {
    isOpen: boolean;
 }
 export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpand, roomId }: ChatContentProps) {
-   const { prependMessage } = useSimpleChatStore.getState();
+   console.log(roomId);
+   const { setMessages } = useSimpleChatStore.getState();
 
    // useShallow를 사용하여 얕은 비교 수행
    const messages = useSimpleChatStore(useShallow(state => state.messages[roomId] ?? []));
-
+   const startIndex = useSimpleChatStore(useShallow(state => state.startIndex[roomId]));
+   const endIndex = useSimpleChatStore(useShallow(state => state.endIndex[roomId]));
+   console.log(messages);
    const [isInit, setInit] = useState<boolean>(false);
    const [isLoading, setIsLoading] = useState(false);
    const contentHeight = style?.maxHeight ? parseInt(style.maxHeight as string) : 320;
@@ -99,58 +102,46 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
 
    // loadMoreMessages를 useCallback으로 메모이제이션
    const loadMoreMessages = useCallback(async () => {
-      if (isLoading || !isInit) return;
+      if (isLoading) return;
 
       setIsLoading(true);
-
+      console.log('load');
       try {
          const DEFAULT_CHAT_HISTORY_LIMIT = 20;
-         const response = await fetchWithTypedBody(
+         const response = await fetchWithTypedBody<unknown, AIChatSimpleFormatHistory[]>(
             API_ENDPOINTS.getChatSimpleFormatHistory({
                roomId,
-               endIndex: '1',
+               endIndex,
                limit: DEFAULT_CHAT_HISTORY_LIMIT,
-               startIndex: '2',
+               startIndex,
             }),
          );
+         console.log(`response : `, response);
 
-         const newMessages = [
-            {
-               id: `${Date.now() + Math.random()}`,
-               roomId, // props로 받은 roomId 사용
-               message: `${Date.now() + Math.random()}`,
-               role: 'User',
-               createdAt: new Date(Date.now() - 1000 * 60).toISOString(),
-            },
-            {
-               id: `${Date.now() + 1 + Math.random()}`,
-               roomId, // props로 받은 roomId 사용
-               message: `${Date.now() + Math.random()}`,
-               role: 'Assistant',
-               createdAt: new Date(Date.now() - 1000 * 60).toISOString(),
-            },
-         ] as AIChatSimpleFormatHistory[];
-
-         prependMessage({ roomId, messages: [...newMessages] });
+         setMessages({ roomId, messages: [...response] });
       } catch (error) {
          console.error('Error loading messages:', error);
       } finally {
          setIsLoading(false);
       }
-   }, [isLoading, isInit, roomId, prependMessage]);
+   }, [isLoading, roomId, endIndex, startIndex, setMessages]);
 
    // 2단계: 메시지 렌더 이후 스크롤 바닥 이동 및 초기화
    useEffect(() => {
+      console.log('init?', isInit);
       if (!isInit) {
          requestAnimationFrame(() => {
             setTimeout(() => {
                if (scrollContainerRef.current) {
                   scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+                  console.log('scrollContainerRef', scrollContainerRef);
                   loadMoreMessages();
                   setInit(true);
                }
             }, 100);
          });
+      } else {
+         loadMoreMessages();
       }
    }, [isOpen, isInit]);
 
@@ -158,9 +149,17 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
       const { scrollTop } = event.currentTarget;
       if (!isInit || isLoading) return; // 초기화가 안됬거나 로딩중이면
 
-      if (scrollTop < 50) {
-         loadMoreMessages();
-         // 다음 렌더 후 스크롤 위치 보정
+      if (scrollTop < 50 && !isLoading) {
+         const container = event.currentTarget;
+         const prevScrollHeight = container.scrollHeight;
+
+         loadMoreMessages().then(() => {
+            // load 후 scroll 위치 유지
+            requestAnimationFrame(() => {
+               const newScrollHeight = container.scrollHeight;
+               container.scrollTop = newScrollHeight - prevScrollHeight + scrollTop;
+            });
+         });
       }
    };
    return (
@@ -186,8 +185,11 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
             onScrollCb={handleScroll}
             className="w-full">
             <div className="p-4">
-               <MessageList messages={messages ?? []} onShowFeedback={onShowFeedback} />
-               {isLoading && <div className="text-center py-2 text-white/60">Loading more messages...</div>}
+               {isLoading ? (
+                  <div className="text-center py-2 text-white/60">Loading more messages...</div>
+               ) : (
+                  <MessageList messages={messages ?? []} onShowFeedback={onShowFeedback} />
+               )}
             </div>
             <div ref={scrollBottom}></div>
          </ScrollAreaOnScroll>
