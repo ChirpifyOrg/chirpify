@@ -1,7 +1,7 @@
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
-import nextPlugin from 'eslint-plugin-next';
+import nextPlugin from '@next/eslint-plugin-next';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -9,6 +9,8 @@ export default [
       ignores: [
          '.next/**',
          'lib/generated/prisma/**', // Ignore Prisma generated files
+         'eslint.config.mjs', // Ignore ESLint config file
+         'postcss.config.js', // Ignore PostCSS config file
       ],
       files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
       languageOptions: {
@@ -29,6 +31,7 @@ export default [
          react: pluginReact,
          '@typescript-eslint': tseslint.plugin,
          next: nextPlugin,
+         // ...nextPlugin.configs.recommended.rules, // Next.js 기본 규칙 추가
       },
       rules: {
          'react/react-in-jsx-scope': 'off',
@@ -52,6 +55,5 @@ export default [
             version: 'detect',
          },
       },
-      ignores: ['lib/generated/prisma/**'],
    },
 ];

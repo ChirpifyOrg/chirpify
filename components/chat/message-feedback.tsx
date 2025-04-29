@@ -5,6 +5,7 @@ import { DialogContent, DialogTitle } from '@radix-ui/react-dialog';
 import { DialogHeader } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getUserLanguage } from '@/lib/fe/utils/language';
+import Image from 'next/image';
 
 // 피드백 컴포넌트
 const FeedbackItem = memo(({ feedback }: { feedback: Feedback[] }) => {
@@ -76,7 +77,7 @@ export const MessageFeedback = memo(({ style, feedbackAndScore, onClose }: Messa
          <DialogHeader className="px-4 py-3 border-b border-white/80">
             <div className="flex items-center justify-between">
                <DialogTitle className="text-base text-white flex items-center gap-2">
-                  <img src="/images/icon.png" alt="icon" className="w-[35px] inline-block" />
+                  <Image src="/images/icon.png" alt="icon" width={35} height={35} className="inline-block" />
                   Chirpi's feedBack!
                   {/* {difficulty_level && `(${difficulty_level})`} */}
                </DialogTitle>
