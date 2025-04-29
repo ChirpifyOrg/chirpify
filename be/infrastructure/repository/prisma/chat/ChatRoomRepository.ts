@@ -86,7 +86,12 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
          createdAt: prismaModel.created_at,
          deletedAt: prismaModel.deleted_at ?? undefined,
          messages: [], // 메시지는 별도로 로드해야 함
-         model: prismaModel.chat_model ? ChatModelRepositoryImpl.toEntity(prismaModel.chat_model) : undefined,
+         model: prismaModel.chat_model
+            ? ChatModelRepositoryImpl.toEntity({
+                 ...prismaModel.chat_model,
+                 chat_model_parameters: [],
+              })
+            : undefined,
       });
    }
 

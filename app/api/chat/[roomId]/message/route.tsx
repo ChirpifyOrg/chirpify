@@ -6,7 +6,7 @@ import { createChatRequest } from '@/be/application/chat/Dtos';
 import { ChatUseCaseFactory } from '@/be/application/chat/ChatUseCaseFactory';
 import { toHttpError } from '@/lib/be/utils/error-http-mapper';
 
-export async function POST(request: NextRequest, { params }: { params: { roomId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ roomId: string }> }) {
    try {
       const { roomId } = await params;
       const { message, nativeLanguage }: ClientChatRequest = await request.json();
@@ -36,9 +36,9 @@ export async function POST(request: NextRequest, { params }: { params: { roomId:
       return NextResponse.json(error.body, { status: error.status });
    }
 }
-
-export async function GET(req: NextRequest, { params: { roomId } }: { params: { roomId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ roomId: string }> }) {
    try {
+      const { roomId } = await params;
       const superbase = await createClient();
       const { data, error } = await superbase.auth.getUser();
       const isLoggedIn = !error && data?.user != null;
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest, { params: { roomId } }: { params: { 
       }
       const isTrial = data?.user?.is_anonymous ? true : false;
       const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, isTrial);
-      const { searchParams } = req.nextUrl;
+      const { searchParams } = request.nextUrl;
       const startIndex = searchParams.get('startIndex') ? searchParams.get('startIndex')! : undefined;
       const endIndex = searchParams.get('endIndex') ? searchParams.get('endIndex')! : undefined;
       const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined;

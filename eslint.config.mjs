@@ -1,11 +1,15 @@
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
+import nextPlugin from 'eslint-plugin-next';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
    {
-      ignores: ['.next/**'],
+      ignores: [
+         '.next/**',
+         'lib/generated/prisma/**', // Ignore Prisma generated files
+      ],
       files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
       languageOptions: {
          globals: {
@@ -18,11 +22,13 @@ export default [
             ecmaFeatures: {
                jsx: true,
             },
+            project: './tsconfig.json',
          },
       },
       plugins: {
          react: pluginReact,
          '@typescript-eslint': tseslint.plugin,
+         next: nextPlugin,
       },
       rules: {
          'react/react-in-jsx-scope': 'off',
@@ -38,6 +44,8 @@ export default [
                caughtErrorsIgnorePattern: '^_',
             },
          ],
+         'next/no-html-link-for-pages': 'error',
+         'next/no-img-element': 'warn',
       },
       settings: {
          react: {

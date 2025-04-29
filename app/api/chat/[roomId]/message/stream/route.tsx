@@ -6,7 +6,7 @@ import { ChatUseCaseFactory } from '@/be/application/chat/ChatUseCaseFactory';
 import { createChatRequest } from '@/be/application/chat/Dtos';
 import { toHttpError } from '@/lib/be/utils/error-http-mapper';
 
-export async function POST(request: Request, { params }: { params: { roomId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ roomId: string }> }) {
    try {
       const { roomId } = await params;
       const { message, nativeLanguage }: ClientChatRequest = await request.json();
