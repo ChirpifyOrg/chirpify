@@ -52,5 +52,6 @@ export default [
             version: 'detect',
          },
       },
+      ignores: ['lib/generated/prisma/**'],
    },
 ];
