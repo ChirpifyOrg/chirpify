@@ -28,7 +28,7 @@ export class ChatModelRepositoryImpl extends BasePrismaRepository implements Cha
                   prompt: param.prompt ?? undefined,
                   defaultParam: param.default_param,
                   isActive: param.is_active ?? true,
-                  isStremaing: param.is_streaming ?? false,
+                  isStreaming: param.is_streaming ?? false,
                   createdAt: param.created_at,
                }),
          ) ?? [];
@@ -55,7 +55,7 @@ export class ChatModelRepositoryImpl extends BasePrismaRepository implements Cha
          //       prompt: param.prompt,
          //       default_param: param.defaultParam,
          //       is_active: param.isActive,
-         //       is_streaming: param.isStremaing,
+         //       is_streaming: param.isStreaming,
          //       created_at: param.createdAt,
          //    })),
          // },
