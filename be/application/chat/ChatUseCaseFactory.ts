@@ -1,4 +1,4 @@
-import { ClientChatRequest } from '@/types/chat';
+import { AIChatAPIResponse, AuthenticatedClientChatReuqest } from '@/types/chat';
 import { ChatUseCase } from './ChatUseCase';
 import { AuthenticationChatUseCase } from './AuthenticationChatUseCase';
 import { OpenAIChatService } from '@/be/infrastructure/service/OpenAIChatService';
@@ -8,7 +8,7 @@ import { UnitOfWorkChatFactory } from '@/be/infrastructure/repository/uow/factor
 
 export class ChatUseCaseFactory {
    private static instance: ChatUseCaseFactory;
-   private usecases: Map<string, ChatUseCase<unknown, ClientChatRequest, unknown>> = new Map();
+   private usecases: Map<string, ChatUseCase<AIChatAPIResponse, AuthenticatedClientChatReuqest, unknown>> = new Map();
 
    private constructor() {}
 
@@ -19,7 +19,10 @@ export class ChatUseCaseFactory {
       return ChatUseCaseFactory.instance;
    }
 
-   getUseCase(isLoggedIn: boolean, isTrial: boolean): ChatUseCase<unknown, ClientChatRequest, unknown> {
+   getUseCase(
+      isLoggedIn: boolean,
+      isTrial: boolean,
+   ): ChatUseCase<AIChatAPIResponse, AuthenticatedClientChatReuqest, unknown> {
       let key;
       if (isLoggedIn) {
          if (isTrial) key = 'trial';
@@ -35,7 +38,7 @@ export class ChatUseCaseFactory {
       }
 
       // 새로운 서비스 생성
-      let useCase: ChatUseCase<unknown, ClientChatRequest, unknown>;
+      let useCase: ChatUseCase<AIChatAPIResponse, AuthenticatedClientChatReuqest, unknown>;
 
       // UoW 팩토리
       const unitOfWork = UnitOfWorkChatFactory.create();

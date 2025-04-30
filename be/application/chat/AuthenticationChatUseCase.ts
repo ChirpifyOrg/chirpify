@@ -65,6 +65,31 @@ export class AuthenticationChatUseCase extends ChatUseCase<
       }
    }
 
+   async processChatStreaming(request: AuthenticatedClientChatReuqest, onData: (chunk: string) => void): Promise<void> {
+      await this.requestValidate(request);
+      const { model } = await this.getModelInfo(request.roomId);
+      const promptInput = await this.formatStreamRequest(request, model);
+      const stream = await this.chatService.generateResponseStream(promptInput);
+      const responseChunks: string[] = [];
+      let isFinished = false;
+      for await (const chunk of stream) {
+         const choice = chunk.choices[0];
+         if (choice.delta?.content) {
+            responseChunks.push(choice.delta.content);
+            onData(choice.delta.content);
+         }
+         if (choice.finish_reason) {
+            isFinished = true;
+            break; // 스트림 끝났으면 빠져나오기
+         }
+      }
+      if (!isFinished) {
+         throw new Error('Stream이 비정상적으로 종료되었습니다.');
+      }
+      const response = responseChunks.join('');
+      const formattedResponse = JSON.parse(response);
+      await this.storeChat(request, formattedResponse);
+   }
    protected formatResponse(originResponse: ChatCompletion): AIChatAPIResponse {
       const result = AIChatAPIResponseSchema.safeParse(JSON.parse(originResponse?.choices[0]?.message?.content ?? ''));
       if (result.error) {
@@ -74,24 +99,6 @@ export class AuthenticationChatUseCase extends ChatUseCase<
          ? result.data
          : ({ ...defaultAIChatResponse, ...originResponse } as AIChatAPIResponse);
       return parsed;
-   }
-
-   async processChatStreaming(request: AuthenticatedClientChatReuqest, onData: (chunk: string) => void): Promise<void> {
-      let responseChunk: string[] = [];
-      await this.requestValidate(request);
-      const stream = await this.chatService.generateResponseStream(request);
-      for await (const chunk of stream) {
-         const content = chunk.choices[0].delta?.content; // Optional chaining 사용
-         if (typeof content === 'string') {
-            // content가 string인지 확인
-            responseChunk.push(content);
-            onData(content);
-         }
-      }
-      const response = responseChunk.join('');
-      // const ndJSON = responseChunk.join('');
-      const formattedResponse = this.formatResponse(JSON.parse(response) as GPTChatFormat);
-      await this.storeChat(request, formattedResponse);
    }
 
    protected async formatRequest(
@@ -122,12 +129,5 @@ export class AuthenticationChatUseCase extends ChatUseCase<
       if (!isUserOwnerOfRoom) {
          throw new ForbiddenError('잘못된 room 소유자 입니다.');
       }
-   }
-   protected async storeChat(request: AuthenticatedClientChatReuqest, response: AIChatAPIResponse): Promise<void> {
-      const { roomId, message, nativeLanguage } = request;
-
-      const userData = ChatMessage.createFromUserMessage(roomId, message);
-      const aiData = ChatMessage.createFromAIResponse(roomId, nativeLanguage, response);
-      await this.unitOfWork.chatRepository.saveChat(userData, aiData);
    }
 }
