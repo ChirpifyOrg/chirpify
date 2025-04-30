@@ -45,4 +45,8 @@ export class ChatRoom {
    sortMessagesByDate() {
       this.messages.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
    }
+   // 소유권 확인
+   isUserOwnerOfRoom(userId: string) {
+      return this.userId === userId;
+   }
 }
