@@ -10,7 +10,6 @@ import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
 import { ForbiddenError, NotFoundError, ValidationError } from '@/lib/be/utils/errors';
 import { ChatCompletion, ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions';
 import { ChatModel } from '@/be/domain/chat/ChatModel';
-import { ChatMessage } from '@/be/domain/chat/ChatMessage';
 import { IUnitOfWorkChat } from '@/be/domain/chat/IUnitOfWorkChat';
 /**
  * @class AuthenticationChatUseCase
