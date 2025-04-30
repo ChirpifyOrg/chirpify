@@ -55,7 +55,7 @@ export default function Home() {
             </div>
             {currentRoomId && (
                <div className="w-full max-w-5xl">
-                  <ChatContainer persona={modelName} mode="trial" roomId={currentRoomId} />
+                  <ChatContainer persona={modelName} mode="trial" isStreaming={isStreaming} roomId={currentRoomId} />
                </div>
             )}
          </main>

@@ -30,14 +30,13 @@ interface ChatContainerProps {
    persona: string;
    mode: 'full' | 'trial';
    roomId: string;
+   isStreaming : boolean;
 }
 
-export function ChatContainer({ persona, mode, roomId }: ChatContainerProps) {
+export function ChatContainer({ persona, mode, roomId ,isStreaming }: ChatContainerProps) {
    if (!roomId) {
       return <>Error !</>;
    }
-
-   const isStreaming = false;
    const containerRef = useRef<HTMLDivElement>(null);
 
    // testdata
