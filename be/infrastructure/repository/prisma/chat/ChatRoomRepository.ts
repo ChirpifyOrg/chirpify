@@ -1,6 +1,6 @@
 import { ChatRoom } from '@/be/domain/chat/ChatRoom';
 import { ChatRoomRepository } from '@/be/domain/chat/ChatRoomRepository';
-import { chat_model, chat_rooms, Prisma } from '@/lib/generated/prisma';
+import { chat_model, chat_rooms, chat_model_parameters, Prisma } from '@/lib/generated/prisma';
 import { ChatModelRepositoryImpl } from './ChatModelRepository';
 import { BasePrismaRepository } from '../BasePrismaRepository';
 
@@ -27,7 +27,11 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
          const prismaModel = await this.prisma.chat_rooms.findUnique({
             where: { id: roomId },
             include: {
-               chat_model: true,
+               chat_model: {
+                  include: {
+                     chat_model_parameters: true
+                  }
+               },
             },
          });
 
@@ -78,7 +82,7 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
    }
 
    // Prisma 모델을 ChatRoom 엔터티로 변환
-   static toEntity(prismaModel: chat_rooms & { chat_model?: chat_model }): ChatRoom {
+   static toEntity(prismaModel: chat_rooms & { chat_model?: chat_model & { chat_model_parameters?: chat_model_parameters[] } }): ChatRoom {
       return new ChatRoom({
          id: prismaModel.id,
          userId: prismaModel.user_id ?? undefined,
@@ -89,7 +93,7 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
          model: prismaModel.chat_model
             ? ChatModelRepositoryImpl.toEntity({
                  ...prismaModel.chat_model,
-                 chat_model_parameters: [],
+                 chat_model_parameters: prismaModel.chat_model.chat_model_parameters ?? [],
               })
             : undefined,
       });
@@ -103,5 +107,46 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
          created_at: entity.createdAt,
          deleted_at: entity.deletedAt,
       };
+   }
+
+   // chatModelParameter 추가
+   async addChatModelParameter(modelId: string, parameter: {
+      defaultParam?: any;
+      prompt?: string;
+      isActive?: boolean;
+      isStreaming?: boolean;
+   }) {
+      try {
+         const prismaModel = await this.prisma.chat_model_parameters.create({
+            data: {
+               chat_model_id: modelId,
+               default_param: parameter.defaultParam,
+               prompt: parameter.prompt,
+               is_active: parameter.isActive ?? true,
+               is_streaming: parameter.isStreaming ?? false,
+            },
+         });
+         return prismaModel;
+      } catch (e) {
+         console.error('Error adding chat model parameter:', e);
+         throw e;
+      }
+   }
+
+   // 스트리밍 여부에 따라 chatModelParameter 조회
+   async getChatModelParametersByStreaming(modelId: string, isStreaming: boolean) {
+      try {
+         const prismaModel = await this.prisma.chat_model_parameters.findMany({
+            where: {
+               chat_model_id: modelId,
+               is_streaming: isStreaming,
+               is_active: true,
+            },
+         });
+         return prismaModel;
+      } catch (e) {
+         console.error('Error getting chat model parameters by streaming:', e);
+         throw e;
+      }
    }
 }

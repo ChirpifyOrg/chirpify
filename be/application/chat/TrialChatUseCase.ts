@@ -10,7 +10,7 @@ import { ChatCompletionChunk, ChatCompletion as GPTChatFormat } from 'openai/res
 import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions';
 import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
 import { ChatModel } from '@/be/domain/chat/ChatModel';
-import { TooManyRequestsError, ValidationError } from '@/lib/be/utils/errors';
+import { TooManyRequestsError, ValidationError, NotFoundError } from '@/lib/be/utils/errors';
 import { ChatMessage } from '@/be/domain/chat/ChatMessage';
 import { IUnitOfWorkChat } from '@/be/domain/chat/IUnitOfWorkChat';
 
@@ -50,6 +50,7 @@ export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, Authenticat
    async processChatStreaming(request: AuthenticatedClientChatReuqest, onData: (chunk: string) => void): Promise<void> {
       await this.requestValidate(request);
       const { model } = await this.getModelInfo(request.roomId);
+  
 
       const promptInput = await this.formatStreamRequest(request, model);
       const stream = await this.chatService.generateResponseStream(promptInput);
@@ -90,8 +91,13 @@ export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, Authenticat
       request: AuthenticatedClientChatReuqest,
       modelInfo: ChatModel,
    ): Promise<ChatCompletionCreateParamsBase> {
-      const defaultParam = modelInfo.chatModelParameter[0].defaultParam as ChatCompletionCreateParamsBase;
-      defaultParam.messages.push({ role: 'system', content: modelInfo.chatModelParameter[0].prompt ?? '' });
+      // 비스트리밍 파라미터만 필터링
+      const nonStreamingParameters = modelInfo.getParametersByStreaming(false);
+      if (nonStreamingParameters.length === 0) {
+         throw new NotFoundError('비스트리밍 파라미터가 설정되지 않았습니다. 지원 여부를 확인해 주세요');
+      }
+      const defaultParam = nonStreamingParameters[0].defaultParam as ChatCompletionCreateParamsBase;
+      defaultParam.messages.push({ role: 'system', content: nonStreamingParameters[0].prompt ?? '' });
       defaultParam.messages.push({ role: 'user', content: request.message });
       defaultParam.stream = false;
       return defaultParam;
@@ -101,8 +107,13 @@ export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, Authenticat
       request: AuthenticatedClientChatReuqest,
       modelInfo: ChatModel,
    ): Promise<ChatCompletionCreateParamsBase> {
-      const defaultParam = modelInfo.chatModelParameter[0].defaultParam as ChatCompletionCreateParamsBase;
-      defaultParam.messages.push({ role: 'system', content: modelInfo.chatModelParameter[0].prompt ?? '' });
+      // 스트리밍 파라미터만 필터링
+      const streamingParameters = modelInfo.getParametersByStreaming(true);
+      if (streamingParameters.length === 0) {
+         throw new NotFoundError('스트리밍 파라미터가 설정되지 않았습니다. 지원 여부를 확인해 주세요');
+      }
+      const defaultParam = streamingParameters[0].defaultParam as ChatCompletionCreateParamsBase;
+      defaultParam.messages.push({ role: 'system', content: streamingParameters[0].prompt ?? '' });
       defaultParam.messages.push({ role: 'user', content: request.message });
       defaultParam.stream = true;
       return defaultParam;
