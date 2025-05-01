@@ -1,4 +1,5 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useEffect, useState } from 'react';
 
 interface AIResponseProps {
    message?: string;
@@ -12,6 +13,23 @@ export function AIResponse({ message, persona, emotion }: AIResponseProps) {
       persona: 'Aru',
       emotion: 'concern',
    };
+   const [displayedMessage, setDisplayedMessage] = useState('');
+
+   useEffect(() => {
+      if (message) {
+         setDisplayedMessage(''); // 초기화
+         let index = 0;
+
+         const interval = setInterval(() => {
+            if (index < message.length) {
+               setDisplayedMessage(prev => prev + message[index]);
+               index++;
+            } else {
+               clearInterval(interval);
+            }
+         }, 100); // 100ms 간격으로 글자 추가
+      }
+   }, [message]);
 
    return (
       <div className="absolute bottom-[80px] left-4 right-4">
@@ -24,7 +42,7 @@ export function AIResponse({ message, persona, emotion }: AIResponseProps) {
             </div>
 
             <ScrollArea className="h-[100px]">
-               <div className="text-base leading-relaxed">{message || defaultData.message}</div>
+               <div className="text-base leading-relaxed">{displayedMessage || defaultData.message}</div>
             </ScrollArea>
          </div>
       </div>

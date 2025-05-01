@@ -3,6 +3,7 @@ import {
    AIChatAPIResponseSchema,
    AuthenticatedClientChatReuqest,
    defaultAIChatResponse,
+   parseNDJSONToAIChatResponse,
 } from '@/types/chat';
 import { ChatUseCase } from './ChatUseCase';
 import { ChatCompletion } from 'openai/resources';
@@ -50,12 +51,11 @@ export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, Authenticat
    async processChatStreaming(request: AuthenticatedClientChatReuqest, onData: (chunk: string) => void): Promise<void> {
       await this.requestValidate(request);
       const { model } = await this.getModelInfo(request.roomId);
-  
 
       const promptInput = await this.formatStreamRequest(request, model);
       const stream = await this.chatService.generateResponseStream(promptInput);
       const responseChunks: string[] = [];
-      let isFinished = false;
+
       for await (const chunk of stream) {
          const choice = chunk.choices[0];
 
@@ -63,16 +63,19 @@ export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, Authenticat
             responseChunks.push(choice.delta.content);
             onData(choice.delta.content);
          }
-         if (choice.finish_reason) {
-            isFinished = true;
-            break; // 스트림 끝났으면 빠져나오기
-         }
       }
-      if (!isFinished) {
-         throw new Error('Stream이 비정상적으로 종료되었습니다.');
-      }
-      const response = responseChunks.join('');
-      const formattedResponse = JSON.parse(response);
+
+      //      const response = responseChunks.join('');
+
+      const raw = responseChunks.join('');
+      const jsonLines = raw.split(/(?<=})\s*(?={)/); // 안전하게 줄 나누기
+      const ndjson = jsonLines.join('\n');
+      const cleanNdJson = ndjson.replace(/```[\s\S]*?```/g, function (match) {
+         // 코드 블록 안의 내용만 추출 (``` 제거)
+         return match.replace(/```[\s]?(?:\w+)?[\s]?|```$/g, '');
+      });
+      const formattedResponse = parseNDJSONToAIChatResponse(cleanNdJson);
+      //const formattedResponse = JSON.parse(response);
       await this.storeChat(request, formattedResponse);
    }
 

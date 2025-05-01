@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
-import { AIChatAPIResponse, ClientChatRequest } from '@/types/chat';
+import { useEffect, useState } from 'react';
+import { AIChatAPIResponse, ClientChatRequest, parseNDJSONToAIChatResponse } from '@/types/chat';
 
 // 채팅 훅
 // 메시지 전송, 스트리밍 메시지, 전체 응답 메시지
@@ -55,7 +55,7 @@ export function useChat() {
                         }
 
                         if (parsedMessage.type === 'message') {
-                           setAiStreamedMessage(prev => prev + parsedMessage.value);
+                           setAiStreamedMessage(prev => prev + parsedMessage.text);
                         }
                      } catch (error) {
                         console.error('JSON parsing error:', error, 'for line:', trimmedLine);
@@ -63,6 +63,8 @@ export function useChat() {
                   }
                }
             }
+            const finalResponse = parseNDJSONToAIChatResponse(buffer);
+            setAiFullResponse(finalResponse); // 파싱된 결과를 상태에 저장
          } else {
             const json = await response.json();
             setAiFullResponse(json);
@@ -71,7 +73,9 @@ export function useChat() {
          console.error('Error sending message:', error);
       }
    }
-
+   useEffect(() => {
+      console.log(aiFullResponse);
+   }, [aiFullResponse]);
    return {
       aiStreamedMessage,
       aiFullResponse,
