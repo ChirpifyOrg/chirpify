@@ -97,60 +97,20 @@ export const EvaluationCategorySchema = z.enum([
    'vocabulary_naturalness',
    'sentence_naturalness',
 ]);
+export const FeedBackStructureSchema = z.record(EvaluationCategorySchema, z.array(FeedbackSchema).default([]));
+
+// 타입 추론
+export type FeedBackStructure = z.infer<typeof FeedBackStructureSchema>;
 export type EvaluationCategory = z.infer<typeof EvaluationCategorySchema>;
-// | 'comprehension'
-// | 'grammar_accuracy'
-// | 'vocabulary_naturalness'
-// | 'sentence_naturalness';
 // AIChatAPIResponse 스키마 정의
 export const AIChatAPIResponseSchema = z.object({
    message: z.string().default(''),
    evaluation: z.record(EvaluationCategorySchema, z.number().default(0)),
-   // evaluation: z.object({
-   //    comprehension: z.number().default(0),
-   //    grammar_accuracy: z.number().default(0),
-   //    sentence_naturalness: z.number().default(0),
-   //    vocabulary_naturalness: z.number().default(0),
-   // }),
    total_score: z.number().default(0),
-   feedback: z.record(EvaluationCategorySchema, z.array(FeedbackSchema).default([])).default({
-      grammar_accuracy: [
-         {
-            issue: '',
-            description: '',
-         },
-      ],
-      sentence_naturalness: [
-         {
-            issue: '',
-            description: '',
-         },
-      ],
-      vocabulary_naturalness: [
-         {
-            issue: '',
-            description: '',
-         },
-      ],
-      comprehension: [
-         {
-            issue: '',
-            description: '',
-         },
-      ],
-   }),
-   // z.object({
-
-   //    grammar_accuracy:
-   //    sentence_naturalness: z.array(FeedbackSchema).default([]),
-   //    vocabulary_naturalness: z.array(FeedbackSchema).default([]),
-   //    comprehension: z.array(FeedbackSchema).default([]),
-   // }),
-   // [z.string()] : z.string() 이 동작하지 않아 아래 링크 참고하여 해결
-   // 유사 이슈 : https://stackoverflow.com/questions/75546547/create-a-schema-that-has-some-dynamic-keys-and-some-static-keys-with-zod
+   feedback: FeedBackStructureSchema,
    total_feedback: z.intersection(
       z.object({
-         en: z.string(),
+         'en-US': z.string(),
       }),
       z.record(z.string(), z.string()),
    ),
@@ -172,7 +132,7 @@ export const AIChatAPIResponseSchema = z.object({
       'Doubt',
    ]),
 });
-export const defaultAIChatResponse = {
+export const defaultAIChatResponse: AIChatAPIResponse = {
    message: '',
    evaluation: {
       grammar_accuracy: 0,
@@ -182,13 +142,13 @@ export const defaultAIChatResponse = {
    },
    total_score: 0,
    feedback: {
-      grammar_accuracy: [{ issue: '', description: '' }],
-      sentence_naturalness: [{ issue: '', description: '' }],
-      vocabulary_naturalness: [{ issue: '', description: '' }],
-      comprehension: [{ issue: '', description: '' }],
+      grammar_accuracy: [],
+      sentence_naturalness: [],
+      vocabulary_naturalness: [],
+      comprehension: [],
    },
    total_feedback: {
-      en: '',
+      'en-US': '',
    },
    difficulty_level: 'Medium',
    emotion: 'Calm',
@@ -227,60 +187,38 @@ export function convertAIChatResponseToNDJSON(data: AIChatAPIResponse): string {
 
    return ndjsonLines.join('\n');
 }
-export function parseNDJSONToAIChatResponse(ndjson: string): AIChatAPIResponse {
-   const lines = ndjson.trim().split('\n');
 
-   const result: AIChatAPIResponse = {
-      message: '',
-      evaluation: {
-         comprehension: 0,
-         grammar_accuracy: 0,
-         sentence_naturalness: 0,
-         vocabulary_naturalness: 0,
-      },
-      total_score: 0,
-      feedback: {
-         grammar_accuracy: [],
-         sentence_naturalness: [],
-         vocabulary_naturalness: [],
-         comprehension: [],
-      },
-      total_feedback: { en: '' },
-      difficulty_level: 'Medium',
-      emotion: 'Calm',
-   };
+export function parseNDJSONToAIChatResponse(ndjsonString: string): AIChatAPIResponse {
+   // NDJSON 파싱
+   const lines = ndjsonString.trim().split('\n');
+   const jsonObjects = lines.map(line => JSON.parse(line));
 
-   for (const line of lines) {
-      const obj = JSON.parse(line);
+   const result = AIChatAPIResponseSchema.parse({});
 
+   // 피드백 항목들을 모으기 위한 배열
+   jsonObjects.forEach(obj => {
       switch (obj.type) {
          case 'message':
-            result.message = obj.text;
+            result.message = obj.value;
             break;
          case 'evaluation':
-            result.evaluation = {
-               comprehension: obj.comprehension,
-               grammar_accuracy: obj.grammar_accuracy,
-               sentence_naturalness: obj.sentence_naturalness,
-               vocabulary_naturalness: obj.vocabulary_naturalness,
-            };
+            result.evaluation = obj.value;
             break;
          case 'total_score':
             result.total_score = obj.value;
             break;
          case 'feedback':
-            const category = obj.category as keyof typeof result.feedback;
-            if (result.feedback[category]) {
-               // Check if category exists
-               result.feedback[category].push({
-                  issue: obj.issue,
-                  description: obj.description,
-               });
+            const category = obj.category as EvaluationCategory;
+            if (!result.feedback[category]) {
+               result.feedback[category] = [];
             }
+            result.feedback[category].push({
+               issue: obj.issue,
+               description: obj.description,
+            });
             break;
          case 'total_feedback':
-            result.total_feedback = { ...obj };
-            delete result.total_feedback.type;
+            result.total_feedback = obj.value;
             break;
          case 'difficulty_level':
             result.difficulty_level = obj.value;
@@ -289,9 +227,9 @@ export function parseNDJSONToAIChatResponse(ndjson: string): AIChatAPIResponse {
             result.emotion = obj.value;
             break;
       }
-   }
+   });
 
-   return AIChatAPIResponseSchema.parse(result);
+   return result;
 }
 
 type userMessage = { userMessage: string };
