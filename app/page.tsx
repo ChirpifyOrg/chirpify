@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 export default function Home() {
    const modelName = 'Aru';
    const isStreaming = true;
-
    const [currentRoomId, setRoomId] = useState<string | null>(null);
    // const { currentRoomId, setRoomId } = useSimpleChatStore();
    useEffect(() => {
@@ -30,6 +29,7 @@ export default function Home() {
 
             setRoomId(result.roomId);
          } catch (e) {
+            alert(e);
             console.error('Error initializing anonymous room:', e);
          }
       };
