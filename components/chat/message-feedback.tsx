@@ -61,12 +61,12 @@ export const MessageFeedback = memo(({ style, feedbackAndScore, onClose }: Messa
       feedbackKeys = Object.keys(feedback);
    }
 
-   const getFeedbackMessage = (feedback: { en: string; [key: string]: string }) => {
+   const getFeedbackMessage = (feedback: { 'en-US': string; [key: string]: string }) => {
       const userLang = getUserLanguage().toLocaleLowerCase();
       if (feedback?.hasOwnProperty(userLang)) return feedback[userLang];
       else {
          console.error('feedback Message가 없습니다.', userLang, feedback);
-         return feedback['en'];
+         return feedback['en-US'];
       }
    };
 

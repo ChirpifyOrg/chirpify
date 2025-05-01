@@ -40,7 +40,8 @@ export const mockAIChatResponseData: AIChatAPIResponse = {
       ],
    },
    total_feedback: {
-      en: 'Your message shows good understanding and vocabulary, but there are some grammar and sentence structure issues to work on. Keep practicing!',
+      'en-US':
+         'Your message shows good understanding and vocabulary, but there are some grammar and sentence structure issues to work on. Keep practicing!',
       'ko-kr':
          '당신의 메시지는 이해력과 어휘력이 좋은 편이지만, 문법과 문장 구조에 일부 문제가 있습니다. 계속 연습해보세요!',
    },
