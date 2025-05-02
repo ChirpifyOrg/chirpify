@@ -14,13 +14,15 @@ export class TranslateLearnFeedbackService {
     this.promptTemplate = fs.readFileSync(templatePath, 'utf8');
   }
 
-  async generateFeedback(question: string, answer: string) {
+  async generateFeedback(question: string, answer: string, level: number, selectedOptions: string[], language: string) {
     const prompt = `${this.promptTemplate}
     
     질문: ${question}
     유저의 답변: ${answer}
-    
-    위 프롬프트 템플릿에 따라 영어 학습 문장을 생성해주세요.`;
+    학습 레벨: ${level}
+    학습 옵션: ${selectedOptions}
+    언어: ${language}
+    위 정보를 기반으로 피드백을 생성해주세요.`;
 
     const request: ChatCompletionCreateParamsNonStreaming = {
       model: "gpt-3.5-turbo",
@@ -39,6 +41,6 @@ export class TranslateLearnFeedbackService {
     };
 
     const response = await this.chatService.generateResponse(request);
-    return response.choices[0].message.content;
+    return JSON.parse(response.choices[0].message.content ?? '');
   }
 }

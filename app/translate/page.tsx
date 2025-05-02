@@ -6,17 +6,21 @@ import InputArea from '@/components/input-area';
 import Settings from '@/components/settings';
 import History from '@/components/history';
 
-
-
 const Layout: React.FC = () => {
   const [mainTitle, setMainTitle] = useState<string>("");
+  const [feedback, setFeedback] = useState<object | null>(null);
+
   return (
     <div className="flex w-full md:w-10/12 sd:w-full m-1 h-90vh bg-gray-900 text-white">
       {/* 왼쪽 채팅 영역 */}
       <div className="sm:w-full md:w-4/5 flex flex-col border-r border-gray-700">
         <NativeLanguageArea sentence={mainTitle} />
         <FeedbackArea />
-        <InputArea />
+        <InputArea 
+          sentence={mainTitle} 
+          setFeedback={setFeedback}
+          setMainTitle={setMainTitle}
+        />
       </div>
 
       {/* 오른쪽 설정 영역 */}

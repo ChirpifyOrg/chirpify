@@ -2,7 +2,14 @@
 
 import React, { useState, useRef } from 'react';
 
-const InputArea: React.FC = () => {
+interface InputAreaProps {
+  sentence: string;
+  setFeedback: (feedback: object) => void;
+  setMainTitle: (sentence: string) => void;
+}
+
+
+const InputArea: React.FC<InputAreaProps> = ({ setFeedback, setMainTitle }) => {
   const [inputText, setInputText] = useState<string>('');
   const isComposingRef = useRef(false);
 
@@ -11,6 +18,8 @@ const InputArea: React.FC = () => {
     if (trimmedText) { // 빈 문자열이 아닐 때만 전송
       const question = "사용자가 물어본 질문"; // 실제 질문으로 대체
       const answer = trimmedText; // 사용자가 입력한 텍스트를 답변으로 사용
+      const level = localStorage.getItem('level');
+      const selectedOptions = localStorage.getItem('selectedOptions');
 
       const response = await fetch('/api/translate/feedback', {
           method: 'POST',
@@ -20,12 +29,21 @@ const InputArea: React.FC = () => {
           body: JSON.stringify({
               question,
               answer,
+              level,
+              selectedOptions,
+              language : 'KR'
           }),
       });
 
       console.log(response);
 
       const result = await response.json();
+      console.log(result);
+      const finalResult = typeof result === 'string' ? JSON.parse(result) : result;
+      if(finalResult && finalResult.feedback){
+        setFeedback(finalResult);
+        setMainTitle(finalResult.sentence);
+      }
       console.log(result); // 결과 처리
       setInputText(''); // 전송 후 입력 필드 초기화
     }

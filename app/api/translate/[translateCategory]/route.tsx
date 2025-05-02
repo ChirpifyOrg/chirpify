@@ -15,15 +15,26 @@ async function handleSentenceRequest(level: number, selectedOptions: string[], l
     return NextResponse.json(result);
 }
 
-async function handleFeedbackRequest(question: string, answer: string){
+async function handleFeedbackRequest(question: string, answer: string, level: number, selectedOptions: string[], language: string){
     
     if (!apiKey) {
         throw new Error("API key is not defined");
     }
 
     const feedbackService = new TranslateLearnFeedbackService(apiKey);
-    const result = await feedbackService.generateFeedback(question , answer);
+    const result = await feedbackService.generateFeedback(question , answer, level, selectedOptions, language);
     return NextResponse.json(result);
+}
+
+async function handleFeedbackAndSentenceRequest(question: string, answer: string, level: number, selectedOptions: string[], language: string) {
+    
+    const feedbackResult = await handleFeedbackRequest(question, answer, level, selectedOptions, language);
+    const sentenceResult = await handleSentenceRequest(level, selectedOptions, language);
+    // 두 결과를 반환하거나 필요한 방식으로 처리
+    return {
+        feedback: feedbackResult,
+        sentence: sentenceResult
+    };
 }
 
 export async function POST(request: NextRequest, { params }: { params: { translateCategory: string } }) {
@@ -38,7 +49,7 @@ export async function POST(request: NextRequest, { params }: { params: { transla
         if (translateCategory === 'sentence') {
             return handleSentenceRequest(level, selectedOptions, language);
         } else if (translateCategory === 'feedback') {
-            return handleFeedbackRequest(question, answer);
+            return handleFeedbackAndSentenceRequest(question, answer, level, selectedOptions, language);
         } else {
             return NextResponse.json({ error: "Invalid endpoint" }, { status: 404 });
         }

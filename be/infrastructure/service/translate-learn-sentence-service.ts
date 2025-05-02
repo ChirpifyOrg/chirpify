@@ -41,6 +41,6 @@ export class TranslateLearnSentenceService {
     };
 
     const response = await this.chatService.generateResponse(request);
-    return response.choices[0].message.content;
+    return JSON.parse(response.choices[0].message.content ?? '');
   }
 }

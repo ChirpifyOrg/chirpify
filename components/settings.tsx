@@ -11,7 +11,6 @@ const Settings: React.FC<SettingsProps> = ({ setMainTitle }) => {
   const [level, setLevel] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   
-
   useEffect(() => {
     const savedLevel = localStorage.getItem('level');
     if (savedLevel) {
