@@ -45,7 +45,7 @@ export class ChatRepositoryImpl extends BasePrismaRepository implements ChatRepo
    }): Promise<AIChatSimpleFormatHistory[]> {
       const { roomId, startIndex, limit } = params;
 
-      const where = startIndex ? { room_id: roomId, id: { lt: startIndex } } : { room_id: roomId };
+      const where = startIndex ? { room_id: roomId, created_at: { lt: startIndex } } : { room_id: roomId };
 
       try {
          const messages = await this.prisma.chat_message.findMany({
