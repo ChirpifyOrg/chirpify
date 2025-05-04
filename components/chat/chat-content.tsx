@@ -84,28 +84,47 @@ interface ChatContentProps {
    isOpen: boolean;
 }
 export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpand, roomId }: ChatContentProps) {
-   console.log(roomId);
    const { setMessages } = useSimpleChatStore.getState();
 
    // useShallow를 사용하여 얕은 비교 수행
    const messages = useSimpleChatStore(useShallow(state => state.messages[roomId] ?? []));
    const startIndex = useSimpleChatStore(useShallow(state => state.startIndex[roomId]));
    const endIndex = useSimpleChatStore(useShallow(state => state.endIndex[roomId]));
-   console.log(messages);
+
    const [isInit, setInit] = useState<boolean>(false);
    const [isLoading, setIsLoading] = useState(false);
+   const [hasMoreMessages, setHasMoreMessages] = useState(true); // 더 불러올 메시지가 있는지 추적
+   const [lastRequestId, setLastRequestId] = useState<string | null>(null); // 마지막 요청 ID 추적
+
    const contentHeight = style?.maxHeight ? parseInt(style.maxHeight as string) : 320;
    const scrollAreaHeight = Math.max(contentHeight - 60, 100);
 
    const scrollContainerRef = useRef<HTMLDivElement>(null);
    const scrollBottom = useRef<HTMLDivElement>(null);
 
+   // 스크롤 이벤트 쓰로틀링을 위한 타이머
+   const scrollTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+   // 요청 ID 생성 함수
+   const generateRequestId = useCallback(() => {
+      return `${roomId}-${startIndex}-${endIndex}-${Date.now()}`;
+   }, [roomId, startIndex, endIndex]);
+
    // loadMoreMessages를 useCallback으로 메모이제이션
    const loadMoreMessages = useCallback(async () => {
-      if (isLoading) return;
+      if (isLoading || !hasMoreMessages) return false;
 
+      // 요청에 고유 ID 할당
+      const requestId = generateRequestId();
+
+      // 중복 요청 방지
+      if (requestId === lastRequestId) {
+         return false;
+      }
+
+      setLastRequestId(requestId);
       setIsLoading(true);
-      console.log('load');
+
       try {
          const DEFAULT_CHAT_HISTORY_LIMIT = 20;
          const response = await fetchWithTypedBody<unknown, AIChatSimpleFormatHistory[]>(
@@ -116,52 +135,118 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
                startIndex,
             }),
          );
-         console.log(`response : `, response);
 
-         setMessages({ roomId, messages: [...response] });
+         // 데이터가 없거나 빈 배열이면 더 이상 메시지가 없음을 표시
+         if (!response || response.length === 0) {
+            setHasMoreMessages(false);
+            return false;
+         }
+
+         // 새로운 메시지가 기존 메시지와 중복되는지 확인
+         if (messages.length > 0) {
+            const existingIds = new Set(messages.map(msg => msg.id));
+            const newMessages = response.filter(msg => !existingIds.has(msg.id));
+
+            if (newMessages.length === 0) {
+               // 모든 메시지가 중복됨
+               setHasMoreMessages(false);
+               return false;
+            }
+
+            // 중복되지 않는 메시지만 추가
+            setMessages({ roomId, messages: [...newMessages, ...messages] });
+         } else {
+            // 첫 로드인 경우
+            setMessages({ roomId, messages: [...response] });
+         }
+
+         return true;
       } catch (error) {
          console.error('Error loading messages:', error);
+         return false;
       } finally {
          setIsLoading(false);
       }
-   }, [isLoading, roomId, endIndex, startIndex, setMessages]);
+   }, [
+      isLoading,
+      hasMoreMessages,
+      roomId,
+      endIndex,
+      startIndex,
+      setMessages,
+      messages,
+      generateRequestId,
+      lastRequestId,
+   ]);
 
-   // 2단계: 메시지 렌더 이후 스크롤 바닥 이동 및 초기화
+   // 컴포넌트가 처음 마운트될 때만 초기화
    useEffect(() => {
-      console.log('init?', isInit);
-      if (!isInit) {
-         requestAnimationFrame(() => {
-            setTimeout(() => {
-               if (scrollContainerRef.current) {
-                  scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
-                  console.log('scrollContainerRef', scrollContainerRef);
-                  loadMoreMessages();
-                  setInit(true);
-               }
-            }, 100);
-         });
-      } else {
-         loadMoreMessages();
-      }
-   }, [isOpen, isInit]);
+      if (!isOpen || isInit) return;
 
+      const initChat = async () => {
+         if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+
+            const hasLoaded = await loadMoreMessages();
+            setInit(true);
+
+            // 초기 로드 후 스크롤을 맨 아래로
+            if (hasLoaded && scrollContainerRef.current) {
+               scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+            }
+         }
+      };
+
+      // 컴포넌트가 렌더링된 후 실행
+      requestAnimationFrame(() => {
+         setTimeout(initChat, 100);
+      });
+   }, [isOpen, isInit, loadMoreMessages]);
+
+   // 스크롤 핸들러 (쓰로틀링 적용)
    const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+      // 초기화되지 않았거나 로딩 중이면 무시
+      if (!isInit || isLoading || !hasMoreMessages) return;
+
       const { scrollTop } = event.currentTarget;
-      if (!isInit || isLoading) return; // 초기화가 안됬거나 로딩중이면
 
-      if (scrollTop < 50 && !isLoading) {
-         const container = event.currentTarget;
-         const prevScrollHeight = container.scrollHeight;
+      // 스크롤이 상단에 가까울 때만 추가 데이터 로드
+      if (scrollTop < 50) {
+         // 이전 타이머가 있으면 취소
+         if (scrollTimerRef.current) {
+            clearTimeout(scrollTimerRef.current);
+         }
 
-         loadMoreMessages().then(() => {
-            // load 후 scroll 위치 유지
-            requestAnimationFrame(() => {
-               const newScrollHeight = container.scrollHeight;
-               container.scrollTop = newScrollHeight - prevScrollHeight + scrollTop;
+         // 300ms 쓰로틀링 적용
+         scrollTimerRef.current = setTimeout(() => {
+            const container = event.currentTarget;
+            const prevScrollHeight = container.scrollHeight;
+
+            // 추가 데이터 로드
+            loadMoreMessages().then(hasNewMessages => {
+               if (hasNewMessages) {
+                  // 스크롤 위치 유지
+                  requestAnimationFrame(() => {
+                     const newScrollHeight = container.scrollHeight;
+                     container.scrollTop = newScrollHeight - prevScrollHeight + scrollTop;
+                  });
+               }
             });
-         });
+
+            scrollTimerRef.current = null;
+         }, 300);
       }
    };
+
+   // 컴포넌트 언마운트 시 타이머 정리
+   useEffect(() => {
+      return () => {
+         if (scrollTimerRef.current) {
+            clearTimeout(scrollTimerRef.current);
+         }
+      };
+   }, []);
+
    return (
       <DialogContent
          className={cn(
@@ -185,11 +270,11 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
             onScrollCb={handleScroll}
             className="w-full">
             <div className="p-4">
-               {isLoading ? (
-                  <div className="text-center py-2 text-white/60">Loading more messages...</div>
-               ) : (
-                  <MessageList messages={messages ?? []} onShowFeedback={onShowFeedback} />
+               {!hasMoreMessages && messages.length > 0 && (
+                  <div className="text-center py-2 text-white/60">모든 메시지를 불러왔습니다</div>
                )}
+               {isLoading && <div className="text-center py-2 text-white/60">Loading more messages...</div>}
+               <MessageList messages={messages ?? []} onShowFeedback={onShowFeedback} />
             </div>
             <div ref={scrollBottom}></div>
          </ScrollAreaOnScroll>

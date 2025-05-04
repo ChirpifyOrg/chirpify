@@ -41,11 +41,11 @@ export const useSimpleChatStore = create(
                   },
                   startIndex: {
                      ...state.startIndex,
-                     [roomId]: state.startIndex[roomId] ?? combined[0]?.id,
+                     [roomId]: state.startIndex[roomId] ?? combined[0]?.createdAt,
                   },
                   endIndex: {
                      ...state.endIndex,
-                     [roomId]: combined[combined.length - 1]?.id,
+                     [roomId]: combined[combined.length - 1]?.createdAt,
                   },
                };
             });
@@ -62,11 +62,11 @@ export const useSimpleChatStore = create(
                   },
                   startIndex: {
                      ...state.startIndex,
-                     [roomId]: combined[0]?.id,
+                     [roomId]: combined[0]?.createdAt,
                   },
                   endIndex: {
                      ...state.endIndex,
-                     [roomId]: state.endIndex[roomId] ?? combined[combined.length - 1]?.id,
+                     [roomId]: state.endIndex[roomId] ?? combined[combined.length - 1]?.createdAt,
                   },
                };
             });
@@ -82,11 +82,11 @@ export const useSimpleChatStore = create(
                   },
                   startIndex: {
                      ...state.startIndex,
-                     [roomId]: state.startIndex[roomId] ?? combined[0]?.id,
+                     [roomId]: state.startIndex[roomId] ?? combined[0]?.createdAt,
                   },
                   endIndex: {
                      ...state.endIndex,
-                     [roomId]: combined[combined.length - 1]?.id,
+                     [roomId]: combined[combined.length - 1]?.createdAt,
                   },
                };
             });
