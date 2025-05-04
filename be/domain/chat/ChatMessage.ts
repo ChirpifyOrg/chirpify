@@ -43,7 +43,7 @@ export class ChatMessage {
 
    static createFromAIResponse(roomId: string, nativeLanguage: string, response: AIChatAPIResponse): ChatMessage {
       const metadata = new ChatMetadata({
-         totalFeedback: response.total_feedback.en,
+         totalFeedback: response.total_feedback['en-US'],
          nativeTotalFeedback: response.total_feedback[nativeLanguage],
          nativeLanguage,
          difficultyLevel: response.difficulty_level,
