@@ -193,16 +193,21 @@ export function parseNDJSONToAIChatResponse(ndjsonString: string): AIChatAPIResp
    const lines = ndjsonString.trim().split('\n');
    const jsonObjects = lines.map(line => JSON.parse(line));
 
-   const result = AIChatAPIResponseSchema.parse({});
+   const result = AIChatAPIResponseSchema.parse({ ...defaultAIChatResponse });
 
    // 피드백 항목들을 모으기 위한 배열
    jsonObjects.forEach(obj => {
       switch (obj.type) {
          case 'message':
-            result.message = obj.value;
+            result.message = obj.text;
             break;
          case 'evaluation':
-            result.evaluation = obj.value;
+            result.evaluation = {
+               comprehension: obj.comprehension,
+               grammar_accuracy: obj.grammar_accuracy,
+               sentence_naturalness: obj.sentence_naturalness,
+               vocabulary_naturalness: obj.vocabulary_naturalness,
+            };
             break;
          case 'total_score':
             result.total_score = obj.value;
@@ -218,7 +223,8 @@ export function parseNDJSONToAIChatResponse(ndjsonString: string): AIChatAPIResp
             });
             break;
          case 'total_feedback':
-            result.total_feedback = obj.value;
+            result.total_feedback = { ...obj };
+            delete result.total_feedback.type;
             break;
          case 'difficulty_level':
             result.difficulty_level = obj.value;
