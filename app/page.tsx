@@ -1,6 +1,41 @@
 'use client';
 import { ChatContainer } from '@/components/chat/chat-container';
+import { createAnonymousUser, trialRoomGetOrCreateWithSupaBaseAnonymousUser } from '@/app/actions';
+import { useEffect, useState } from 'react';
+
 export default function Home() {
+   const modelName = 'Aru';
+   const isStreaming = true;
+   const [currentRoomId, setRoomId] = useState<string | null>(null);
+   // const { currentRoomId, setRoomId } = useSimpleChatStore();
+   useEffect(() => {
+      const initRoom = async () => {
+         try {
+            const { sessionCreated } = await createAnonymousUser();
+
+            // 세션이 새로 생성된 경우 → 다음 렌더 사이클에 다시 시도
+            if (sessionCreated) {
+               location.reload();
+               return;
+            }
+
+            const result = await trialRoomGetOrCreateWithSupaBaseAnonymousUser({ modelName, isStreaming });
+
+            if (!result.success) {
+               console.error(result.error);
+               alert(result.error);
+               return;
+            }
+
+            setRoomId(result.roomId);
+         } catch (e) {
+            alert(e);
+            console.error('Error initializing anonymous room:', e);
+         }
+      };
+
+      initRoom();
+   }, []);
    return (
       <>
          <main className="flex-1 flex flex-col w-full items-center justify-center">
@@ -18,9 +53,11 @@ export default function Home() {
                   Try your first lesson for free!
                </h2>
             </div>
-            <div className="w-full max-w-5xl">
-               <ChatContainer persona="aru" mode="trial" />
-            </div>
+            {currentRoomId && (
+               <div className="w-full max-w-5xl">
+                  <ChatContainer persona={modelName} mode="trial" isStreaming={isStreaming} roomId={currentRoomId} />
+               </div>
+            )}
          </main>
       </>
    );

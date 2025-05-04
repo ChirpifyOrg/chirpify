@@ -1,11 +1,16 @@
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
+import nextPlugin from '@next/eslint-plugin-next';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
    {
-      ignores: ['.next/**'],
+      ignores: [
+         '.next/**',
+         'eslint.config.mjs', // Ignore ESLint config file
+         'postcss.config.js', // Ignore PostCSS config file
+      ],
       files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
       languageOptions: {
          globals: {
@@ -18,11 +23,14 @@ export default [
             ecmaFeatures: {
                jsx: true,
             },
+            project: './tsconfig.json',
          },
       },
       plugins: {
          react: pluginReact,
          '@typescript-eslint': tseslint.plugin,
+         next: nextPlugin,
+         // ...nextPlugin.configs.recommended.rules, // Next.js 기본 규칙 추가
       },
       rules: {
          'react/react-in-jsx-scope': 'off',
@@ -38,18 +46,8 @@ export default [
                caughtErrorsIgnorePattern: '^_',
             },
          ],
-         '@typescript-eslint/naming-convention': [
-            'error',
-            {
-               selector: 'property',
-               format: ['camelCase'],
-            },
-            {
-               selector: 'typeProperty',
-               format: ['camelCase'],
-            },
-         ],
-         camelcase: ['error', { properties: 'as-needed' }],
+         'next/no-html-link-for-pages': 'error',
+         'next/no-img-element': 'warn',
       },
       settings: {
          react: {

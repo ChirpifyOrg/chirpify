@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,7 +10,7 @@ import {
 } from '@radix-ui/react-alert-dialog';
 import { AlertDialogFooter, AlertDialogHeader } from '@/components/ui/alert-dialog';
 import { MessageSquare, Trophy, Maximize2, Minimize2 } from 'lucide-react';
-import { Dialog, DialogTrigger } from '@radix-ui/react-dialog';
+import { Dialog } from '@radix-ui/react-dialog';
 import { ChatContent } from './chat-content';
 import { ChallengeTask } from './challenge-task';
 import { MessageFeedback } from './message-feedback';
@@ -22,36 +23,53 @@ import { useTrialMode } from '@/app/hooks/useTrialMode';
 import { useFullscreen } from '@/app/hooks/useFullscreen';
 import { useContainerDimensions } from '@/app/hooks/useContainerDimensions';
 import { useChat } from '@/app/hooks/useChat';
-import { mockChatHistoryData } from '@/lib/fe/mock/chat-history-data';
 import { getUserLanguage } from '@/lib/fe/utils/language';
+import { useFeedBack } from '@/app/hooks/useFeedBack';
 
 interface ChatContainerProps {
    persona: string;
    mode: 'full' | 'trial';
+   roomId: string;
+   isStreaming: boolean;
 }
 
-function ChatContainerContent({ persona, mode }: ChatContainerProps) {
+export function ChatContainer({ persona, mode, roomId, isStreaming }: ChatContainerProps) {
+   if (!roomId) {
+      return <>Error !</>;
+   }
    const containerRef = useRef<HTMLDivElement>(null);
+
    // testdata
    const [challengeTasks] = useState(mockChallengeData);
-   console.log(mockChallengeData);
+
+   const [isExpanded, setIsExpanded] = useState(false);
 
    const [isChallengeTaskOpen, setIsChallengeTaskOpen] = useState<boolean>(false);
    // 메시지 카운트 관련
-   const { messageCount, isTrialEnded, incrementMessageCount, maxTrialCount } = useTrialMode({ mode });
+   const { messageCount, isTrialEnded, incrementMessageCount } = useTrialMode({ mode });
+
+   const [trialEndedPopupShow, setTrailEndedPopup] = useState<boolean>(false);
+
    // 전체 화면 관련
    const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
    // 컨테이너 크기 관련
    const { containerHeight, containerWidth } = useContainerDimensions(containerRef);
-   const {
-      messages,
-      selectedFeedback,
-      isExpanded,
-      setSelectedFeedback,
-      setIsExpanded,
-      handleSendMessage,
-      lastAIResponse,
-   } = useChat(mockChatHistoryData);
+   const { aiStreamedMessage, aiFullResponse, handleSendMessage, isLoading: isChatLoading } = useChat();
+
+   const [isChatContentOpen, setChatContentIsOpen] = useState<boolean>(false);
+   const setChatContentOpen = () => setChatContentIsOpen(true);
+
+   // 피드백 관련
+   const { onShowFeedback, selectedFeedback } = useFeedBack(roomId);
+   const [isFeedBackOpen, setFeedBackIsOpen] = useState<boolean>(false);
+   const setFeedBackOpen = () => setFeedBackIsOpen(true);
+   const setFeedBackClose = () => {
+      setChatContentOpen();
+      setFeedBackIsOpen(false);
+   };
+   useEffect(() => {
+      if (selectedFeedback) setFeedBackOpen();
+   }, [selectedFeedback]);
 
    // 도전과제 패널 스타일
    const getChallengePanelStyle = () => ({
@@ -63,7 +81,7 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
       transition: 'transform 0.3s ease-in-out',
       zIndex: 2000,
    });
-   // 채팅 컨텐츠 스타일
+   // 채팅 및 feedback 컨텐츠 스타일
    const getChatContentStyle = (containerHeight: number, containerWidth: number) => {
       if (typeof window === 'undefined') {
          return { maxHeight: '100%' };
@@ -86,14 +104,17 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
          zIndex: 1000,
       };
    };
-   useEffect(() => {}, []);
 
    // 메시지 전송 핸들러
    const onSendMessage = (message: string) => {
-      handleSendMessage({ roomId: '1', message, nativeLanguage: getUserLanguage() });
-      incrementMessageCount();
+      if (!isTrialEnded) {
+         handleSendMessage({ roomId, message, nativeLanguage: getUserLanguage() }, isStreaming);
+         incrementMessageCount();
+      } else {
+         setTrailEndedPopup(true);
+      }
    };
-
+   console.log('messageCount : ', messageCount);
    return (
       <div
          ref={containerRef}
@@ -109,7 +130,7 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
          }}>
          <div className={cn('relative w-full', isFullscreen ? 'h-[100dvh]' : 'h-[380px] md:h-[400px] lg:h-[480px]')}>
             <Image
-               src={`/images/${persona}.png`}
+               src={`/images/${persona}_${aiFullResponse?.emotion.toLocaleLowerCase() ?? 'calm'}.webp`}
                alt={persona}
                fill
                className={cn('transition-all duration-300', isFullscreen ? 'object-cover' : '')}
@@ -125,51 +146,65 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
          </div>
 
          <div className="absolute top-4 right-4 flex gap-2" style={{ zIndex: 100 }}>
-            <Button
-               variant="outline"
-               size="icon"
-               className="rounded-full bg-white/80 hover:bg-white/90 relative h-8 w-8"
-               onClick={() => setIsChallengeTaskOpen(prev => !prev)}>
-               <Trophy className="h-5 w-5" />
-               {challengeTasks.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                     {challengeTasks.length}
-                  </span>
-               )}
-            </Button>
-            <Dialog>
-               <DialogTrigger asChild>
+            {
+               // TODO : 도전과제 구현 후 표시할것
+               !challengeTasks && (
                   <Button
                      variant="outline"
                      size="icon"
-                     className="rounded-full bg-white/80 hover:bg-white/90 h-8 w-8 relative z-[110]">
-                     <MessageSquare className="h-5 w-5" />
+                     className="rounded-full bg-white/80 hover:bg-white/90 relative h-8 w-8"
+                     onClick={() => setIsChallengeTaskOpen(prev => !prev)}>
+                     <Trophy className="h-5 w-5" />
+                     {/* {challengeTasks.length > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                           {challengeTasks.length}
+                        </span>
+                     )} */}
                   </Button>
-               </DialogTrigger>
+               )
+            }
+            <Dialog modal={false} open={!!isChatContentOpen} onOpenChange={open => !open}>
+               <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full bg-white/80 hover:bg-white/90 h-8 w-8 relative z-[110]"
+                  onClick={() => {
+                     setChatContentIsOpen(!isChatContentOpen);
+                  }}>
+                  <MessageSquare className="h-5 w-5" />
+               </Button>
+
                <ChatContent
+                  roomId={roomId}
+                  isOpen={isChatContentOpen}
                   style={getChatContentStyle(containerHeight, containerWidth)}
                   isExpanded={isExpanded}
                   onExpand={() => setIsExpanded(!isExpanded)}
-                  // onShowFeedback={response => {
-                  //    setSelectedFeedback(response);
-                  // }}
+                  onShowFeedback={onShowFeedback}
                />
             </Dialog>
-            <Dialog open={!!selectedFeedback} onOpenChange={open => !open && setSelectedFeedback(null)}>
-               <MessageFeedback response={selectedFeedback || undefined} />
+            <Dialog modal={false} open={!!isFeedBackOpen} onOpenChange={open => !open}>
+               {selectedFeedback && (
+                  <MessageFeedback
+                     style={getChatContentStyle(containerHeight, containerWidth)}
+                     feedbackAndScore={selectedFeedback}
+                     onClose={setFeedBackClose}
+                  />
+               )}
             </Dialog>
          </div>
 
          <ChallengeTask isOpen={isChallengeTaskOpen} style={getChallengePanelStyle()} challenge={mockChallengeData} />
 
-         <AIResponse response={lastAIResponse as string} persona={persona} />
-
-         <ChatInput
-            onSend={onSendMessage}
-            disabled={isTrialEnded || (mode === 'trial' && messageCount >= maxTrialCount)}
+         <AIResponse
+            message={isStreaming ? aiStreamedMessage : aiFullResponse?.message}
+            persona={persona}
+            emotion={aiFullResponse?.emotion}
          />
 
-         {isTrialEnded && (
+         <ChatInput onSend={onSendMessage} disabled={isChatLoading} />
+
+         {trialEndedPopupShow && (
             <>
                <div className="absolute inset-0 bg-black/50"></div>
                <div className="absolute inset-0 flex items-center justify-center">
@@ -195,8 +230,4 @@ function ChatContainerContent({ persona, mode }: ChatContainerProps) {
          )}
       </div>
    );
-}
-
-export function ChatContainer(props: ChatContainerProps) {
-   return <ChatContainerContent {...props} />;
 }

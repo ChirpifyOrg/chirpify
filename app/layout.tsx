@@ -4,7 +4,7 @@ import { ThemeProvider } from 'next-themes';
 import Link from 'next/link';
 import './globals.css';
 import { Toaster } from 'sonner';
-import { StateProvider } from './StateProvider';
+import Image from 'next/image';
 
 const defaultUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
 
@@ -34,7 +34,8 @@ export default function RootLayout({
                         <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
                            <div className="flex items-center font-semibold">
                               <Link href={'/'} className="flex items-center">
-                                 <img src="/images/icon.png" alt="Icon" className="w-12 h-12 mr-2" />
+                                 <Image src="/images/icon.png" alt="Icon" width={48} height={48} />
+
                                  <span className="text-2xl font-bold">Chirpify</span>
                               </Link>
                               <div className="flex items-center"></div>
@@ -44,7 +45,7 @@ export default function RootLayout({
                            </div>
                         </div>
                      </nav>
-                     <StateProvider>{children}</StateProvider>
+                     {children}
                      <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
                         footer TBD
                      </footer>
