@@ -1,5 +1,5 @@
 import { uowContext } from '@/be/domain/UnitOfWorkContext';
-import { Prisma, PrismaClient } from '@/lib/generated/prisma';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 // prisma 구현체를 위한 클래스
 // 모든 prisma를 통한 영속화 구현체들은 UoW + Service Locator 가 적용된  prisma()를 통해서 prismaclient를 가져오도록 한다.

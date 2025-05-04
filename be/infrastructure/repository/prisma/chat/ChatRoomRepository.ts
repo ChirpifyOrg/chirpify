@@ -1,8 +1,9 @@
 import { ChatRoom } from '@/be/domain/chat/ChatRoom';
 import { ChatRoomRepository } from '@/be/domain/chat/ChatRoomRepository';
-import { chat_model, chat_rooms, chat_model_parameters, Prisma } from '@/lib/generated/prisma';
+
 import { ChatModelRepositoryImpl } from './ChatModelRepository';
 import { BasePrismaRepository } from '../BasePrismaRepository';
+import { chat_model, chat_model_parameters, chat_rooms, Prisma } from '@prisma/client';
 
 type ChatRoomWithModel = chat_rooms & { chat_model: chat_model };
 
@@ -29,8 +30,8 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
             include: {
                chat_model: {
                   include: {
-                     chat_model_parameters: true
-                  }
+                     chat_model_parameters: true,
+                  },
                },
             },
          });
@@ -82,7 +83,9 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
    }
 
    // Prisma 모델을 ChatRoom 엔터티로 변환
-   static toEntity(prismaModel: chat_rooms & { chat_model?: chat_model & { chat_model_parameters?: chat_model_parameters[] } }): ChatRoom {
+   static toEntity(
+      prismaModel: chat_rooms & { chat_model?: chat_model & { chat_model_parameters?: chat_model_parameters[] } },
+   ): ChatRoom {
       return new ChatRoom({
          id: prismaModel.id,
          userId: prismaModel.user_id ?? undefined,
@@ -110,12 +113,15 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
    }
 
    // chatModelParameter 추가
-   async addChatModelParameter(modelId: string, parameter: {
-      defaultParam?: any;
-      prompt?: string;
-      isActive?: boolean;
-      isStreaming?: boolean;
-   }) {
+   async addChatModelParameter(
+      modelId: string,
+      parameter: {
+         defaultParam?: any;
+         prompt?: string;
+         isActive?: boolean;
+         isStreaming?: boolean;
+      },
+   ) {
       try {
          const prismaModel = await this.prisma.chat_model_parameters.create({
             data: {

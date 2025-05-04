@@ -1,5 +1,4 @@
-import { Prisma, PrismaClient } from '@/lib/generated/prisma';
-
+import { Prisma, PrismaClient } from '@prisma/client';
 import { UnitOfWork } from '../uow/UnitOfWork';
 import { uowContext } from '@/be/domain/UnitOfWorkContext';
 

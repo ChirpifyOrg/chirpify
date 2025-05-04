@@ -1,9 +1,9 @@
 import { ChatModel } from '@/be/domain/chat/ChatModel';
 import { ChatModelRepository } from '@/be/domain/chat/ChatModelRepository';
-import { chat_model, chat_model_parameters } from '@/lib/generated/prisma';
-import { Prisma } from '@/lib/generated/prisma';
+
 import { BasePrismaRepository } from '../BasePrismaRepository';
 import { ChatModelParameter } from '@/be/domain/chat/ChatModelParameter';
+import { chat_model, chat_model_parameters, Prisma } from '@prisma/client';
 
 export class ChatModelRepositoryImpl extends BasePrismaRepository implements ChatModelRepository {
    // persona 이름으로 마지막 모델 정보 가져오기
