@@ -29,7 +29,7 @@ export function useTrialMode({
             console.error('Error accessing localStorage:', error);
          }
       }
-   }, [mode, maxTrialCount]);
+   }, [mode, messageCount, maxTrialCount]);
 
    const incrementMessageCount = () => {
       if (mode === 'trial' && typeof window !== 'undefined' && window.localStorage) {

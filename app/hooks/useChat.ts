@@ -7,6 +7,7 @@ import { AIChatAPIResponse, ClientChatRequest, parseNDJSONToAIChatResponse } fro
 export function useChat() {
    const [aiStreamedMessage, setAiStreamedMessage] = useState('');
    const [aiFullResponse, setAiFullResponse] = useState<AIChatAPIResponse | null>(null);
+   const [isLoading, setIsLoading] = useState<boolean>(false);
 
    async function handleSendMessage(
       content: ClientChatRequest,
@@ -18,7 +19,7 @@ export function useChat() {
             throw Error('invalid Message');
          }
          const url = isStreaming ? `/api/chat/${content.roomId}/message/stream` : `/api/chat/${content.roomId}/message`;
-
+         setIsLoading(true);
          const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -71,14 +72,17 @@ export function useChat() {
          }
       } catch (error) {
          console.error('Error sending message:', error);
+      } finally {
+         setIsLoading(false);
       }
    }
    useEffect(() => {
-      console.log(aiFullResponse);
+      console.log('ai full response', aiFullResponse);
    }, [aiFullResponse]);
    return {
       aiStreamedMessage,
       aiFullResponse,
       handleSendMessage,
+      isLoading,
    };
 }

@@ -30,10 +30,10 @@ interface ChatContainerProps {
    persona: string;
    mode: 'full' | 'trial';
    roomId: string;
-   isStreaming : boolean;
+   isStreaming: boolean;
 }
 
-export function ChatContainer({ persona, mode, roomId ,isStreaming }: ChatContainerProps) {
+export function ChatContainer({ persona, mode, roomId, isStreaming }: ChatContainerProps) {
    if (!roomId) {
       return <>Error !</>;
    }
@@ -46,12 +46,15 @@ export function ChatContainer({ persona, mode, roomId ,isStreaming }: ChatContai
 
    const [isChallengeTaskOpen, setIsChallengeTaskOpen] = useState<boolean>(false);
    // 메시지 카운트 관련
-   const { messageCount, isTrialEnded, incrementMessageCount, maxTrialCount } = useTrialMode({ mode });
+   const { messageCount, isTrialEnded, incrementMessageCount } = useTrialMode({ mode });
+
+   const [trialEndedPopupShow, setTrailEndedPopup] = useState<boolean>(false);
+
    // 전체 화면 관련
    const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
    // 컨테이너 크기 관련
    const { containerHeight, containerWidth } = useContainerDimensions(containerRef);
-   const { aiStreamedMessage, aiFullResponse, handleSendMessage } = useChat();
+   const { aiStreamedMessage, aiFullResponse, handleSendMessage, isLoading: isChatLoading } = useChat();
 
    const [isChatContentOpen, setChatContentIsOpen] = useState<boolean>(false);
    const setChatContentOpen = () => setChatContentIsOpen(true);
@@ -104,10 +107,14 @@ export function ChatContainer({ persona, mode, roomId ,isStreaming }: ChatContai
 
    // 메시지 전송 핸들러
    const onSendMessage = (message: string) => {
-      handleSendMessage({ roomId, message, nativeLanguage: getUserLanguage() }, isStreaming);
-      incrementMessageCount();
+      if (!isTrialEnded) {
+         handleSendMessage({ roomId, message, nativeLanguage: getUserLanguage() }, isStreaming);
+         incrementMessageCount();
+      } else {
+         setTrailEndedPopup(true);
+      }
    };
-
+   console.log('messageCount : ', messageCount);
    return (
       <div
          ref={containerRef}
@@ -123,7 +130,7 @@ export function ChatContainer({ persona, mode, roomId ,isStreaming }: ChatContai
          }}>
          <div className={cn('relative w-full', isFullscreen ? 'h-[100dvh]' : 'h-[380px] md:h-[400px] lg:h-[480px]')}>
             <Image
-               src={`/images/${persona}.png`}
+               src={`/images/${persona}_${aiFullResponse?.emotion.toLocaleLowerCase() ?? 'calm'}.`}
                alt={persona}
                fill
                className={cn('transition-all duration-300', isFullscreen ? 'object-cover' : '')}
@@ -195,12 +202,9 @@ export function ChatContainer({ persona, mode, roomId ,isStreaming }: ChatContai
             emotion={aiFullResponse?.emotion}
          />
 
-         <ChatInput
-            onSend={onSendMessage}
-            disabled={isTrialEnded || (mode === 'trial' && messageCount >= maxTrialCount)}
-         />
+         <ChatInput onSend={onSendMessage} disabled={isChatLoading} />
 
-         {isTrialEnded && (
+         {trialEndedPopupShow && (
             <>
                <div className="absolute inset-0 bg-black/50"></div>
                <div className="absolute inset-0 flex items-center justify-center">
