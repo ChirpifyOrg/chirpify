@@ -130,7 +130,7 @@ export function ChatContainer({ persona, mode, roomId, isStreaming }: ChatContai
          }}>
          <div className={cn('relative w-full', isFullscreen ? 'h-[100dvh]' : 'h-[380px] md:h-[400px] lg:h-[480px]')}>
             <Image
-               src={`/images/${persona}_${aiFullResponse?.emotion.toLocaleLowerCase() ?? 'calm'}.`}
+               src={`/images/${persona}_${aiFullResponse?.emotion.toLocaleLowerCase() ?? 'calm'}.webp`}
                alt={persona}
                fill
                className={cn('transition-all duration-300', isFullscreen ? 'object-cover' : '')}
