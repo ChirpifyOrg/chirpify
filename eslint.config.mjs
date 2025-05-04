@@ -8,7 +8,6 @@ export default [
    {
       ignores: [
          '.next/**',
-         'lib/generated/prisma/**', // Ignore Prisma generated files
          'eslint.config.mjs', // Ignore ESLint config file
          'postcss.config.js', // Ignore PostCSS config file
       ],
