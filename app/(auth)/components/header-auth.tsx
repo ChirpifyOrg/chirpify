@@ -12,7 +12,7 @@ export default async function AuthButton() {
 
    // 로그인한 사용자가 아니면 null을 리턴
 
-   if (user?.user_metadata?.isAnonymous || !user) {
+   if (user?.is_anonymous || !user) {
       return (
          <div className="flex gap-2">
             <Button asChild size="sm" variant={'default'}>
