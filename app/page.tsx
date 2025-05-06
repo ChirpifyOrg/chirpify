@@ -7,7 +7,6 @@ export default function Home() {
    const modelName = 'Aru';
    const isStreaming = true;
    const [currentRoomId, setRoomId] = useState<string | null>(null);
-   // const { currentRoomId, setRoomId } = useSimpleChatStore();
    useEffect(() => {
       const initRoom = async () => {
          try {
