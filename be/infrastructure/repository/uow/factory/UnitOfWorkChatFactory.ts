@@ -5,7 +5,9 @@ import { IUnitOfWorkChat } from '@/be/domain/chat/IUnitOfWorkChat';
 import { UnitOfWorkChat } from '../../prisma/chat/UnitWorkChat';
 
 export class UnitOfWorkChatFactory {
+   private static instance: IUnitOfWorkChat;
    static create(): IUnitOfWorkChat {
-      return UnitOfWorkChat.create(prisma); // 현재는 prisma로 지정
+      if (!UnitOfWorkChatFactory.instance) UnitOfWorkChatFactory.instance = UnitOfWorkChat.create(prisma);
+      return UnitOfWorkChatFactory.instance; // 현재는 prisma로 지정
    }
 }
