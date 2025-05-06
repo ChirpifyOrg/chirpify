@@ -23,7 +23,7 @@ export default function Home() {
 
             if (!result.success) {
                console.error(result.error);
-               alert(result.error);
+               // alert(result.error);
                return;
             }
 
