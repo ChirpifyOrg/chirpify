@@ -4,6 +4,7 @@ import { ChatRoomRepository } from '@/be/domain/chat/ChatRoomRepository';
 import { ChatModelRepositoryImpl } from './ChatModelRepository';
 import { BasePrismaRepository } from '../BasePrismaRepository';
 import { chat_model, chat_model_parameters, chat_rooms, Prisma } from '@prisma/client';
+import { AppError } from '@/lib/be/utils/errors';
 
 type ChatRoomWithModel = chat_rooms & { chat_model: chat_model };
 
@@ -19,7 +20,8 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
          return prismaModel.user_id === userId;
       } catch (e) {
          console.error('Error checking if user is in room:', e);
-         throw e;
+
+         throw new AppError('Error checking if user in room');
       }
    }
    // 채팅방 아이디를 통해 모델 정보를 같이 추출
@@ -59,6 +61,7 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
          return ChatRoomRepositoryImpl.toEntity(prismaModel);
       } catch (e) {
          console.error('Error finding room by userId and modelId:', e);
+         throw new AppError('Error finding room');
          throw e;
       }
    }
@@ -77,8 +80,9 @@ export class ChatRoomRepositoryImpl extends BasePrismaRepository implements Chat
 
          return ChatRoomRepositoryImpl.toEntity(prismaModel);
       } catch (e) {
-         console.error('Error creating room:', e);
-         return null; // 방 생성 실패 시 null 반환
+         console.error('Error creaete room by userId and modelId:', e);
+
+         throw new AppError('Error creaete room');
       }
    }
 
