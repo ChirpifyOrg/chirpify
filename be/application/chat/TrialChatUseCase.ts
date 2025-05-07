@@ -65,8 +65,6 @@ export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, Authenticat
          }
       }
 
-      //      const response = responseChunks.join('');
-
       const raw = responseChunks.join('');
       const jsonLines = raw.split(/(?<=})\s*(?={)/); // 안전하게 줄 나누기
       const ndjson = jsonLines.join('\n');
@@ -75,7 +73,6 @@ export class TrialChatUseCase extends ChatUseCase<AIChatAPIResponse, Authenticat
          return match.replace(/```[\s]?(?:\w+)?[\s]?|```$/g, '');
       });
       const formattedResponse = parseNDJSONToAIChatResponse(cleanNdJson);
-      //const formattedResponse = JSON.parse(response);
       await this.storeChat(request, formattedResponse);
    }
 
