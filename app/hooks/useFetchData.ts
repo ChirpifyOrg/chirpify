@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 
-export async function fetchWithTypedBody<Req, Res>(url: string, options?: RequestInit & { body?: Req }): Promise<Res> {
+export async function fetchWithTypedBody<Req, Res>(
+   url: string,
+   options?: Omit<RequestInit, 'body'> & { body?: Req },
+): Promise<Res> {
    const response = await fetch(url, {
       ...options,
       body: options?.body ? JSON.stringify(options.body) : undefined,
