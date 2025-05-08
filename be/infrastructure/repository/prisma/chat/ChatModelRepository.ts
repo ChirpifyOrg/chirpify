@@ -6,6 +6,9 @@ import { ChatModelParameter } from '@/be/domain/chat/ChatModelParameter';
 import { chat_model, chat_model_parameters, Prisma } from '@prisma/client';
 
 export class ChatModelRepositoryImpl extends BasePrismaRepository implements ChatModelRepository {
+   getChatModelByChatRoomId(): Promise<ChatModel | null> {
+      throw new Error('Method not implemented.');
+   }
    async getAvailableChatModels(): Promise<ChatModel[] | null> {
       const prismaModels = await this.prisma.chat_model.findMany({
          where: {

@@ -1,6 +1,6 @@
 'use client';
 import { ChatModel } from '@/be/domain/chat/ChatModel';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
 import Image from 'next/image';
 
