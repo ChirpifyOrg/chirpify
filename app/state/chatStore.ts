@@ -2,8 +2,6 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { AIChatSimpleFormatHistory } from '@/types/chat';
 
-import { mockChatHistoryData } from '@/lib/fe/mock/chat-history-data';
-
 type useSimpleStoreAddParam = {
    roomId: string;
    messages: AIChatSimpleFormatHistory[];
@@ -29,7 +27,7 @@ export const useSimpleChatStore = create(
          setRoomId: roomId => {
             set(state => ({ ...state, currentRoomId: roomId }));
          },
-         messages: { '1': mockChatHistoryData },
+         messages: {},
          appendMessage: ({ roomId, messages }) => {
             set(state => {
                const combined = [...(state.messages[roomId] || []), ...messages];
