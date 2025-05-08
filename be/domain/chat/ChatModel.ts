@@ -48,4 +48,14 @@ export class ChatModel {
          param => param.isStreaming === isStreaming && param.isActive
       );
    }
+   toJSON() {
+      return {
+          id: this.id,
+          persona: this.persona,
+          description: this.description,
+          createdAt: this.createdAt,
+          chatRooms: this.chatRooms,
+          chatModelParameter: this.chatModelParameter,
+      };
+  }
 }
