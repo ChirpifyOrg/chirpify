@@ -22,19 +22,15 @@ export default async function AuthButton() {
    } else {
       return (
          <div className=" flex items-center gap-4 pl-2 justify-start xs:justify-end ">
-            <div className=" w-1/12 xxs:w-1/4 xs:w-1/3 ">
-               <Link href="/practice-english">
-                  <Button variant="outline" asChild className="flex-1 truncate text-left w-full">
-                     Practice English Sentences
-                  </Button>
-               </Link>
+            <div className=" w-1/8 xxs:w-1/4 xs:w-1/3 md:w-2/3">
+               <Button variant="outline" asChild className="flex-1 truncate text-left w-full">
+                  <Link href="/translate"> Practice English Sentences </Link>
+               </Button>
             </div>
-            <div className=" w-1/12 xxs:w-1/4 xs:w-1/3 ">
-               <Link href="/chat">
-                  <Button variant="outline" className="flex-1 truncate text-left  w-full">
-                     Chat With AI
-                  </Button>
-               </Link>
+            <div className="  w-1/8 xxs:w-1/4 xs:w-1/3 md:w-2/3 ">
+               <Button variant="outline" className="flex-1 truncate text-left  w-full">
+                  <Link href="/chat">Chat With AI</Link>
+               </Button>
             </div>
             <div className="flex-shrink-0">
                <UserProfile />

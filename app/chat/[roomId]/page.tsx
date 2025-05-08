@@ -21,7 +21,7 @@ const ChatPage = async ({ params }: { params: Promise<{ roomId: string }> }) => 
    }
    return (
       <>
-         <main className=" w-full ">
+         <main className="max-w-6xl  w-full ">
             <ChatContainer persona={model.persona} mode="trial" isStreaming={true} roomId={roomId} />
          </main>
       </>
