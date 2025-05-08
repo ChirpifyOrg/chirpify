@@ -19,7 +19,7 @@ export class ChatRoom {
       createdAt?: Date;
       deletedAt?: Date;
       messages?: ChatMessage[];
-      model?: ChatModel;
+      readonly model?: ChatModel;
    }) {
       this.id = props.id || crypto.randomUUID();
       this.name = props.name;

@@ -5,4 +5,5 @@ export interface ChatRoomRepository {
    findByIdWithModel(roomId: string): Promise<ChatRoom | null>;
    getRoomByUserIdAndModelId({ userId, modelId }: { userId: string; modelId: string }): Promise<ChatRoom | null>;
    isUserInRoom({ roomId, userId }: { roomId: string; userId: string }): Promise<boolean>;
+   getChatModelByChatRoomId(chatRoomId: string): Promise<ChatRoom | null>;
 }

@@ -4,7 +4,7 @@ export class GetChatModelByChatRoomIdUseCase {
    constructor(protected unitOfWork: IUnitOfWorkChat) {
       unitOfWork;
    }
-   async execute() {
-      return this.unitOfWork.chatModelRepository.getAvailableChatModels();
+   async execute(chatRoomId: string) {
+      return this.unitOfWork.chatRoomRepository.getChatModelByChatRoomId(chatRoomId);
    }
 }
