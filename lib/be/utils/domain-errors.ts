@@ -1,8 +1,7 @@
-export class AppError extends Error {
-   public readonly code: string;
-   constructor(message: string, code: string = 'APP_ERROR') {
-      super(message);
-      this.name = this.constructor.name;
-      this.code = code;
+import { AppError } from './errors';
+
+export class DomainError extends AppError {
+   constructor(message: string, code = 'DOMAIN_ERROR') {
+      super(message, code);
    }
 }

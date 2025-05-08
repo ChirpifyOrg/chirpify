@@ -30,10 +30,11 @@ interface ChatContainerProps {
    persona: string;
    mode: 'full' | 'trial';
    roomId: string;
-   isStreaming: boolean;
+   isStreaming?: boolean;
 }
 
 export function ChatContainer({ persona, mode, roomId, isStreaming }: ChatContainerProps) {
+   isStreaming = isStreaming ?? true;
    if (!roomId) {
       return <>Error !</>;
    }
@@ -108,7 +109,7 @@ export function ChatContainer({ persona, mode, roomId, isStreaming }: ChatContai
    // 메시지 전송 핸들러
    const onSendMessage = (message: string) => {
       if (!isTrialEnded) {
-         handleSendMessage({ roomId, message, nativeLanguage: getUserLanguage() }, isStreaming);
+         handleSendMessage({ roomId, message, nativeLanguage: getUserLanguage() }, isStreaming ?? true);
          incrementMessageCount();
       } else {
          setTrailEndedPopup(true);
@@ -128,7 +129,11 @@ export function ChatContainer({ persona, mode, roomId, isStreaming }: ChatContai
             minHeight: '320px',
             margin: '0 auto',
          }}>
-         <div className={cn('relative w-full', isFullscreen ? 'h-[100dvh]' : 'h-[380px] md:h-[400px] lg:h-[480px]')}>
+         <div
+            className={cn(
+               'relative w-full',
+               isFullscreen ? 'h-[100dvh]' : 'h-[380px] md:h-[400px] lg:h-[480px] xl:h-[560px]',
+            )}>
             <Image
                src={`/images/${persona}_${aiFullResponse?.emotion.toLocaleLowerCase() ?? 'calm'}.webp`}
                alt={persona}

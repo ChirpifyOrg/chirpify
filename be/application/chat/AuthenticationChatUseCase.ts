@@ -3,6 +3,7 @@ import {
    AIChatAPIResponseSchema,
    AuthenticatedClientChatReuqest,
    defaultAIChatResponse,
+   parseNDJSONToAIChatResponse,
 } from '@/types/chat';
 import { ChatUseCase } from './ChatUseCase';
 import { ChatCompletionChunk, ChatCompletion as GPTChatFormat } from 'openai/resources';
@@ -85,8 +86,14 @@ export class AuthenticationChatUseCase extends ChatUseCase<
       if (!isFinished) {
          throw new Error('Stream이 비정상적으로 종료되었습니다.');
       }
-      const response = responseChunks.join('');
-      const formattedResponse = JSON.parse(response);
+      const raw = responseChunks.join('');
+      const jsonLines = raw.split(/(?<=})\s*(?={)/); // 안전하게 줄 나누기
+      const ndjson = jsonLines.join('\n');
+      const cleanNdJson = ndjson.replace(/```[\s\S]*?```/g, function (match) {
+         // 코드 블록 안의 내용만 추출 (``` 제거)
+         return match.replace(/```[\s]?(?:\w+)?[\s]?|```$/g, '');
+      });
+      const formattedResponse = parseNDJSONToAIChatResponse(cleanNdJson);
       await this.storeChat(request, formattedResponse);
    }
    protected formatResponse(originResponse: ChatCompletion): AIChatAPIResponse {

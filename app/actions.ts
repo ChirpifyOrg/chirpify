@@ -45,7 +45,7 @@ export async function trialRoomGetOrCreateWithSupaBaseAnonymousUser({
       }
 
       const userId = user.id;
-      const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, true);
+      const useCase = ChatUseCaseFactory.getInstance().getUseCase({ isLoggedIn, isTrial: true });
       const modelInfo = await useCase.getLatestModelInfo({ name: modelName, isStreaming });
 
       if (!modelInfo?.id) {

@@ -22,7 +22,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ roo
       }
       const isTrial = data?.user?.is_anonymous ? true : false;
 
-      const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, isTrial);
+      const useCase = ChatUseCaseFactory.getInstance().getUseCase({ isLoggedIn, isTrial });
       const response = await useCase.processChat(
          createChatRequest({ message, nativeLanguage, roomId }, userId, isTrial),
       );
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
          return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
       const isTrial = data?.user?.is_anonymous ? true : false;
-      const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, isTrial);
+      const useCase = ChatUseCaseFactory.getInstance().getUseCase({ isLoggedIn, isTrial });
       const { searchParams } = request.nextUrl;
       const startIndex = searchParams.get('startIndex') ? searchParams.get('startIndex')! : undefined;
       const endIndex = searchParams.get('endIndex') ? searchParams.get('endIndex')! : undefined;

@@ -19,10 +19,13 @@ export class ChatUseCaseFactory {
       return ChatUseCaseFactory.instance;
    }
 
-   getUseCase(
-      isLoggedIn: boolean,
-      isTrial: boolean,
-   ): ChatUseCase<AIChatAPIResponse, AuthenticatedClientChatReuqest, unknown> {
+   getUseCase({
+      isLoggedIn,
+      isTrial,
+   }: {
+      isLoggedIn: boolean;
+      isTrial: boolean;
+   }): ChatUseCase<AIChatAPIResponse, AuthenticatedClientChatReuqest, unknown> {
       let key;
       if (isLoggedIn) {
          if (isTrial) key = 'trial';

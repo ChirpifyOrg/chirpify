@@ -5,7 +5,42 @@ import { BasePrismaRepository } from '../BasePrismaRepository';
 import { ChatModelParameter } from '@/be/domain/chat/ChatModelParameter';
 import { chat_model, chat_model_parameters, Prisma } from '@prisma/client';
 
+/**
+ * ChatModelRepositoryImpl 클래스
+ *
+ * Prisma ORM을 사용하여 ChatModel 엔티티에 대한 데이터베이스 작업을 처리하는 리포지토리 구현체입니다.
+ * 채팅 모델 조회, 채팅방 ID 기반 모델 검색, 활성화된 모델 목록 조회 등의 기능을 제공합니다.
+ * 도메인 엔티티와 Prisma 모델 간의 변환 메서드를 포함합니다.
+ *
+ */
+
 export class ChatModelRepositoryImpl extends BasePrismaRepository implements ChatModelRepository {
+   async getAvailableChatModels(): Promise<ChatModel[] | null> {
+      const prismaModels = await this.prisma.chat_model.findMany({
+         where: {
+            chat_model_parameters: {
+               some: {
+                  is_active: true,
+               },
+            },
+         },
+         include: {
+            chat_model_parameters: {
+               where: {
+                  is_active: true, // 비활성화 파라미터는 포함하지 않음
+               },
+            },
+         },
+         orderBy: {
+            created_at: 'desc',
+         },
+      });
+
+      if (!prismaModels || prismaModels.length === 0) return null;
+
+      const entity = prismaModels.map(model => ChatModelRepositoryImpl.toEntity(model));
+      return entity;
+   }
    // persona 이름으로 마지막 모델 정보 가져오기
    async getLastModelInfo(name: string, isStreaming: boolean) {
       const prismaModel = await this.prisma.chat_model.findFirst({
@@ -19,9 +54,9 @@ export class ChatModelRepositoryImpl extends BasePrismaRepository implements Cha
       return ChatModelRepositoryImpl.toEntity(prismaModel);
    }
 
-   static toEntity(prismaModel: chat_model & { chat_model_parameters: chat_model_parameters[] }): ChatModel {
+   static toEntity(prismaModel: chat_model & { chat_model_parameters?: chat_model_parameters[] }): ChatModel {
       const chatModelParameters =
-         prismaModel?.chat_model_parameters.map(
+         prismaModel?.chat_model_parameters?.map(
             param =>
                new ChatModelParameter({
                   id: param.id,

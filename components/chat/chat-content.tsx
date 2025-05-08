@@ -55,7 +55,7 @@ MessageItem.displayName = 'MessageItem';
 const MessageList = memo(
    ({ messages, onShowFeedback }: { messages: AIChatSimpleFormatHistory[]; onShowFeedback: onShowFeedBackFn }) => {
       if (messages.length === 0) {
-         return <div className="text-center text-white/60 py-8">아직 대화 내용이 없습니다.</div>;
+         return <div className="text-center text-white/60 py-8">No Messages..</div>;
       }
       return (
          <div className="flex flex-col gap-3">
@@ -270,10 +270,10 @@ export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpan
             onScrollCb={handleScroll}
             className="w-full">
             <div className="p-4">
-               {!hasMoreMessages && messages.length > 0 && (
+               {!isLoading && !hasMoreMessages && messages.length > 0 && (
                   <div className="text-center py-2 text-white/60">모든 메시지를 불러왔습니다</div>
                )}
-               {isLoading && <div className="text-center py-2 text-white/60">Loading more messages...</div>}
+               {isLoading &&  <div className="text-center py-2 text-white/60">Loading more messages...</div>}
                <MessageList messages={messages ?? []} onShowFeedback={onShowFeedback} />
             </div>
             <div ref={scrollBottom}></div>

@@ -13,6 +13,7 @@ const ENDPOINTS = {
       if (limit !== undefined) params.append('limit', limit.toString());
       return `/chat/${roomId}/message?${params.toString()}`;
    },
+   getOrCreateChatRoom: () => `/chat`,
 };
 
 // PREFIX 추가를 위해 Proxy 객체 사용

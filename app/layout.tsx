@@ -40,7 +40,7 @@ export default function RootLayout({
                               </Link>
                               <div className="flex items-center"></div>
                            </div>
-                           <div className="flex items-center gap-4">
+                           <div className="flex items-center gap-4 justify-end">
                               <HeaderAuth />
                            </div>
                         </div>

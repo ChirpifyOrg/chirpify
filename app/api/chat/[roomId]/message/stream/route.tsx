@@ -31,7 +31,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ roo
             const cb = (data: string) => {
                controller.enqueue(encoder.encode(data));
             };
-            const useCase = ChatUseCaseFactory.getInstance().getUseCase(isLoggedIn, isTrial);
+            const useCase = ChatUseCaseFactory.getInstance().getUseCase({ isLoggedIn, isTrial });
 
             await useCase.processChatStreaming(
                createChatRequest({ message, nativeLanguage, roomId }, userId, isTrial),
