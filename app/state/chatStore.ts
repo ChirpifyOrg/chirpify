@@ -31,7 +31,17 @@ export const useSimpleChatStore = create(
          appendMessage: ({ roomId, messages }) => {
             set(state => {
                const combined = [...(state.messages[roomId] || []), ...messages];
-               combined.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+               combined.sort((a, b) => {
+                  // 첫 번째 조건: role에 따라 정렬
+                  if (a.role === 'User' && b.role !== 'User') {
+                     return -1; // a가 User이면 앞으로
+                  }
+                  if (a.role !== 'User' && b.role === 'User') {
+                     return 1; // b가 User이면 a가 뒤로
+                  }
+                  // 두 번째 조건: createdAt으로 정렬
+                  return Number(a.createdAt) - Number(b.createdAt);
+               });
                return {
                   messages: {
                      ...state.messages,
@@ -52,7 +62,18 @@ export const useSimpleChatStore = create(
          prependMessage: ({ roomId, messages }) => {
             set(state => {
                const combined = [...messages, ...(state.messages[roomId] || [])];
-               combined.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+               combined.sort((a, b) => {
+                  // 첫 번째 조건: role에 따라 정렬
+                  if (a.role === 'User' && b.role !== 'User') {
+                     return -1; // a가 User이면 앞으로
+                  }
+                  if (a.role !== 'User' && b.role === 'User') {
+                     return 1; // b가 User이면 a가 뒤로
+                  }
+
+                  // 두 번째 조건: createdAt으로 정렬
+                  return Number(a.createdAt) - Number(b.createdAt);
+               });
                return {
                   messages: {
                      ...state.messages,
@@ -72,7 +93,18 @@ export const useSimpleChatStore = create(
          setMessages: ({ roomId, messages }) => {
             set(state => {
                const combined = [...messages, ...(state.messages[roomId] || [])];
-               combined.sort((a, b) => Number(a.createdAt) - Number(b.createdAt));
+               combined.sort((a, b) => {
+                  // 첫 번째 조건: role에 따라 정렬
+                  if (a.role === 'User' && b.role !== 'User') {
+                     return -1; // a가 User이면 앞으로
+                  }
+                  if (a.role !== 'User' && b.role === 'User') {
+                     return 1; // b가 User이면 a가 뒤로
+                  }
+
+                  // 두 번째 조건: createdAt으로 정렬
+                  return Number(a.createdAt) - Number(b.createdAt);
+               });
                return {
                   messages: {
                      ...state.messages,
