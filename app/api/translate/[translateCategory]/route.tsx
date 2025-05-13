@@ -1,0 +1,62 @@
+"use server";
+import { NextRequest, NextResponse } from "next/server";
+import { TranslateLearnSentenceService } from "@/be/infrastructure/service/translate-learn-sentence-service";
+import { TranslateLearnFeedbackService } from "@/be/infrastructure/service/translate-learn-feedback-service";
+
+
+const apiKey = process.env.OPENAI_API_KEY;
+
+async function handleSentenceRequest(level: number, selectedOptions: string[], language: string) {
+    if (!apiKey) {
+        throw new Error("API key is not defined");
+    }
+    const service = new TranslateLearnSentenceService(apiKey);
+    const result = await service.generateLearningContent(level, selectedOptions, language);
+    return NextResponse.json(result);
+}
+
+async function handleFeedbackRequest(question: string, answer: string, level: number, selectedOptions: string[], language: string){
+    
+    if (!apiKey) {
+        throw new Error("API key is not defined");
+    }
+
+    const feedbackService = new TranslateLearnFeedbackService(apiKey);
+    const result = await feedbackService.generateFeedback(question , answer, level, selectedOptions, language);
+    return NextResponse.json(result);
+}
+
+async function handleFeedbackAndSentenceRequest(question: string, answer: string, level: number, selectedOptions: string[], language: string) {
+    
+    const feedbackResult = await handleFeedbackRequest(question, answer, level, selectedOptions, language);
+    const sentenceResult = await handleSentenceRequest(level, selectedOptions, language);
+    // 두 결과를 반환하거나 필요한 방식으로 처리
+    return {
+        feedback: feedbackResult,
+        sentence: sentenceResult
+    };
+}
+
+export async function POST(request: NextRequest, { params }: { params: { translateCategory: string } }) {
+    try {
+        const { level, selectedOptions, question, answer, language } = await request.json();
+        const { translateCategory } = await params;
+
+        if (!process.env.OPENAI_API_KEY) {
+            return NextResponse.json({ error: "API key not found" }, { status: 500 });
+        }
+        
+        if (translateCategory === 'sentence') {
+            return handleSentenceRequest(level, selectedOptions, language);
+        } else if (translateCategory === 'feedback') {
+            return handleFeedbackAndSentenceRequest(question, answer, level, selectedOptions, language);
+        } else {
+            return NextResponse.json({ error: "Invalid endpoint" }, { status: 404 });
+        }
+    } catch (error) {
+        console.error('API Error:', error);
+        return NextResponse.json({ 
+            error: error instanceof Error ? error.message : 'Unknown error' 
+        }, { status: 500 });
+    }
+}

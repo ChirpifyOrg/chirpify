@@ -59,6 +59,29 @@
   }
 }
 
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    display: block;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: white;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: white;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: white;
+  }
+
+  .scrollbar-always-visible {
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
