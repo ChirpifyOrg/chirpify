@@ -37,6 +37,7 @@ interface ChatContainerProps {
 
 export function ChatContainer({ persona, mode, roomId, isStreaming, lastMessage }: ChatContainerProps) {
    isStreaming = isStreaming ?? true;
+
    if (!roomId) {
       return <>Error !</>;
    }
@@ -125,7 +126,7 @@ export function ChatContainer({ persona, mode, roomId, isStreaming, lastMessage 
          setTrailEndedPopup(true);
       }
    };
-   console.log('messageCount : ', messageCount);
+
    return (
       <div
          ref={containerRef}
@@ -192,7 +193,10 @@ export function ChatContainer({ persona, mode, roomId, isStreaming, lastMessage 
                <ChatContent
                   roomId={roomId}
                   isOpen={isChatContentOpen}
-                  style={getChatContentStyle(containerHeight, containerWidth)}
+                  style={{
+                     ...getChatContentStyle(containerHeight, containerWidth),
+                     display: isChatContentOpen ? 'block' : 'none', // 💡 보이기만 제어
+                  }}
                   isExpanded={isExpanded}
                   onExpand={() => setIsExpanded(!isExpanded)}
                   onShowFeedback={onShowFeedback}

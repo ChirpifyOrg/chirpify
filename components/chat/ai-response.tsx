@@ -1,5 +1,5 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 interface AIResponseProps {
    message?: string;
@@ -7,12 +7,13 @@ interface AIResponseProps {
    emotion?: string;
 }
 
-export function AIResponse({ message, persona, emotion }: AIResponseProps) {
+export const AIResponse = memo(({ message, persona, emotion }: AIResponseProps) => {
    const defaultData = {
       message: '안녕하세요! 저는 영어 학습을 도와주는 AI 어시스턴트입니다. 함께 영어를 배워볼까요?',
       persona: 'Aru',
       emotion: 'concern',
    };
+
    const [displayedMessage, setDisplayedMessage] = useState('');
 
    useEffect(() => {
@@ -28,6 +29,10 @@ export function AIResponse({ message, persona, emotion }: AIResponseProps) {
                clearInterval(interval);
             }
          }, 100); // 100ms 간격으로 글자 추가
+
+         return () => {
+            clearInterval(interval); // ✅ 새 message 들어오거나 컴포넌트 언마운트 시 기존 interval 제거
+         };
       }
    }, [message]);
 
@@ -47,4 +52,4 @@ export function AIResponse({ message, persona, emotion }: AIResponseProps) {
          </div>
       </div>
    );
-}
+});
