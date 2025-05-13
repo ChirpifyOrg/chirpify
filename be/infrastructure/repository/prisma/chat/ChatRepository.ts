@@ -55,9 +55,10 @@ export class ChatRepositoryImpl extends BasePrismaRepository implements ChatRepo
                room_id: true,
                message: true,
                role: true,
+               chat_metadata: true,
                created_at: true,
             },
-            orderBy: { created_at: 'desc' },
+            orderBy: [{ created_at: 'desc' }, { role: 'desc' }], //,
             take: limit,
          });
 
