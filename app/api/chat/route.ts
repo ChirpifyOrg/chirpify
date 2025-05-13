@@ -17,7 +17,6 @@ export async function POST(request: Request) {
          console.log(error);
          return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
-
       const useCase = ChatUseCaseFactory.getInstance().getUseCase({ isLoggedIn, isTrial: false });
       const response = await useCase.getOrCreateRoom({ modelId, userId });
       return NextResponse.json(response, {

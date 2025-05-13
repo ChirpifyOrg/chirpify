@@ -50,5 +50,6 @@ export function useTrialMode({
       isTrialEnded,
       incrementMessageCount,
       maxTrialCount,
+      setIsTrialEnded,
    };
 }

@@ -58,7 +58,7 @@ export function ChatContainer({ persona, mode, roomId, isStreaming, lastMessage 
 
    const [isChallengeTaskOpen, setIsChallengeTaskOpen] = useState<boolean>(false);
    // 메시지 카운트 관련
-   const { messageCount, isTrialEnded, incrementMessageCount } = useTrialMode({ mode });
+   const { isTrialEnded, incrementMessageCount } = useTrialMode({ mode });
 
    const [trialEndedPopupShow, setTrailEndedPopup] = useState<boolean>(false);
 
@@ -118,10 +118,18 @@ export function ChatContainer({ persona, mode, roomId, isStreaming, lastMessage 
    };
 
    // 메시지 전송 핸들러
-   const onSendMessage = (message: string) => {
+   const onSendMessage = async (message: string) => {
       if (!isTrialEnded) {
-         handleSendMessage({ roomId, message, nativeLanguage: getUserLanguage() }, isStreaming ?? true);
-         incrementMessageCount();
+         try {
+            await handleSendMessage({ roomId, message, nativeLanguage: getUserLanguage() }, isStreaming ?? true);
+            incrementMessageCount();
+         } catch (error) {
+            if (typeof error === 'object' && error !== null && 'status' in error && (error as any).status === 429) {
+               setTrailEndedPopup(true); // 429 Too Many Requests 처리
+            } else {
+               console.error(error);
+            }
+         }
       } else {
          setTrailEndedPopup(true);
       }
