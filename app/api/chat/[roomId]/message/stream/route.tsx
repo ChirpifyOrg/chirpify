@@ -33,11 +33,25 @@ export async function POST(request: Request, { params }: { params: Promise<{ roo
             };
             const useCase = ChatUseCaseFactory.getInstance().getUseCase({ isLoggedIn, isTrial });
 
-            await useCase.processChatStreaming(
-               createChatRequest({ message, nativeLanguage, roomId }, userId, isTrial),
-               cb,
-            );
-            controller.close();
+            try {
+               await useCase.processChatStreaming(
+                  createChatRequest({ message, nativeLanguage, roomId }, userId, isTrial),
+                  cb,
+               );
+            } catch (err) {
+               const error = toHttpError(err);
+
+               const errorPayload =
+                  JSON.stringify({
+                     type: 'error',
+                     message: error.body.message,
+                     status: error.status,
+                  }) + '\n';
+
+               controller.enqueue(encoder.encode(errorPayload));
+            } finally {
+               controller.close();
+            }
          },
       });
 

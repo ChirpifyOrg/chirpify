@@ -27,8 +27,9 @@ export function useChat() {
             },
             body: JSON.stringify(content),
          });
-
          if (!response.ok) {
+            console.log('reponse status', response);
+            // if (response.status === '429')
             throw new Error('Network response was not ok');
          }
 
@@ -57,9 +58,13 @@ export function useChat() {
 
                         if (parsedMessage.type === 'message') {
                            setAiStreamedMessage(prev => prev + parsedMessage.text);
+                        } else if (parsedMessage.type === 'error') {
+                           console.error('🚨 Server-side error from stream:', parsedMessage);
+                           throw parsedMessage;
                         }
                      } catch (error) {
-                        console.error('JSON parsing error:', error, 'for line:', trimmedLine);
+                        console.error('❌ JSON parsing error:', error, 'for line:', trimmedLine);
+                        throw error;
                      }
                   }
                }
@@ -72,6 +77,7 @@ export function useChat() {
          }
       } catch (error) {
          console.error('Error sending message:', error);
+         throw error;
       } finally {
          setIsLoading(false);
       }
