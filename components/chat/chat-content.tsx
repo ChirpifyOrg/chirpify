@@ -83,7 +83,7 @@ interface ChatContentProps {
    roomId: string;
    isOpen: boolean;
 }
-export function ChatContent({ style, onShowFeedback, isExpanded, onExpand, roomId }: ChatContentProps) {
+export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpand, roomId }: ChatContentProps) {
    const DEFAULT_CHAT_HISTORY_LIMIT = 20;
    // 스토어에서 필요한 함수들 가져오기
    const { setMessages, prependMessage } = useSimpleChatStore(
@@ -106,11 +106,22 @@ export function ChatContent({ style, onShowFeedback, isExpanded, onExpand, roomI
    const scrollAreaHeight = Math.max(contentHeight - 60, 100);
 
    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+   useEffect(() => {
+      if (isOpen === true) {
+         console.log('reopen');
+         setInit(false);
+         setHasMoreMessages(false);
+      }
+   }, [isOpen]);
    // 초기 메시지 로드
    useEffect(() => {
       if (roomId && !isInit) {
          loadInitialMessages();
          setInit(true);
+      }
+      if (scrollContainerRef.current) {
+         scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
       }
    }, [roomId, isInit]);
 
@@ -157,6 +168,12 @@ export function ChatContent({ style, onShowFeedback, isExpanded, onExpand, roomI
       // 상단에 가까워지면 이전 메시지 로드 (더 오래된 메시지)
       if (scrollTop < 100 && !isLoading && hasMoreMessages) {
          await loadMoreMessages();
+         const container = e.currentTarget;
+         const prevScrollHeight = container.scrollHeight;
+         requestAnimationFrame(() => {
+            const newScrollHeight = container.scrollHeight;
+            container.scrollTop = newScrollHeight - prevScrollHeight + scrollTop;
+         });
       }
    };
 
@@ -181,6 +198,9 @@ export function ChatContent({ style, onShowFeedback, isExpanded, onExpand, roomI
                roomId,
                messages: response,
             });
+            if (scrollContainerRef.current) {
+               scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+            }
          } else {
             setHasMoreMessages(false);
          }
@@ -214,7 +234,7 @@ export function ChatContent({ style, onShowFeedback, isExpanded, onExpand, roomI
             className="w-full">
             <div className="p-4">
                {!isLoading && !hasMoreMessages && messages.length > 0 && (
-                  <div className="text-center py-2 text-white/60">모든 메시지를 불러왔습니다</div>
+                  <div className="text-center py-2 text-white/60">All Messages Loaded..</div>
                )}
                {isLoading && <div className="text-center py-2 text-white/60">Loading more messages...</div>}
                <MessageList messages={messages ?? []} onShowFeedback={onShowFeedback} />
