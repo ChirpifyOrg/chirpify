@@ -25,19 +25,29 @@ import { useContainerDimensions } from '@/app/hooks/useContainerDimensions';
 import { useChat } from '@/app/hooks/useChat';
 import { getUserLanguage } from '@/lib/fe/utils/language';
 import { useFeedBack } from '@/app/hooks/useFeedBack';
+import { AIChatSimpleFormatHistory } from '@/types/chat';
 
 interface ChatContainerProps {
    persona: string;
    mode: 'full' | 'trial';
    roomId: string;
    isStreaming?: boolean;
+   lastMessage?: AIChatSimpleFormatHistory;
 }
 
-export function ChatContainer({ persona, mode, roomId, isStreaming }: ChatContainerProps) {
+export function ChatContainer({ persona, mode, roomId, isStreaming, lastMessage }: ChatContainerProps) {
    isStreaming = isStreaming ?? true;
    if (!roomId) {
       return <>Error !</>;
    }
+   const [showLastMessage, setShowLastMessage] = useState<boolean>(!!lastMessage); // lastMessage가 있을 경우 true로 설정
+
+   useEffect(() => {
+      if (lastMessage) {
+         setShowLastMessage(true); // lastMessage가 있을 때 상태 업데이트
+      }
+   }, [lastMessage]);
+
    const containerRef = useRef<HTMLDivElement>(null);
 
    // testdata
