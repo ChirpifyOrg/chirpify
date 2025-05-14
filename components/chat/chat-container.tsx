@@ -224,7 +224,15 @@ export function ChatContainer({ persona, mode, roomId, isStreaming, lastMessage 
          <ChallengeTask isOpen={isChallengeTaskOpen} style={getChallengePanelStyle()} challenge={mockChallengeData} />
 
          <AIResponse
-            message={showLastMessage ? lastMessage?.message : isStreaming ? aiStreamedMessage : aiFullResponse?.message}
+            message={
+               isStreaming
+                  ? aiStreamedMessage
+                     ? aiStreamedMessage
+                     : showLastMessage
+                       ? lastMessage?.message
+                       : ''
+                  : aiFullResponse?.message
+            }
             persona={persona}
             emotion={aiFullResponse?.emotion}
          />

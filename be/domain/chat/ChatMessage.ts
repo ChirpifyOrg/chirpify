@@ -11,6 +11,7 @@ export class ChatMessage {
    createdAt: Date;
    evaluations: ChatEvaluation[];
    metadata?: ChatMetadata;
+   seq?: number;
 
    constructor(props: {
       id?: string;
@@ -21,6 +22,7 @@ export class ChatMessage {
       createdAt?: Date;
       evaluations?: ChatEvaluation[];
       metadata?: ChatMetadata;
+      seq?: number;
    }) {
       this.id = props.id || crypto.randomUUID();
       this.roomId = props.roomId;
@@ -30,6 +32,7 @@ export class ChatMessage {
       this.createdAt = props.createdAt || new Date();
       this.evaluations = props.evaluations || [];
       this.metadata = props.metadata;
+      this.seq = props.seq;
    }
 
    static createFromUserMessage(roomId: string, message: string): ChatMessage {
