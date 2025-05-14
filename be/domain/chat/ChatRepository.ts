@@ -15,4 +15,5 @@ export interface ChatRepository {
       limit: number | undefined;
    }): Promise<AIChatSimpleFormatHistory[]>;
    getMessageCountForUserInRoom(roomId: string): Promise<number>;
+   getLastAIResponse(roomId: string): Promise<AIChatSimpleFormatHistory | null>;
 }
