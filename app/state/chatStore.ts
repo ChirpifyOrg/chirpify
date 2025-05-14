@@ -40,7 +40,7 @@ export const useSimpleChatStore = create(
                      return 1; // b가 User이면 a가 뒤로
                   }
                   // 두 번째 조건: createdAt으로 정렬
-                  return Number(a.createdAt) - Number(b.createdAt);
+                  return Number(b.createdAt) - Number(a.createdAt);
                });
                return {
                   messages: {
@@ -72,7 +72,7 @@ export const useSimpleChatStore = create(
                   }
 
                   // 두 번째 조건: createdAt으로 정렬
-                  return Number(a.createdAt) - Number(b.createdAt);
+                  return Number(b.createdAt) - Number(a.createdAt);
                });
                return {
                   messages: {
@@ -93,22 +93,12 @@ export const useSimpleChatStore = create(
          setMessages: ({ roomId, messages }) => {
             set(state => {
                const combined = [...messages, ...(state.messages[roomId] || [])];
-               combined.sort((a, b) => {
-                  // 첫 번째 조건: role에 따라 정렬
-                  if (a.role === 'User' && b.role !== 'User') {
-                     return -1; // a가 User이면 앞으로
-                  }
-                  if (a.role !== 'User' && b.role === 'User') {
-                     return 1; // b가 User이면 a가 뒤로
-                  }
+               combined.sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0)); // seq 오름차순 정렬
 
-                  // 두 번째 조건: createdAt으로 정렬
-                  return Number(a.createdAt) - Number(b.createdAt);
-               });
                return {
                   messages: {
                      ...state.messages,
-                     [roomId]: messages,
+                     [roomId]: combined, // 정렬된 메시지 저장
                   },
                   startIndex: {
                      ...state.startIndex,

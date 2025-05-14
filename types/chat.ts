@@ -27,6 +27,7 @@ export interface AIChatSimpleFormatHistory {
    message: string;
    role: ChatRole;
    createdAt: string;
+   seq: number;
 }
 
 // AI 채팅 저장시 공통속성

@@ -6,6 +6,32 @@ import type { ChatRole } from '@/types/chat';
 import { BasePrismaRepository } from '../BasePrismaRepository';
 
 export class ChatRepositoryImpl extends BasePrismaRepository implements ChatRepository {
+   async getLastAIResponse(roomId: string): Promise<AIChatSimpleFormatHistory | null> {
+      try {
+         const messages = await this.prisma.chat_message.findFirst({
+            where: {
+               room_id: roomId,
+               role: 'assistant',
+            },
+            select: {
+               id: true,
+               room_id: true,
+               message: true,
+               role: true,
+               chat_metadata: true,
+               created_at: true,
+               seq: true,
+            },
+            orderBy: [{ seq: 'desc' }], //,
+         });
+
+         if (!messages) return null; // Handle null case
+         return this.mapToSimpleHistory(messages);
+      } catch (error) {
+         console.error('Error finding messages:', error);
+         throw new Error('Failed to retrieve chat history');
+      }
+   }
    async getMessageCountForUserInRoom(roomId: string): Promise<number> {
       try {
          return await this.prisma.chat_message.count({
@@ -57,8 +83,9 @@ export class ChatRepositoryImpl extends BasePrismaRepository implements ChatRepo
                role: true,
                chat_metadata: true,
                created_at: true,
+               seq: true,
             },
-            orderBy: [{ created_at: 'desc' }, { role: 'desc' }], //,
+            orderBy: { seq: 'desc' },
             take: limit,
          });
 
@@ -97,6 +124,7 @@ export class ChatRepositoryImpl extends BasePrismaRepository implements ChatRepo
       message: any;
       role: string | null;
       created_at: Date;
+      seq: number | null;
    }): AIChatSimpleFormatHistory {
       return {
          id: msg.id,
@@ -104,6 +132,7 @@ export class ChatRepositoryImpl extends BasePrismaRepository implements ChatRepo
          message: typeof msg.message === 'string' ? msg.message : JSON.stringify(msg.message ?? {}),
          role: (msg.role?.toLowerCase() === 'user' ? 'User' : 'Assistant') as ChatRole,
          createdAt: msg.created_at.toISOString(),
+         seq: msg.seq ?? 0,
       };
    }
 
