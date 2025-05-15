@@ -9,6 +9,7 @@
 {
   "question": "사용자가 물어본 질문",
   "answer": "사용자의 영어 답변",
+  "language": "언어 코드(KR/CN/JP)"
 }
 ```
 
@@ -106,7 +107,6 @@
             "grammar": 점수(1-4),
             "fluency": 점수(1-4),
             "vocabulary": 점수(1-4),
-            "interaction": 점수(1-4)
         },
         "total_score": 최종_점수
     },
