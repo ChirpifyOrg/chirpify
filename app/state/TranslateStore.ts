@@ -1,14 +1,15 @@
+import { AITranslateReponse } from '@/types/translate';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 // Zustand 스토어 생성 (persist 미들웨어 포함)
 export const useTranslateStore = create(
    persist<{
-      currentSentents: string | null;
-      currentEvaluation: string;
+      currentSentents: string;
+      currentEvaluation: AITranslateReponse | null;
       currentInput: string;
       setCurrentSentents: (sentents: string) => void;
-      setCurrentEvaluation: (evaluation: string) => void;
+      setCurrentEvaluation: (evaluation: AITranslateReponse) => void;
       setCurrentInput: (input: string) => void;
       currentLevel: number;
       setCurrentLevel: (level: number) => void;
@@ -17,7 +18,7 @@ export const useTranslateStore = create(
    }>(
       set => ({
          currentSentents: '',
-         currentEvaluation: '',
+         currentEvaluation: null,
          currentInput: '',
          setCurrentSentents: sentents => {
             set(state => ({ ...state, currentSentents: sentents }));
