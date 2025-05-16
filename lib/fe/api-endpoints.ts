@@ -14,7 +14,7 @@ const ENDPOINTS = {
       return `/chat/${roomId}/message?${params.toString()}`;
    },
    getOrCreateChatRoom: () => `/chat`,
-   generateSentence: () => `/api/translate/sentence`,
+   generateSentence: () => `/translate/sentence`,
 };
 
 // PREFIX 추가를 위해 Proxy 객체 사용
