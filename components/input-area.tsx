@@ -1,9 +1,10 @@
 'use client';
 
+import { AITranslateReponse } from '@/types/translate';
 import React, { useState, useRef } from 'react';
 
 interface InputAreaProps {
-   setEvaluation: (evaluation: string) => void;
+   setEvaluation: (evaluation: AITranslateReponse) => void;
    setSentents: (sentence: string) => void;
    level: number;
 }

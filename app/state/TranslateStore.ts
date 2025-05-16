@@ -39,8 +39,8 @@ export const useTranslateStore = create(
          },
          reset: () => {
             set({
-               currentSentents: null,
-               currentEvaluation: '',
+               currentSentents: '',
+               currentEvaluation: null,
                currentInput: '',
                currentLevel: 1,
                selectOptions: [],

@@ -7,10 +7,10 @@ import { useStore } from 'zustand';
 import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
 
 interface SettingsProps {
-   setMainTitle: (sentence: string) => void;
+   setSentents: (sentence: string) => void;
 }
 
-const Settings: React.FC<SettingsProps> = ({ setMainTitle }) => {
+const Settings: React.FC<SettingsProps> = ({ setSentents }) => {
    const { currentLevel, setCurrentLevel, selectOptions } = useStore(useTranslateStore);
    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -43,7 +43,7 @@ const Settings: React.FC<SettingsProps> = ({ setMainTitle }) => {
             const finalResult = typeof result === 'string' ? JSON.parse(result) : result;
 
             if (finalResult && finalResult.sentence) {
-               setMainTitle(finalResult.sentence);
+               setSentents(finalResult.sentence);
             } else {
                console.error('No sentence in response');
             }
