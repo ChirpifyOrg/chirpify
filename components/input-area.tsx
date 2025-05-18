@@ -1,23 +1,25 @@
 'use client';
 
+import { useTranslateStore } from '@/app/state/TranslateStore';
 import { AITranslateReponse } from '@/types/translate';
 import React, { useState, useRef } from 'react';
+import { useStore } from 'zustand';
 
 interface InputAreaProps {
    setEvaluation: (evaluation: AITranslateReponse) => void;
-   setSentents: (sentence: string) => void;
    level: number;
 }
 
-const InputArea: React.FC<InputAreaProps> = ({ setEvaluation, setSentents, level }) => {
+const InputArea: React.FC<InputAreaProps> = ({ setEvaluation, level }) => {
    const [inputText, setInputText] = useState<string>('');
+   const { currentSentents } = useStore(useTranslateStore);
    const isComposingRef = useRef(false);
 
    const handleSend = async () => {
       const trimmedText = inputText.trim(); // 공백 제거
       if (trimmedText) {
          // 빈 문자열이 아닐 때만 전송
-         const question = '사용자가 물어본 질문'; // 실제 질문으로 대체
+         const question = currentSentents; // 실제 질문으로 대체
          const answer = trimmedText; // 사용자가 입력한 텍스트를 답변으로 사용
 
          const selectedOptions = localStorage.getItem('selectedOptions');
@@ -36,14 +38,12 @@ const InputArea: React.FC<InputAreaProps> = ({ setEvaluation, setSentents, level
             }),
          });
 
-         console.log(response);
-
          const result = await response.json();
-         console.log(result);
+
          const finalResult = typeof result === 'string' ? JSON.parse(result) : result;
          if (finalResult && finalResult.feedback) {
             setEvaluation(finalResult);
-            setSentents(finalResult.sentence);
+            // setSentents(finalResult.sentence);
          }
          console.log(result); // 결과 처리
          setInputText(''); // 전송 후 입력 필드 초기화

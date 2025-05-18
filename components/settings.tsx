@@ -6,12 +6,9 @@ import { useTranslateStore } from '@/app/state/TranslateStore';
 import { useStore } from 'zustand';
 import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
 
-interface SettingsProps {
-   setSentents: (sentence: string) => void;
-}
-
-const Settings: React.FC<SettingsProps> = ({ setSentents }) => {
-   const { currentLevel, setCurrentLevel, selectOptions } = useStore(useTranslateStore);
+const Settings = () => {
+   const { currentLevel, setCurrentLevel, setCurrentSentents, selectOptions, setCurrentEvaluation } =
+      useStore(useTranslateStore);
    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
    const handleSearchClick = () => {
@@ -43,7 +40,8 @@ const Settings: React.FC<SettingsProps> = ({ setSentents }) => {
             const finalResult = typeof result === 'string' ? JSON.parse(result) : result;
 
             if (finalResult && finalResult.sentence) {
-               setSentents(finalResult.sentence);
+               setCurrentSentents(finalResult.sentence);
+               setCurrentEvaluation(null);
             } else {
                console.error('No sentence in response');
             }

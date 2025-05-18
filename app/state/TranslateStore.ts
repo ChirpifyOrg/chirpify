@@ -9,7 +9,7 @@ export const useTranslateStore = create(
       currentEvaluation: AITranslateReponse | null;
       currentInput: string;
       setCurrentSentents: (sentents: string) => void;
-      setCurrentEvaluation: (evaluation: AITranslateReponse) => void;
+      setCurrentEvaluation: (evaluation: AITranslateReponse | null) => void;
       setCurrentInput: (input: string) => void;
       currentLevel: number;
       setCurrentLevel: (level: number) => void;
