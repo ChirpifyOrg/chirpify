@@ -47,6 +47,12 @@ export class TranslateLearnFeedbackService {
       };
 
       const response = await this.chatService.generateResponse(request);
-      return JSON.parse(response.choices[0].message.content ?? '');
+      const jsonStr = response.choices[0].message.content ?? '';
+      const cleanJson = jsonStr.replace(/```[\s\S]*?```/g, function (match) {
+         // 코드 블록 안의 내용만 추출 (``` 제거)
+         return match.replace(/```[\s]?(?:\w+)?[\s]?|```$/g, '');
+      });
+      const json = JSON.parse(cleanJson);
+      return json;
    }
 }
