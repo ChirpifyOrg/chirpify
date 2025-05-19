@@ -9,8 +9,7 @@ import { useTranslateStore } from '../state/TranslateStore';
 import TranslateEvaluationArea from '@/components/translate-evaluation-area';
 
 const Layout: React.FC = () => {
-   const { currentSentents, setCurrentSentents, currentLevel, currentEvaluation, setCurrentEvaluation } =
-      useStore(useTranslateStore);
+   const { currentSentents, currentLevel, currentEvaluation, setCurrentEvaluation } = useStore(useTranslateStore);
 
    return (
       <div className="flex w-full md:w-10/12 sd:w-full m-1  max-h-[90dvh]  bg-gray-900 text-white">
@@ -18,7 +17,7 @@ const Layout: React.FC = () => {
          <div className="sm:w-full md:w-4/5 flex flex-col border-r border-gray-700">
             <NativeLanguageArea sentence={currentSentents} />
             <TranslateEvaluationArea evaluation={currentEvaluation} />
-            <InputArea setEvaluation={setCurrentEvaluation} setSentents={setCurrentSentents} level={currentLevel} />
+            <InputArea setEvaluation={setCurrentEvaluation} level={currentLevel} />
          </div>
 
          {/* 오른쪽 설정 영역 */}
