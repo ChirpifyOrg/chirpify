@@ -11,10 +11,18 @@ export const metadata: Metadata = {
 const ChatPage = async ({ params }: { params: Promise<{ roomId: string }> }) => {
    const { roomId } = await params;
 
-   const modelChatRoomUseCase = new GetChatModelByChatRoomIdUseCase(UnitOfWorkChatFactory.create());
-   const modelChatRoomResponse = await modelChatRoomUseCase.execute(roomId);
-   const lastMessageUseCase = new GetLastChatMessageUseCase(UnitOfWorkChatFactory.create());
-   const lastMessageResponse = await lastMessageUseCase.execute(roomId);
+   const uow = UnitOfWorkChatFactory.create();
+
+   const { modelChatRoomResponse, lastMessageResponse } = await uow.executeInTransaction(async () => {
+      const modelChatRoomUseCase = new GetChatModelByChatRoomIdUseCase(uow);
+      const modelChatRoomResponse = await modelChatRoomUseCase.execute(roomId);
+
+      const lastMessageUseCase = new GetLastChatMessageUseCase(uow);
+      const lastMessageResponse = await lastMessageUseCase.execute(roomId);
+
+      // 트랜잭션 내에서 필요한 값 모두 반환
+      return { modelChatRoomResponse, lastMessageResponse };
+   });
 
    if (!modelChatRoomResponse) {
       throw new Error('잘못된 room 소유자 입니다.');
