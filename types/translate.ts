@@ -39,3 +39,11 @@ export const defaultAIChatResponse: AITranslateReponse = {
       total_score: 0.0,
    },
 };
+
+export interface RequestTranslateFeedback {
+   question: string;
+   answer: string;
+   level: number;
+   selectOptions: string[];
+   language: string;
+}
