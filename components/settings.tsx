@@ -20,7 +20,7 @@ const Settings = () => {
    };
    const generateSentence = async (_event: React.MouseEvent) => {
       // API 호출
-      const response = await fetch(API_ENDPOINTS.generateSentence(), {
+      const response = await fetch(API_ENDPOINTS.getGenerateSentence(), {
          method: 'POST',
          headers: {
             'Content-Type': 'application/json',
