@@ -1,7 +1,9 @@
 'use client';
 
+import { fetchWithTypedBody } from '@/app/hooks/useFetchData';
 import { useTranslateStore } from '@/app/state/TranslateStore';
-import { AITranslateReponse } from '@/types/translate';
+import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
+import { AITranslateReponse, RequestTranslateFeedback } from '@/types/translate';
 import React, { useState, useRef } from 'react';
 import { useStore } from 'zustand';
 
@@ -12,7 +14,7 @@ interface InputAreaProps {
 
 const InputArea: React.FC<InputAreaProps> = ({ setEvaluation, level }) => {
    const [inputText, setInputText] = useState<string>('');
-   const { currentSentents } = useStore(useTranslateStore);
+   const { currentSentents, selectOptions } = useStore(useTranslateStore);
    const isComposingRef = useRef(false);
 
    const handleSend = async () => {
@@ -21,31 +23,31 @@ const InputArea: React.FC<InputAreaProps> = ({ setEvaluation, level }) => {
          // 빈 문자열이 아닐 때만 전송
          const question = currentSentents; // 실제 질문으로 대체
          const answer = trimmedText; // 사용자가 입력한 텍스트를 답변으로 사용
-
-         const selectedOptions = localStorage.getItem('selectedOptions');
-
-         const response = await fetch('/api/translate/feedback', {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json',
+         const response = await fetchWithTypedBody<RequestTranslateFeedback, AITranslateReponse>(
+            API_ENDPOINTS.getTranslateFeedback(),
+            {
+               method: 'POST',
+               headers: {
+                  'Content-Type': 'application/json',
+               },
+               body: {
+                  question,
+                  answer,
+                  level,
+                  selectOptions,
+                  language: 'KR',
+               },
             },
-            body: JSON.stringify({
-               question,
-               answer,
-               level,
-               selectedOptions,
-               language: 'KR',
-            }),
-         });
+         );
 
-         const result = await response.json();
+         // const result = await response.json();
 
-         const finalResult = typeof result === 'string' ? JSON.parse(result) : result;
+         const finalResult = typeof response === 'string' ? JSON.parse(response) : response;
          if (finalResult && finalResult.feedback) {
             setEvaluation(finalResult);
             // setSentents(finalResult.sentence);
          }
-         console.log(result); // 결과 처리
+
          setInputText(''); // 전송 후 입력 필드 초기화
       }
    };
