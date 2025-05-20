@@ -47,3 +47,14 @@ export interface RequestTranslateFeedback {
    selectOptions: string[];
    language: string;
 }
+
+export const TranslateModelUseType = {
+   GENERATE_SENTENCE: 'sentence',
+   GENERATE_FEEDBACK: 'feedback',
+} as const;
+export type TranslateModelUseType = (typeof TranslateModelUseType)[keyof typeof TranslateModelUseType];
+const TranstlateModelUseTypeValues = Object.keys(TranslateModelUseType) as [
+   TranslateModelUseType,
+   ...TranslateModelUseType[],
+];
+export const translateModelUseTypeSchema = z.enum(TranstlateModelUseTypeValues);
