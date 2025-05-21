@@ -7,7 +7,10 @@ export const metadata: Metadata = {
 };
 
 const ChatPage = async () => {
-   const fetchData = await fetch(`http://${env.nextPublicDomain}/api/chat/models`);
+   const fetchData = await fetch(
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `http://${env.nextPublicDomain}`) +
+         `/api/chat/models`,
+   );
    const data = await fetchData.json();
 
    return (
