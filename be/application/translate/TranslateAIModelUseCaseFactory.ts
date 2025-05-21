@@ -15,25 +15,29 @@ export class TranslateAIModelUseCaseFactory {
       }
       return TranslateAIModelUseCaseFactory.instance;
    }
-   getUseCase(useType: TranslateModelUseType) {
+   getUseCase(useType: unknown) {
       const parsed = translateModelUseTypeSchema.safeParse(useType);
       if (!parsed.success) {
          throw new Error('잘못된 useType 값입니다 : ' + useType);
       }
-      useType = parsed.data;
-      const existingService = this.usecases.get(useType);
+      const vaildUseType = parsed.data;
+      const existingService = this.usecases.get(vaildUseType);
       if (existingService) {
          return existingService;
       }
-
-      switch (useType) {
+      let useCase;
+      switch (vaildUseType) {
          case 'feedback':
-            return this.usecases.set('feedback', new FeedBackUseCase());
+            useCase = new FeedBackUseCase();
+            break;
          case 'sentence':
-            return this.usecases.set('sentence', new MakeSentenceUseCase());
+            useCase = new MakeSentenceUseCase();
+            break;
          default:
             throw new Error('잘못된 useType 값입니다 : ' + useType);
       }
+      this.usecases.set(vaildUseType, useCase);
+      return useCase;
    }
 }
 
