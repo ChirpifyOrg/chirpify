@@ -53,7 +53,7 @@ export const TranslateModelUseType = {
    GENERATE_FEEDBACK: 'feedback',
 } as const;
 export type TranslateModelUseType = (typeof TranslateModelUseType)[keyof typeof TranslateModelUseType];
-const TranstlateModelUseTypeValues = Object.keys(TranslateModelUseType) as [
+const TranstlateModelUseTypeValues = Object.values(TranslateModelUseType) as [
    TranslateModelUseType,
    ...TranslateModelUseType[],
 ];
