@@ -1,4 +1,4 @@
-import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
+import { ApiResponseGenerator } from '@/be/application/ApiResponseGenerator';
 import { IUnitOfWorkChat } from '@/be/domain/chat/IUnitOfWorkChat';
 import { ChatCompletionChunk, ChatCompletion as GPTChatFormat } from 'openai/resources';
 import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions';
