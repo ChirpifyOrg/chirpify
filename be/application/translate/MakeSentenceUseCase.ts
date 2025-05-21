@@ -1,6 +1,6 @@
 import { TranslateAIModel } from './TranslateAIModelUseCaseFactory';
 
-export class MakeSententsUseCase extends TranslateAIModel {
+export class MakeSentenceUseCase extends TranslateAIModel {
    async execute(): Promise<string> {
       throw new Error('Method not implemented.');
    }

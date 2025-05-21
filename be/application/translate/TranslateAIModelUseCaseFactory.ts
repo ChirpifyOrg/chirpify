@@ -1,6 +1,7 @@
 import { TranslateModelUseType, translateModelUseTypeSchema } from '@/types/translate';
-import { MakeSententsUseCase } from './MakeSententsUseCase';
+
 import { FeedBackUseCase } from './FeedBackUseCase';
+import { MakeSentenceUseCase } from './MakeSentenceUseCase';
 
 export class TranslateAIModelUseCaseFactory {
    private static instance: TranslateAIModelUseCaseFactory;
@@ -29,7 +30,7 @@ export class TranslateAIModelUseCaseFactory {
          case 'feedback':
             return this.usecases.set('feedback', new FeedBackUseCase());
          case 'sentence':
-            return this.usecases.set('sentence', new MakeSententsUseCase());
+            return this.usecases.set('sentence', new MakeSentenceUseCase());
          default:
             throw new Error('잘못된 useType 값입니다 : ' + useType);
       }
