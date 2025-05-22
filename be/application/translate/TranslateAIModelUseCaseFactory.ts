@@ -1,7 +1,9 @@
-import { TranslateModelUseType, translateModelUseTypeSchema } from '@/types/translate';
+import { ClientTranslateRequest, TranslateModelUseType, translateModelUseTypeSchema } from '@/types/translate';
 
 import { FeedBackUseCase } from './FeedBackUseCase';
 import { MakeSentenceUseCase } from './MakeSentenceUseCase';
+import { IUnitOfWorkTranslate } from '@/be/domain/translate/IUnitOfTranslate';
+import { UnitOfWorkTranslateFactory } from '@/be/infrastructure/repository/uow/factory/UnitOfWorkTranslateFactory';
 
 export class TranslateAIModelUseCaseFactory {
    private static instance: TranslateAIModelUseCaseFactory;
@@ -26,15 +28,14 @@ export class TranslateAIModelUseCaseFactory {
          return existingService;
       }
       let useCase;
+      const uow = UnitOfWorkTranslateFactory.create();
       switch (vaildUseType) {
          case 'feedback':
-            useCase = new FeedBackUseCase();
+            useCase = new FeedBackUseCase(uow);
             break;
          case 'sentence':
-            useCase = new MakeSentenceUseCase();
+            useCase = new MakeSentenceUseCase(uow);
             break;
-         default:
-            throw new Error('잘못된 useType 값입니다 : ' + useType);
       }
       this.usecases.set(vaildUseType, useCase);
       return useCase;
@@ -42,6 +43,6 @@ export class TranslateAIModelUseCaseFactory {
 }
 
 export abstract class TranslateAIModel {
-   constructor() {}
-   abstract execute(): Promise<string>;
+   constructor(private readonly uow: IUnitOfWorkTranslate) {}
+   abstract execute(data: ClientTranslateRequest): Promise<string>;
 }

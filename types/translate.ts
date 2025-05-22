@@ -58,3 +58,19 @@ const TranstlateModelUseTypeValues = Object.values(TranslateModelUseType) as [
    ...TranslateModelUseType[],
 ];
 export const translateModelUseTypeSchema = z.enum(TranstlateModelUseTypeValues);
+export interface BaseClientTranslateRequest {
+   level: number;
+   selectedOptions: string[];
+   language: string;
+}
+
+export interface GenerateSentenceRequest extends BaseClientTranslateRequest {
+   userId: string;
+}
+export interface GenerateFeedbackRequest extends BaseClientTranslateRequest {
+   userId: string;
+   question: string;
+   answer: string;
+   sentenceId: number;
+}
+export type ClientTranslateRequest = GenerateSentenceRequest | GenerateFeedbackRequest;
