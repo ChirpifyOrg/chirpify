@@ -4,7 +4,7 @@ import { createAnonymousUser, trialRoomGetOrCreateWithSupaBaseAnonymousUser } fr
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-   const modelName = 'Aru';
+   const modelName = 'aru';
    const isStreaming = true;
    const [currentRoomId, setRoomId] = useState<string | null>(null);
    useEffect(() => {
