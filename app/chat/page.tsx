@@ -7,7 +7,11 @@ export const metadata: Metadata = {
 };
 
 const ChatPage = async () => {
-   const fetchData = await fetch(`http://${env.nextPublicDomain}/api/chat/models`);
+   const isLocal = env.isLocal();
+   const protocol = isLocal ? 'http' : 'https';
+
+   const fetchUrl = `${protocol}://${env.nextPublicDomain}/api/chat/models`;
+   const fetchData = await fetch(fetchUrl);
    const data = await fetchData.json();
 
    return (
