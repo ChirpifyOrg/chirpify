@@ -13,10 +13,10 @@ export class TranslateModelUseTypeVO {
    static create(value: unknown) {
       return new TranslateModelUseTypeVO(value);
    }
+
    equals(other: TranslateModelUseTypeVO) {
       return this.value === other.value;
    }
-
    toString() {
       return this.value;
    }
