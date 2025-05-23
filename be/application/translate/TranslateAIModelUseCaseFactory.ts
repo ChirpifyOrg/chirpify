@@ -1,13 +1,13 @@
-import { ClientTranslateRequest, TranslateModelUseType, translateModelUseTypeSchema } from '@/types/translate';
+import { TranslateModelUseType, translateModelUseTypeSchema } from '@/types/translate';
 
 import { FeedBackUseCase } from './FeedBackUseCase';
 import { MakeSentenceUseCase } from './MakeSentenceUseCase';
-import { IUnitOfWorkTranslate } from '@/be/domain/translate/IUnitOfTranslate';
 import { UnitOfWorkTranslateFactory } from '@/be/infrastructure/repository/uow/factory/UnitOfWorkTranslateFactory';
+import { TranslateAIModelUseCase } from './TranslateAIModelUseCase';
 
 export class TranslateAIModelUseCaseFactory {
    private static instance: TranslateAIModelUseCaseFactory;
-   private usecases: Map<TranslateModelUseType, TranslateAIModel> = new Map();
+   private usecases: Map<TranslateModelUseType, TranslateAIModelUseCase> = new Map();
 
    private constructor() {}
 
@@ -40,9 +40,4 @@ export class TranslateAIModelUseCaseFactory {
       this.usecases.set(vaildUseType, useCase);
       return useCase;
    }
-}
-
-export abstract class TranslateAIModel {
-   constructor(private readonly uow: IUnitOfWorkTranslate) {}
-   abstract execute(data: ClientTranslateRequest): Promise<string>;
 }
