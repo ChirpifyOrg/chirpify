@@ -396,6 +396,7 @@ model chat_model {
   persona               String?
   description           String?
   created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  ai_model_type         String?
   chat_model_parameters chat_model_parameters[]
   chat_rooms            chat_rooms[]
 
@@ -462,6 +463,7 @@ model translate_model {
   use_type      String?
   is_active     Boolean? @default(true)
   created_at    DateTime @default(now()) @db.Timestamptz(6)
+  ai_model_type String?
 
   @@schema("public")
 }
