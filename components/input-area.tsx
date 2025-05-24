@@ -3,42 +3,47 @@
 import { fetchWithTypedBody } from '@/app/hooks/useFetchData';
 import { useTranslateStore } from '@/app/state/TranslateStore';
 import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
-import { AITranslateReponse, RequestTranslateFeedback } from '@/types/translate';
+import { AITranslateFeedbackResponse, GenerateFeedbackRequest } from '@/types/translate';
 import React, { useState, useRef } from 'react';
 import { useStore } from 'zustand';
 
 interface InputAreaProps {
-   setEvaluation: (evaluation: AITranslateReponse) => void;
+   setEvaluation: (evaluation: AITranslateFeedbackResponse) => void;
    level: number;
 }
 
 const InputArea: React.FC<InputAreaProps> = ({ setEvaluation, level }) => {
    const [inputText, setInputText] = useState<string>('');
-   const { currentSentents, selectOptions } = useStore(useTranslateStore);
+   const { currentSentents, selectOptions, currentSententsId } = useStore(useTranslateStore);
    const isComposingRef = useRef(false);
 
    const handleSend = async () => {
       const trimmedText = inputText.trim(); // 공백 제거
+      if (!currentSententsId) {
+         alert('생성된 문장이 없습니다. 문장을 생성해주세요.');
+         return;
+      }
       if (trimmedText) {
          // 빈 문자열이 아닐 때만 전송
          const question = currentSentents; // 실제 질문으로 대체
          const answer = trimmedText; // 사용자가 입력한 텍스트를 답변으로 사용
-         const response = await fetchWithTypedBody<RequestTranslateFeedback, AITranslateReponse>(
-            API_ENDPOINTS.getTranslateFeedback(),
-            {
-               method: 'POST',
-               headers: {
-                  'Content-Type': 'application/json',
-               },
-               body: {
-                  question,
-                  answer,
-                  level,
-                  selectOptions,
-                  language: 'KR',
-               },
+         const response = await fetchWithTypedBody<
+            Omit<GenerateFeedbackRequest, 'sentenceId'> & { sentenceId: number },
+            AITranslateFeedbackResponse
+         >(API_ENDPOINTS.getTranslateFeedback(), {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
             },
-         );
+            body: {
+               question,
+               answer,
+               level,
+               selectedOptions: selectOptions,
+               sentenceId: currentSententsId,
+               language: 'KR',
+            },
+         });
 
          // const result = await response.json();
 
