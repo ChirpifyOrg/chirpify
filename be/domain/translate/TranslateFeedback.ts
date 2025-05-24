@@ -2,7 +2,7 @@ import { translate_feedback } from '.prisma/client';
 import { AITranslateFeedbackResponse, TranslatFeedbackResponseSchema } from '@/types/translate';
 
 export interface TranslateFeedbackProps {
-   id?: bigint;
+   id?: bigint | null;
    userId: string;
    sentenceId: bigint;
    feedback: AITranslateFeedbackResponse | null;
@@ -10,14 +10,14 @@ export interface TranslateFeedbackProps {
 }
 
 export class TranslateFeedback {
-   public readonly id: bigint;
+   public readonly id: bigint | null;
    public readonly userId: string;
    public readonly sentenceId: bigint;
    public readonly feedback: AITranslateFeedbackResponse | null;
    public readonly createdAt: Date;
 
    protected constructor(props: TranslateFeedbackProps) {
-      this.id = props.id ?? BigInt(0); // DB에서 autoincrement로 할당 예정
+      this.id = props.id ?? null; // DB에서 autoincrement로 할당 예정
       this.userId = props.userId;
       this.sentenceId = props.sentenceId;
       this.feedback = props.feedback;
@@ -27,7 +27,7 @@ export class TranslateFeedback {
    static create(props: Omit<TranslateFeedbackProps, 'id' | 'createdAt'>): TranslateFeedback {
       return new TranslateFeedback({
          ...props,
-         id: BigInt(0),
+         id: null,
          createdAt: new Date(),
       });
    }
