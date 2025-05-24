@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GenerateFeedbackRequestDTO, GenerateSentenceRequestDTO, TranslateModelUseType } from '@/types/translate';
 import { createClient } from '@/lib/be/superbase/server';
 import { TranslateAIModelUseCaseFactory } from '@/be/application/translate/TranslateAIModelUseCaseFactory';
+import { safeJsonStringify } from '@/lib/be/utils/json';
 
 export async function POST(
    request: NextRequest,
@@ -38,7 +39,6 @@ export async function POST(
             response = await useCase.execute(feedbackRequest);
             break;
          }
-
          case 'sentence': {
             const sentenceRequest: GenerateSentenceRequestDTO = {
                userId,
@@ -50,8 +50,7 @@ export async function POST(
             break;
          }
       }
-
-      return NextResponse.json(response);
+      return NextResponse.json(JSON.parse(safeJsonStringify(response)));
    } catch (error) {
       console.error('API Error:', error);
       const message = error instanceof Error ? error.message : 'Unknown error';
