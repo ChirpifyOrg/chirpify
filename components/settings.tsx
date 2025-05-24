@@ -7,8 +7,14 @@ import { useStore } from 'zustand';
 import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
 
 const Settings = () => {
-   const { currentLevel, setCurrentLevel, setCurrentSentents, selectOptions, setCurrentEvaluation } =
-      useStore(useTranslateStore);
+   const {
+      currentLevel,
+      setCurrentLevel,
+      setCurrentSentents,
+      setCurrentSententsId,
+      selectOptions,
+      setCurrentEvaluation,
+   } = useStore(useTranslateStore);
    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
    const handleSearchClick = () => {
@@ -41,6 +47,7 @@ const Settings = () => {
 
             if (finalResult && finalResult.sentence) {
                setCurrentSentents(finalResult.sentence);
+               setCurrentSententsId(Number.parseInt(finalResult.sentenceId));
                setCurrentEvaluation(null);
             } else {
                console.error('No sentence in response');
