@@ -1,10 +1,9 @@
 module.exports = {
+   rootDir: '.',
    preset: 'ts-jest',
    testEnvironment: 'node',
-   roots: ['<rootDir>'],
-   modulePaths: ['<rootDir>'],
    moduleNameMapper: {
-      '^@/(.*)$': '<rootDir>/$1', // 절대 경로 매핑
+      '^@/(.*)$': '<rootDir>/$1',
    },
    transform: {
       '^.+\\.tsx?$': 'ts-jest',
