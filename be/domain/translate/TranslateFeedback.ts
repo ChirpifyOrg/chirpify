@@ -1,4 +1,4 @@
-import { translate_feedback } from '.prisma/client';
+import { Prisma, translate_feedback } from '.prisma/client';
 import { AITranslateFeedbackResponse, TranslatFeedbackResponseSchema } from '@/types/translate';
 
 export interface TranslateFeedbackProps {
@@ -48,5 +48,14 @@ export class TranslateFeedback {
          feedback,
          createdAt: prismaObj.created_at instanceof Date ? prismaObj.created_at : new Date(prismaObj.created_at),
       });
+   }
+   static toPrisma(entity: TranslateFeedback): Prisma.translate_feedbackUncheckedCreateInput {
+      return {
+         id: entity.id !== null ? Number(entity.id) : undefined,
+         user_id: entity.userId,
+         senetence_id: entity.sentenceId,
+         feedback: entity.feedback ? JSON.stringify(entity.feedback) : undefined, // Change null to undefined
+         created_at: entity.createdAt,
+      };
    }
 }

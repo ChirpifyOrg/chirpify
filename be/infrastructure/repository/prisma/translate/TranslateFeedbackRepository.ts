@@ -3,10 +3,13 @@ import { BasePrismaRepository } from '../BasePrismaRepository';
 import { TranslateFeedback } from '@/be/domain/translate/TranslateFeedback';
 
 export class TranslateFeedbackRepositoryImpl extends BasePrismaRepository implements TranslateFeedbackRepository {
-   save(): Promise<void> {
-      throw new Error('Method not implemented.');
+   async save(feedback: TranslateFeedback): Promise<void> {
+      const entity = TranslateFeedback.toPrisma(feedback);
+      this.prisma.translate_feedback.create({
+         data: entity,
+      });
    }
-   getFindAllByUserIdBetweenSeq({
+   async getFindAllByUserIdBetweenSeq({
       userId,
       start,
       end,
