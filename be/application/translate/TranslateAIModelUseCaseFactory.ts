@@ -7,7 +7,7 @@ import { TranslateAIModelUseCase } from './TranslateAIModelUseCase';
 
 export class TranslateAIModelUseCaseFactory {
    private static instance: TranslateAIModelUseCaseFactory;
-   private usecases: Map<TranslateModelUseType, TranslateAIModelUseCase> = new Map();
+   private usecases: Map<TranslateModelUseType, TranslateAIModelUseCase<unknown>> = new Map();
 
    private constructor() {}
 
