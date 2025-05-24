@@ -1,19 +1,19 @@
 import { translate_feedback } from '.prisma/client';
-import { AITranslateReponse, TranslateResponseSchema } from '@/types/translate';
+import { AITranslateFeedbackResponse, TranslatFeedbackResponseSchema } from '@/types/translate';
 
 export interface TranslateFeedbackProps {
    id?: bigint;
    userId: string;
-   sentenceId: string;
-   feedback: AITranslateReponse | null;
+   sentenceId: bigint;
+   feedback: AITranslateFeedbackResponse | null;
    createdAt?: Date;
 }
 
 export class TranslateFeedback {
    public readonly id: bigint;
    public readonly userId: string;
-   public readonly sentenceId: string;
-   public readonly feedback: AITranslateReponse | null;
+   public readonly sentenceId: bigint;
+   public readonly feedback: AITranslateFeedbackResponse | null;
    public readonly createdAt: Date;
 
    protected constructor(props: TranslateFeedbackProps) {
@@ -36,7 +36,7 @@ export class TranslateFeedback {
       let feedback = null;
       // feedback이 존재할 경우에만 파싱 시도
       if (prismaObj.feedback) {
-         const { error, data } = TranslateResponseSchema.safeParse(prismaObj.feedback);
+         const { error, data } = TranslatFeedbackResponseSchema.safeParse(prismaObj.feedback);
          if (!error) {
             feedback = data;
          }
@@ -44,7 +44,7 @@ export class TranslateFeedback {
       return new TranslateFeedback({
          id: typeof prismaObj.id === 'bigint' ? prismaObj.id : BigInt(prismaObj.id),
          userId: prismaObj.user_id ?? '',
-         sentenceId: prismaObj.senetence_id ?? '',
+         sentenceId: prismaObj.senetence_id ?? BigInt(9),
          feedback,
          createdAt: prismaObj.created_at instanceof Date ? prismaObj.created_at : new Date(prismaObj.created_at),
       });

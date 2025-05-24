@@ -1,7 +1,7 @@
 import { TranslateFeedback } from './TranslateFeedback';
 
 export interface TranslateFeedbackRepository {
-   save(): Promise<void>;
+   save(feedback: TranslateFeedback): Promise<void>;
    getFindAllByUserIdBetweenSeq({
       userId,
       start,
