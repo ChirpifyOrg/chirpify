@@ -1,6 +1,6 @@
 'use server';
 import { NextRequest, NextResponse } from 'next/server';
-import { GenerateFeedbackRequest, GenerateSentenceRequest, TranslateModelUseType } from '@/types/translate';
+import { GenerateFeedbackRequestDTO, GenerateSentenceRequestDTO, TranslateModelUseType } from '@/types/translate';
 import { createClient } from '@/lib/be/superbase/server';
 import { TranslateAIModelUseCaseFactory } from '@/be/application/translate/TranslateAIModelUseCaseFactory';
 
@@ -26,7 +26,7 @@ export async function POST(
 
       switch (translateCategory) {
          case 'feedback': {
-            const feedbackRequest: GenerateFeedbackRequest = {
+            const feedbackRequest: GenerateFeedbackRequestDTO = {
                sentenceId,
                userId,
                question,
@@ -40,7 +40,7 @@ export async function POST(
          }
 
          case 'sentence': {
-            const sentenceRequest: GenerateSentenceRequest = {
+            const sentenceRequest: GenerateSentenceRequestDTO = {
                userId,
                level,
                selectedOptions,

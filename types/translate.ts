@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const TranslateFeedBackSchema = z.object({
+export const TranslateFeedBackDetailSchema = z.object({
    correct: z.boolean().default(false),
    errors: z.array(z.string()).default([]),
    meaning_feedback: z.string().default(''),
@@ -14,14 +14,22 @@ export const TranslateFeedBackSchema = z.object({
    }),
    total_score: z.number().default(0),
 });
-export const TranslateResponseSchema = z.object({
+export const TranslatFeedbackResponseSchema = z.object({
    level: z.number().default(1),
    sentence: z.string().default(''),
-   feedback: TranslateFeedBackSchema,
+   feedback: TranslateFeedBackDetailSchema,
 });
-export type AITranslateReponse = z.infer<typeof TranslateResponseSchema>;
 
-export const defaultAIChatResponse: AITranslateReponse = {
+export const TranslateSentenceSchema = z.object({
+   level: z.number(),
+   selectedOptions: z.array(z.string()),
+   language: z.string(),
+   sentence: z.string(),
+});
+export type AITranslateFeedbackResponse = z.infer<typeof TranslatFeedbackResponseSchema>;
+export type AITranslateSentenceResponse = z.infer<typeof TranslateSentenceSchema>;
+
+export const defaultAITranslateFeedbackResponse: AITranslateFeedbackResponse = {
    level: 5,
    sentence: '',
    feedback: {
@@ -40,14 +48,6 @@ export const defaultAIChatResponse: AITranslateReponse = {
    },
 };
 
-export interface RequestTranslateFeedback {
-   question: string;
-   answer: string;
-   level: number;
-   selectOptions: string[];
-   language: string;
-}
-
 export const TranslateModelUseType = {
    GENERATE_SENTENCE: 'sentence',
    GENERATE_FEEDBACK: 'feedback',
@@ -58,19 +58,23 @@ const TranstlateModelUseTypeValues = Object.values(TranslateModelUseType) as [
    ...TranslateModelUseType[],
 ];
 export const translateModelUseTypeSchema = z.enum(TranstlateModelUseTypeValues);
+
 export interface BaseClientTranslateRequest {
    level: number;
    selectedOptions: string[];
    language: string;
 }
 
-export interface GenerateSentenceRequest extends BaseClientTranslateRequest {
-   userId: string;
-}
+export interface GenerateSentenceRequest extends BaseClientTranslateRequest {}
 export interface GenerateFeedbackRequest extends BaseClientTranslateRequest {
-   userId: string;
    question: string;
    answer: string;
-   sentenceId: number;
+   sentenceId: bigint;
+}
+export interface GenerateSentenceRequestDTO extends GenerateSentenceRequest {
+   userId: string;
+}
+export interface GenerateFeedbackRequestDTO extends GenerateFeedbackRequest {
+   userId: string;
 }
 export type ClientTranslateRequest = GenerateSentenceRequest | GenerateFeedbackRequest;
