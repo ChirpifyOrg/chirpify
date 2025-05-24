@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Modal from './setting-modal'; // 모달 컴포넌트 임포트
-import { useTranslateStore } from '@/app/state/TranslateStore';
+import { useTranslateStore } from '@/state/TranslateStore';
 import { useStore } from 'zustand';
 import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
 

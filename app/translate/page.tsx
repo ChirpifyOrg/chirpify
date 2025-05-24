@@ -5,7 +5,7 @@ import InputArea from '@/components/input-area';
 import Settings from '@/components/settings';
 import History from '@/components/history';
 import { useStore } from 'zustand';
-import { useTranslateStore } from '../state/TranslateStore';
+import { useTranslateStore } from '../../state/TranslateStore';
 import TranslateEvaluationArea from '@/components/translate-evaluation-area';
 
 const Layout: React.FC = () => {

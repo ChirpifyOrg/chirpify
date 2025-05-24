@@ -1,7 +1,7 @@
 'use client';
 
-import { fetchWithTypedBody } from '@/app/hooks/useFetchData';
-import { useTranslateStore } from '@/app/state/TranslateStore';
+import { fetchWithTypedBody } from '@/hooks/useFetchData';
+import { useTranslateStore } from '@/state/TranslateStore';
 import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
 import { AITranslateFeedbackResponse, GenerateFeedbackRequest } from '@/types/translate';
 import React, { useState, useRef } from 'react';

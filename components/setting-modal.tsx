@@ -1,4 +1,4 @@
-import { useTranslateStore } from '@/app/state/TranslateStore';
+import { useTranslateStore } from '@/state/TranslateStore';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useStore } from 'zustand';
 

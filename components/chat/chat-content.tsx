@@ -8,10 +8,10 @@ import { AIChatSimpleFormatHistory } from '@/types/chat';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/fe/utils/cn';
-import { onShowFeedBackFn } from '@/app/hooks/useFeedBack';
-import { useSimpleChatStore } from '@/app/state/chatStore';
+import { onShowFeedBackFn } from '@/hooks/useFeedBack';
+import { useSimpleChatStore } from '@/state/chatStore';
 import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
-import { fetchWithTypedBody } from '@/app/hooks/useFetchData';
+import { fetchWithTypedBody } from '@/hooks/useFetchData';
 import { useShallow } from 'zustand/shallow';
 
 type MessageItemProps = {
