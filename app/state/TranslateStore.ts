@@ -1,4 +1,4 @@
-import { AITranslateReponse } from '@/types/translate';
+import { AITranslateFeedbackResponse } from '@/types/translate';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
@@ -6,10 +6,12 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 export const useTranslateStore = create(
    persist<{
       currentSentents: string;
-      currentEvaluation: AITranslateReponse | null;
+      currentSententsId: number | null;
+      currentEvaluation: AITranslateFeedbackResponse | null;
       currentInput: string;
       setCurrentSentents: (sentents: string) => void;
-      setCurrentEvaluation: (evaluation: AITranslateReponse | null) => void;
+      setCurrentSententsId: (sententsId: number) => void;
+      setCurrentEvaluation: (evaluation: AITranslateFeedbackResponse | null) => void;
       setCurrentInput: (input: string) => void;
       currentLevel: number;
       setCurrentLevel: (level: number) => void;
@@ -20,6 +22,10 @@ export const useTranslateStore = create(
          currentSentents: '',
          currentEvaluation: null,
          currentInput: '',
+         currentSententsId: null,
+         setCurrentSententsId: sententsId => {
+            set(state => ({ ...state, currentSententsId: sententsId }));
+         },
          setCurrentSentents: sentents => {
             set(state => ({ ...state, currentSentents: sentents }));
          },
