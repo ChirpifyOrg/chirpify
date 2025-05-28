@@ -1,12 +1,13 @@
 'use client';
 import React from 'react';
 import NativeLanguageArea from '@/components/native-language-area';
-import InputArea from '@/components/input-area';
-import Settings from '@/components/settings';
-import History from '@/components/history';
+import InputArea from '@/components/translate/input-area';
+import Settings from '@/components/translate/settings';
+
 import { useStore } from 'zustand';
 import { useTranslateStore } from '../../state/TranslateStore';
-import TranslateEvaluationArea from '@/components/translate-evaluation-area';
+import TranslateEvaluationArea from '@/components/translate/translate-evaluation-area';
+import History from '@/components/translate/history';
 
 const Layout: React.FC = () => {
    const { currentSentents, currentLevel, currentEvaluation, setCurrentEvaluation } = useStore(useTranslateStore);
