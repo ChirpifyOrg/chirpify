@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { API_ENDPOINTS } from '@/lib/fe/api-endpoints';
 import Image from 'next/image';
 
-import { fetchWithTypedBody } from '../hooks/useFetchData';
+import { fetchWithTypedBody } from '../../hooks/useFetchData';
 import { useRouter } from 'next/navigation';
 import { ChatRoom } from '@/be/domain/chat/ChatRoom';
 

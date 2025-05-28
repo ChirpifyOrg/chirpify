@@ -19,12 +19,12 @@ import { ChatInput } from './chat-input';
 import { mockChallengeData } from '@/lib/fe/mock/challenge-data';
 import Image from 'next/image';
 import { cn } from '@/lib/fe/utils/cn';
-import { useTrialMode } from '@/app/hooks/useTrialMode';
-import { useFullscreen } from '@/app/hooks/useFullscreen';
-import { useContainerDimensions } from '@/app/hooks/useContainerDimensions';
-import { useChat } from '@/app/hooks/useChat';
+import { useTrialMode } from '@/hooks/useTrialMode';
+import { useFullscreen } from '@/hooks/useFullscreen';
+import { useContainerDimensions } from '@/hooks/useContainerDimensions';
+import { useChat } from '@/hooks/useChat';
 import { getUserLanguage } from '@/lib/fe/utils/language';
-import { useFeedBack } from '@/app/hooks/useFeedBack';
+import { useFeedBack } from '@/hooks/useFeedBack';
 import { AIChatSimpleFormatHistory } from '@/types/chat';
 
 interface ChatContainerProps {
