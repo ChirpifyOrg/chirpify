@@ -1,9 +1,9 @@
-import { AITranslateReponse } from '@/types/translate';
+import { AITranslateFeedbackResponse } from '@/types/translate';
 
 import React from 'react';
 
 type TranslateEvaluationAreaProps = {
-   evaluation: AITranslateReponse | null; // evaluation prop의 타입 정의
+   evaluation: AITranslateFeedbackResponse | null; // evaluation prop의 타입 정의
 };
 
 const TranslateEvaluationArea = ({ evaluation }: TranslateEvaluationAreaProps) => {
