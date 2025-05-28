@@ -44,7 +44,7 @@ export class TranslateFeedback {
       return new TranslateFeedback({
          id: typeof prismaObj.id === 'bigint' ? prismaObj.id : BigInt(prismaObj.id),
          userId: prismaObj.user_id ?? '',
-         sentenceId: prismaObj.senetence_id ?? BigInt(9),
+         sentenceId: prismaObj.senetence_id,
          feedback,
          createdAt: prismaObj.created_at instanceof Date ? prismaObj.created_at : new Date(prismaObj.created_at),
       });
