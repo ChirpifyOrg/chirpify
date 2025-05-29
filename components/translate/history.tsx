@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import HistoryModal from './history-modal';
 
-const History: React.FC = () => {
+const History = () => {
    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
    const [selectedHistory, setSelectedHistory] = useState<string | null>(null);
 

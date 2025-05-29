@@ -9,16 +9,21 @@ export class TranslateFeedbackRepositoryImpl extends BasePrismaRepository implem
          data: entity,
       });
    }
-   async getFindAllByUserIdBetweenSeq({
-      userId,
-      start,
-      end,
-   }: {
-      userId: string;
-      start?: number;
-      end?: number;
-   }): Promise<TranslateFeedback> {
-      console.log(userId, start, end);
-      throw new Error('Method not implemented.');
+   async getFindAllByUserIdBetweenSeq({ userId, start, limit }: { userId: string; start?: number; limit: number }) {
+      const where = start ? { user_id: userId, id: { lt: start } } : { user_id: userId };
+      const feedbacks = await this.prisma.translate_feedback.findMany({
+         where,
+         include: {
+            translate_generate_senetence: {
+               select: {
+                  sentence: true,
+               },
+            },
+         },
+         orderBy: { id: 'desc' },
+         take: limit,
+      });
+      const convertFeedbacks = feedbacks?.map(feedback => TranslateFeedback.fromPrisma(feedback));
+      return convertFeedbacks;
    }
 }

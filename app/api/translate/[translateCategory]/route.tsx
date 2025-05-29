@@ -4,7 +4,24 @@ import { GenerateFeedbackRequestDTO, GenerateSentenceRequestDTO, TranslateModelU
 import { createClient } from '@/lib/be/superbase/server';
 import { TranslateAIModelUseCaseFactory } from '@/be/application/translate/TranslateAIModelUseCaseFactory';
 import { safeJsonStringify } from '@/lib/be/utils/json';
+import { GetLastTranslateFeedbackUseCase } from '@/be/application/translate/GetLastTranslateFeedbackUseCase';
+import { UnitOfWorkTranslateFactory } from '@/be/infrastructure/repository/uow/factory/UnitOfWorkTranslateFactory';
 
+export async function GET() {
+   const superbase = await createClient();
+   const { data, error } = await superbase.auth.getUser();
+
+   const userId = data?.user?.id;
+   if (!userId || error) {
+      console.log(error);
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+   }
+
+   const uow = UnitOfWorkTranslateFactory.create();
+   const useCase = new GetLastTranslateFeedbackUseCase(uow);
+   useCase.execute({});
+   return NextResponse.json(JSON.parse(safeJsonStringify(response)));
+}
 export async function POST(
    request: NextRequest,
    { params }: { params: Promise<{ translateCategory: TranslateModelUseType }> },

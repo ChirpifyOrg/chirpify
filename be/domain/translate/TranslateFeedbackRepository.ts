@@ -5,10 +5,10 @@ export interface TranslateFeedbackRepository {
    getFindAllByUserIdBetweenSeq({
       userId,
       start,
-      end,
+      limit,
    }: {
       userId: string;
       start?: number;
-      end?: number;
-   }): Promise<TranslateFeedback>;
+      limit: number;
+   }): Promise<TranslateFeedback[] | null>;
 }
