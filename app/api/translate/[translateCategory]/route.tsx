@@ -4,23 +4,30 @@ import { GenerateFeedbackRequestDTO, GenerateSentenceRequestDTO, TranslateModelU
 import { createClient } from '@/lib/be/superbase/server';
 import { TranslateAIModelUseCaseFactory } from '@/be/application/translate/TranslateAIModelUseCaseFactory';
 import { safeJsonStringify } from '@/lib/be/utils/json';
-import { GetLastTranslateFeedbackUseCase } from '@/be/application/translate/GetLastTranslateFeedbackUseCase';
 import { UnitOfWorkTranslateFactory } from '@/be/infrastructure/repository/uow/factory/UnitOfWorkTranslateFactory';
 
-export async function GET() {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ translateCategory: string }> }) {
+   const { searchParams } = new URL(request.url);
+   const { translateCategory } = await params;
+   if (translateCategory !== 'feedback') {
+      return NextResponse.json({ error: 'Invalid translate category' }, { status: 400 });
+   }
+
+   const startIndex = searchParams.get('startIndex') ? parseInt(searchParams.get('startIndex')!) : undefined;
+   const endIndex = searchParams.get('endIndex') ? parseInt(searchParams.get('endIndex')!) : undefined;
+   const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined;
+
    const superbase = await createClient();
    const { data, error } = await superbase.auth.getUser();
-
    const userId = data?.user?.id;
    if (!userId || error) {
       console.log(error);
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
    }
-
    const uow = UnitOfWorkTranslateFactory.create();
-   const useCase = new GetLastTranslateFeedbackUseCase(uow);
-   useCase.execute({});
-   return NextResponse.json(JSON.parse(safeJsonStringify(response)));
+   const useCase = new GetTranslateFeedbackUseCase(uow);
+   const response = await useCase.execute(userId, startIndex, endIndex, limit);
+   return NextResponse.json(response, { status: 200 });
 }
 export async function POST(
    request: NextRequest,
@@ -67,7 +74,8 @@ export async function POST(
             break;
          }
       }
-      return NextResponse.json(JSON.parse(safeJsonStringify(response)));
+      const json = JSON.parse(safeJsonStringify(response));
+      return NextResponse.json(json, { status: 200 });
    } catch (error) {
       console.error('API Error:', error);
       const message = error instanceof Error ? error.message : 'Unknown error';

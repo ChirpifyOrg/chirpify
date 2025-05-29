@@ -5,7 +5,7 @@ import { TranslateFeedback } from '@/be/domain/translate/TranslateFeedback';
 export class TranslateFeedbackRepositoryImpl extends BasePrismaRepository implements TranslateFeedbackRepository {
    async save(feedback: TranslateFeedback): Promise<void> {
       const entity = TranslateFeedback.toPrisma(feedback);
-      this.prisma.translate_feedback.create({
+      await this.prisma.translate_feedback.create({
          data: entity,
       });
    }
