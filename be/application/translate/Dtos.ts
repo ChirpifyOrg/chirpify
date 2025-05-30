@@ -12,11 +12,11 @@ export class GetLastTranslateFeedbackDTO implements Dto {
       private readonly sentence: string,
       private readonly feedback: AITranslateFeedbackResponse,
    ) {}
-   static fromEntity(entity: TranslateFeedback, sentence: string): GetLastTranslateFeedbackDTO {
+   static fromEntity(entity: TranslateFeedback): GetLastTranslateFeedbackDTO {
       return new GetLastTranslateFeedbackDTO(
          entity.id?.toString() ?? '', // bigint -> string 처리
          entity.userId,
-         sentence, // sentenceId만 있으므로 문장은 외부에서 주입
+         entity.sentence,
          entity.feedback!,
       );
    }
