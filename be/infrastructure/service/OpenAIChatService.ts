@@ -1,4 +1,4 @@
-import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
+import { ApiResponseGenerator } from '@/be/application/ApiResponseGenerator';
 import OpenAI from 'openai';
 import { ChatCompletion } from 'openai/resources';
 import {

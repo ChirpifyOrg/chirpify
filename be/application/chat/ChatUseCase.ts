@@ -1,4 +1,4 @@
-import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
+import { ApiResponseGenerator } from '@/be/application/ApiResponseGenerator';
 import { AIChatAPIResponse, AIChatSimpleFormatHistory, AuthenticatedClientChatReuqest } from '@/types/chat';
 import { IUnitOfWorkChat } from '@/be/domain/chat/IUnitOfWorkChat';
 import { NotFoundError, ForbiddenError } from '@/lib/be/utils/errors';

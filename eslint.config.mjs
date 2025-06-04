@@ -10,6 +10,7 @@ export default [
          '.next/**',
          'eslint.config.mjs', // Ignore ESLint config file
          'postcss.config.js', // Ignore PostCSS config file
+         'jest.config.js',
       ],
       files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
       languageOptions: {

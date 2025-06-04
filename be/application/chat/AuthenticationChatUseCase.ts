@@ -7,7 +7,7 @@ import {
 } from '@/types/chat';
 import { ChatUseCase } from './ChatUseCase';
 import { ChatCompletionChunk, ChatCompletion as GPTChatFormat } from 'openai/resources';
-import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
+import { ApiResponseGenerator } from '@/be/application/ApiResponseGenerator';
 import { ForbiddenError, NotFoundError, ValidationError } from '@/lib/be/utils/errors';
 import { ChatCompletion, ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions';
 import { ChatModel } from '@/be/domain/chat/ChatModel';

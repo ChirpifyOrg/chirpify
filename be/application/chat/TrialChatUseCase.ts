@@ -9,7 +9,7 @@ import { ChatUseCase } from './ChatUseCase';
 import { ChatCompletion } from 'openai/resources';
 import { ChatCompletionChunk, ChatCompletion as GPTChatFormat } from 'openai/resources';
 import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions';
-import { ApiResponseGenerator } from '@/be/domain/ApiResponseGenerator';
+import { ApiResponseGenerator } from '@/be/application/ApiResponseGenerator';
 import { ChatModel } from '@/be/domain/chat/ChatModel';
 import { TooManyRequestsError, ValidationError, NotFoundError } from '@/lib/be/utils/errors';
 import { ChatMessage } from '@/be/domain/chat/ChatMessage';
