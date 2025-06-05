@@ -8,11 +8,11 @@ import React, { useState, useRef } from 'react';
 import { useStore } from 'zustand';
 
 interface InputAreaProps {
-   setEvaluation: (evaluation: AITranslateFeedbackResponse) => void;
+   setFeedback: (evaluation: AITranslateFeedbackResponse) => void;
    level: number;
 }
 
-const InputArea: React.FC<InputAreaProps> = ({ setEvaluation, level }) => {
+const InputArea: React.FC<InputAreaProps> = ({ setFeedback, level }) => {
    const [inputText, setInputText] = useState<string>('');
    const { currentSentents, selectOptions, currentSententsId } = useStore(useTranslateStore);
    const isComposingRef = useRef(false);
@@ -49,7 +49,7 @@ const InputArea: React.FC<InputAreaProps> = ({ setEvaluation, level }) => {
 
          const finalResult = typeof response === 'string' ? JSON.parse(response) : response;
          if (finalResult && finalResult.feedback) {
-            setEvaluation(finalResult);
+            setFeedback(finalResult);
             // setSentents(finalResult.sentence);
          }
 

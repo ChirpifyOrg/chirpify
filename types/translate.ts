@@ -78,3 +78,10 @@ export interface GenerateFeedbackRequestDTO extends GenerateFeedbackRequest {
    userId: string;
 }
 export type ClientTranslateRequest = GenerateSentenceRequest | GenerateFeedbackRequest;
+
+export type GetLastTranslateFeedback = {
+   id: string;
+   userId: string;
+   sentence: string;
+   feedback: AITranslateFeedbackResponse;
+};

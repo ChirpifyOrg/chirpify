@@ -13,7 +13,7 @@ const Settings = () => {
       setCurrentSentents,
       setCurrentSententsId,
       selectOptions,
-      setCurrentEvaluation,
+      setCurrentFeedback,
    } = useStore(useTranslateStore);
    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -48,7 +48,7 @@ const Settings = () => {
             if (finalResult && finalResult.sentence) {
                setCurrentSentents(finalResult.sentence);
                setCurrentSententsId(Number.parseInt(finalResult.sentenceId));
-               setCurrentEvaluation(null);
+               setCurrentFeedback(null);
             } else {
                console.error('No sentence in response');
             }

@@ -1,17 +1,19 @@
-import { AITranslateFeedbackResponse } from '@/types/translate';
+import { AITranslateFeedbackResponse, GetLastTranslateFeedback } from '@/types/translate';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 // Zustand 스토어 생성 (persist 미들웨어 포함)
 export const useTranslateStore = create(
    persist<{
+      histories: GetLastTranslateFeedback[];
+      setHistories: (feedbacks: GetLastTranslateFeedback[] | null) => void;
       currentSentents: string;
       currentSententsId: number | null;
-      currentEvaluation: AITranslateFeedbackResponse | null;
+      currentFeedback: AITranslateFeedbackResponse | null;
       currentInput: string;
       setCurrentSentents: (sentents: string) => void;
       setCurrentSententsId: (sententsId: number) => void;
-      setCurrentEvaluation: (evaluation: AITranslateFeedbackResponse | null) => void;
+      setCurrentFeedback: (feedback: AITranslateFeedbackResponse | null) => void;
       setCurrentInput: (input: string) => void;
       currentLevel: number;
       setCurrentLevel: (level: number) => void;
@@ -19,8 +21,12 @@ export const useTranslateStore = create(
       setCurrentSelectOptions: (options: string[]) => void;
    }>(
       set => ({
+         histories: [],
+         setHistories: feedbacks => {
+            set(state => ({ ...state, histories: feedbacks || [] }));
+         },
          currentSentents: '',
-         currentEvaluation: null,
+         currentFeedback: null,
          currentInput: '',
          currentSententsId: null,
          setCurrentSententsId: sententsId => {
@@ -29,8 +35,8 @@ export const useTranslateStore = create(
          setCurrentSentents: sentents => {
             set(state => ({ ...state, currentSentents: sentents }));
          },
-         setCurrentEvaluation: evaluation => {
-            set(state => ({ ...state, currentEvaluation: evaluation }));
+         setCurrentFeedback: feedback => {
+            set(state => ({ ...state, currentFeedback: feedback }));
          },
          setCurrentInput: input => {
             set(state => ({ ...state, currentInput: input }));
@@ -46,7 +52,7 @@ export const useTranslateStore = create(
          reset: () => {
             set({
                currentSentents: '',
-               currentEvaluation: null,
+               currentFeedback: null,
                currentInput: '',
                currentLevel: 1,
                selectOptions: [],

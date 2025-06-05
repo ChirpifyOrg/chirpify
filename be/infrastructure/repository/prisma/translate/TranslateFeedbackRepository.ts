@@ -14,16 +14,12 @@ export class TranslateFeedbackRepositoryImpl extends BasePrismaRepository implem
       const feedbacks = await this.prisma.translate_feedback.findMany({
          where,
          include: {
-            translate_generate_senetence: {
-               select: {
-                  sentence: true,
-               },
-            },
+            translate_generate_senetence: true,
          },
          orderBy: { id: 'desc' },
          take: limit,
       });
-      const convertFeedbacks = feedbacks?.map(feedback => TranslateFeedback.fromPrisma(feedback));
+      const convertFeedbacks = feedbacks.map(feedback => TranslateFeedback.fromPrisma(feedback));
       return convertFeedbacks;
    }
 }

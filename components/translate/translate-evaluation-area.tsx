@@ -3,16 +3,17 @@ import { AITranslateFeedbackResponse } from '@/types/translate';
 import React from 'react';
 
 type TranslateEvaluationAreaProps = {
-   evaluation: AITranslateFeedbackResponse | null; // evaluation prop의 타입 정의
+   feedback: AITranslateFeedbackResponse | null; // evaluation prop의 타입 정의
 };
 
-const TranslateEvaluationArea = ({ evaluation }: TranslateEvaluationAreaProps) => {
-   if (!evaluation) return <div className="flex-1 p-3 max-h-[65dvh]"></div>;
+const TranslateEvaluationArea = ({ feedback }: TranslateEvaluationAreaProps) => {
+   if (!feedback) return <div className="flex-1 p-3 max-h-[65dvh]"></div>;
    // evaluation이 없으면 null 반환
-   const { feedback, sentence } = evaluation; // evaluation에서 필요한 데이터 추출
-   const { correct, errors, meaning_feedback, grammar_feedback, story_feedback, score, total_score } = feedback;
+   const { sentence } = feedback; // evaluation에서 필요한 데이터 추출
+   const feedbackDetail = feedback.feedback;
+   const { correct, errors, meaning_feedback, grammar_feedback, story_feedback, score, total_score } = feedbackDetail;
    return (
-      <div className="flex-1 p-3 max-h-[65dvh] scrollbar-hide overflow-y-auto border-t border-gray-700 pt-1">
+      <div className="flex-1 p-3 max-h-[65dvh] overflow-y-auto border-t border-gray-700 pt-1">
          <div className="space-y-4 p-3 ">
             <div className="p-4">
                <div className="mb-4">

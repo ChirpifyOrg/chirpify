@@ -8,16 +8,16 @@ export interface TranslateGenerateSentenceProps {
 }
 
 export class TranslateGenerateSentence {
-   private readonly id: bigint | null;
-   private readonly sentence: string;
-   private readonly userId: string;
-   private readonly createdAt: Date;
+   private readonly _id: bigint | null;
+   private readonly _sentence: string;
+   private readonly _userId: string;
+   private readonly _createdAt: Date;
 
    protected constructor(props: TranslateGenerateSentenceProps) {
-      this.id = props.id ?? null; // auto-increment placeholder
-      this.sentence = props.sentence;
-      this.userId = props.userId;
-      this.createdAt = props.createdAt ?? new Date();
+      this._id = props.id ?? null; // auto-increment placeholder
+      this._sentence = props.sentence;
+      this._userId = props.userId;
+      this._createdAt = props.createdAt ?? new Date();
    }
 
    static create(props: Omit<TranslateGenerateSentenceProps, 'id' | 'createdAt'>): TranslateGenerateSentence {
@@ -46,5 +46,21 @@ export class TranslateGenerateSentence {
          user_id: entity.userId,
          created_at: entity.createdAt,
       };
+   }
+
+   get id(): bigint | null {
+      return this._id;
+   }
+
+   get sentence(): string {
+      return this._sentence;
+   }
+
+   get userId(): string {
+      return this._userId;
+   }
+
+   get createdAt(): Date {
+      return this._createdAt;
    }
 }

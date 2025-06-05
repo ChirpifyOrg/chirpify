@@ -39,7 +39,11 @@ export class FeedBackUseCase extends TranslateAIModelUseCase<AITranslateFeedback
       });
       const json = JSON.parse(cleanJson) as AITranslateFeedbackResponse;
 
-      const entity = TranslateFeedback.create({ feedback: json, sentenceId, userId });
+      const entity = TranslateFeedback.create({
+         feedback: json,
+         sentenceId,
+         userId,
+      });
       await this.uow.translateFeedbackRepository.save(entity);
 
       return json;

@@ -1,8 +1,9 @@
 import { TranslateFeedback } from '@/be/domain/translate/TranslateFeedback';
-import { AITranslateFeedbackResponse } from '@/types/translate';
+import { AITranslateFeedbackResponse, GetLastTranslateFeedback } from '@/types/translate';
 
 interface Dto {
    toString(): string;
+   toJSON(): Record<string, any>;
 }
 
 export class GetLastTranslateFeedbackDTO implements Dto {
@@ -16,17 +17,19 @@ export class GetLastTranslateFeedbackDTO implements Dto {
       return new GetLastTranslateFeedbackDTO(
          entity.id?.toString() ?? '', // bigint -> string 처리
          entity.userId,
-         entity.sentence,
+         entity.sentence ?? '',
          entity.feedback!,
       );
    }
-
    toString(): string {
-      return JSON.stringify({
+      return JSON.stringify(this.toJSON());
+   }
+   toJSON(): GetLastTranslateFeedback {
+      return {
          id: this.id,
          userId: this.userId,
          sentence: this.sentence,
          feedback: this.feedback,
-      });
+      };
    }
 }

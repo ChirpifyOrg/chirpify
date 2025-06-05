@@ -7,7 +7,7 @@ export interface TranslateFeedbackProps {
    id?: bigint | null;
    userId: string;
    sentenceId: bigint;
-   translate_generate_senetence: TranslateGenerateSentence;
+   translate_generate_senetence?: TranslateGenerateSentence;
    feedback: AITranslateFeedbackResponse | null;
    createdAt?: Date;
 }
@@ -16,7 +16,7 @@ export class TranslateFeedback {
    private readonly _id: bigint | null;
    private readonly _userId: string;
    private readonly _sentenceId: bigint;
-   private readonly _translate_generate_senetence: TranslateGenerateSentence;
+   private readonly _translate_generate_senetence: TranslateGenerateSentence | null;
    private readonly _feedback: AITranslateFeedbackResponse | null;
    private readonly _createdAt: Date;
 
@@ -25,7 +25,7 @@ export class TranslateFeedback {
       this._userId = props.userId;
       this._sentenceId = props.sentenceId;
       this._feedback = props.feedback;
-      this._translate_generate_senetence = props.translate_generate_senetence;
+      this._translate_generate_senetence = props.translate_generate_senetence ?? null;
       this._createdAt = props.createdAt ?? new Date();
    }
 
@@ -48,9 +48,11 @@ export class TranslateFeedback {
       return this._createdAt;
    }
    get sentence() {
-      return this._translate_generate_senetence.sentence;
+      return this._translate_generate_senetence?.sentence;
    }
-   static create(props: Omit<TranslateFeedbackProps, 'id' | 'createdAt'>): TranslateFeedback {
+   static create(
+      props: Omit<TranslateFeedbackProps, 'id' | 'createdAt' | 'translate_generate_senetence'>,
+   ): TranslateFeedback {
       return new TranslateFeedback({
          ...props,
          id: null,
@@ -73,6 +75,7 @@ export class TranslateFeedback {
                throw new Error('Invalid feedback schema');
             }
          } catch (e) {
+            console.warn(e);
             throw new NotFoundError('TranslateFeedback: 유효한 feedback이 없습니다.');
          }
       } else {
