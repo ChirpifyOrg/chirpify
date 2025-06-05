@@ -10,7 +10,6 @@ interface HistoryModalProps {
 
 const HistoryModal = ({ isOpen, onClose, selectedHistory }: HistoryModalProps) => {
    useEffect(() => {
-      console.log(selectedHistory);
       if (isOpen) {
          // ESC 키 이벤트 리스너 추가
          const handleKeyDown = (event: KeyboardEvent) => {
