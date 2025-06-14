@@ -93,20 +93,33 @@ export const useSimpleChatStore = create(
          setMessages: ({ roomId, messages }) => {
             set(state => {
                const combined = [...messages, ...(state.messages[roomId] || [])];
-               combined.sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0)); // seq 오름차순 정렬
+               const uniqueMap = new Map<string, AIChatSimpleFormatHistory>();
+
+               for (const msg of combined) {
+                  if (msg.id) {
+                     uniqueMap.set(msg.id, msg); // id가 있는 경우 id를 기준으로 중복 제거
+                  } else {
+                     // id가 없는 메시지 처리를 위한 fallback: createdAt + role 기준 key
+                     const fallbackKey = `${msg.createdAt}-${msg.role}`;
+                     uniqueMap.set(fallbackKey, msg);
+                  }
+               }
+
+               const deduped = Array.from(uniqueMap.values());
+               deduped.sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0)); // seq 오름차순 정렬
 
                return {
                   messages: {
                      ...state.messages,
-                     [roomId]: combined, // 정렬된 메시지 저장
+                     [roomId]: deduped, // 중복 제거 및 정렬된 메시지 저장
                   },
                   startIndex: {
                      ...state.startIndex,
-                     [roomId]: state.startIndex[roomId] ?? combined[0]?.createdAt,
+                     [roomId]: state.startIndex[roomId] ?? deduped[0]?.createdAt,
                   },
                   endIndex: {
                      ...state.endIndex,
-                     [roomId]: combined[combined.length - 1]?.createdAt,
+                     [roomId]: deduped[deduped.length - 1]?.createdAt,
                   },
                };
             });

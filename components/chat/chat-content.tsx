@@ -86,14 +86,17 @@ interface ChatContentProps {
 export function ChatContent({ isOpen, style, onShowFeedback, isExpanded, onExpand, roomId }: ChatContentProps) {
    const DEFAULT_CHAT_HISTORY_LIMIT = 20;
    // 스토어에서 필요한 함수들 가져오기
-   const { setMessages, prependMessage } = useSimpleChatStore(
+   const { setMessages, prependMessage, clearMessages } = useSimpleChatStore(
       useShallow(state => ({
          setMessages: state.setMessages,
          appendMessage: state.appendMessage,
          prependMessage: state.prependMessage,
+         clearMessages: state.clearMessages,
       })),
    );
-
+   useEffect(() => {
+      clearMessages(roomId);
+   }, []);
    // useShallow를 사용하여 얕은 비교 수행
    const messages = useSimpleChatStore(useShallow(state => state.messages[roomId] ?? []));
    const startIndex = useSimpleChatStore(useShallow(state => state.startIndex[roomId]));
